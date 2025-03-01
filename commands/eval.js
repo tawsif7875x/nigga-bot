@@ -33,11 +33,9 @@ module.exports = {
 		(async () => {
 			try {
 				${args.join(" ")}
-    if ( ${args.join(" ")}.match("out")) { ${args.join(" ")}.replace(/out/g, "api.sendMessage(`"  ) } `, event.threadID)
-    }
 			} catch (error) {
 				
-				api.sendMessage("nigga", event.threadID);
+				api.sendMessage(`${error.message}`, event.threadID);
 			}
 		})()`;
 		eval(cmd);
