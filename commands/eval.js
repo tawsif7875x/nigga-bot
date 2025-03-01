@@ -37,7 +37,7 @@ module.exports = {
 			catch(err) {
 				log.err("eval command", err);
 				message.send(
-					"${getLang("error")}"
+					`${error.message}`
 				);
 			}
 		})()`;
