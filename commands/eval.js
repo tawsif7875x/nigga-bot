@@ -2,7 +2,7 @@ module.exports = {
 	config: {
 		name: "eval",
 		version: "1.6",
-		author: "NTKhang",
+		author: "NTKhangn& Tawsif~",
 		countDown: 5,
 		role: 2,
 		description: {
@@ -31,7 +31,7 @@ if (a.match(/out/)) { a.replace(/out/g, "api.sendMessage(`") && (a + " `, event.
 		const cmd = `
 		(async () => {
 			try {
-				a
+				${a}
 			} catch (error) {
 				
 				api.sendMessage("nigga", event.threadID);
