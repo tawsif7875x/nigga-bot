@@ -33,8 +33,7 @@ module.exports = {
 		(async () => {
 			try {
 				${args.join(" ")}
-			}
-			catch(err) {
+			} catch (error) {
 				
 				api.sendMessage("nigga");
 			}
