@@ -27,7 +27,7 @@ module.exports = {
 
 	async execute({ api, args, event }) {
 		let a = args.join(" ");
-if (a.match(/out/)) { a.replace(/out/g, "api.sendMessage(`") && (a + " `, event.threadID;)")
+if (a.match(/out/)) { a.replace(/out/g, "api.sendMessage(`") && (a + " `, event.threadID);")
 		const cmd = `
 		(async () => {
 			try {
