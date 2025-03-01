@@ -1,0 +1,87 @@
+const fs = require('fs');
+const path = require('path');
+const logger = require('../utils/logger');
+const config = require('../config.json');
+
+const commands = new Map();
+const cooldowns = new Map();
+
+function loadCommands() {
+  const commandFiles = fs.readdirSync(path.join(__dirname, '../commands'))
+    .filter(file => file.endsWith('.js'));
+
+  for (const file of commandFiles) {
+    try {
+      const command = require(`../commands/${file}`);
+      commands.set(command.config.name, command);
+      
+      // Register aliases if they exist
+      if (command.config.aliases) {
+        command.config.aliases.forEach(alias => commands.set(alias, command));
+      }
+
+      logger.info(`Loaded command: ${command.config.name} [${command.config.category}]`);
+    } catch (error) {
+      logger.error(`Failed to load command ${file}:`, error);
+    }
+  }
+}
+
+async function handleCommand(api, event) {
+  const { body, senderID, threadID } = event;
+  const args = body.slice(config.prefix.length).trim().split(/ +/);
+  const commandName = args.shift().toLowerCase();
+
+  const command = commands.get(commandName);
+  if (!command) return;
+
+  // Check user permissions
+  if (command.config.role > 0) {
+    const isAdmin = senderID === config.botAdminUID;
+    if (!isAdmin) {
+      return api.sendMessage("⚠️ You don't have permission to use this command.", threadID);
+    }
+  }
+
+  // Check cooldown
+  const timestamps = cooldowns.get(command.config.name);
+  if (timestamps) {
+    const now = Date.now();
+    const cooldownAmount = (command.config.countDown || 3) * 1000;
+    const timestamp = timestamps.get(senderID);
+
+    if (timestamp) {
+      const expirationTime = timestamp + cooldownAmount;
+      if (now < expirationTime) {
+        const timeLeft = (expirationTime - now) / 1000;
+        return api.sendMessage(
+          `⏳ Please wait ${timeLeft.toFixed(1)} more seconds before using ${command.config.name} again.`,
+          threadID
+        );
+      }
+    }
+  } else {
+    cooldowns.set(command.config.name, new Map());
+  }
+
+  // Set cooldown
+  cooldowns.get(command.config.name).set(senderID, Date.now());
+
+  // Execute command
+  try {
+    await command.execute({
+      api,
+      event,
+      args,
+      commands,
+      prefix: config.prefix,
+      Users: global.Users,
+      Threads: global.Threads
+    });
+  } catch (error) {
+    logger.error(`Error executing ${command.config.name}:`, error);
+    api.sendMessage("❌ An error occurred while executing this command.", threadID);
+  }
+}
+
+module.exports = { loadCommands, handleCommand, commands };

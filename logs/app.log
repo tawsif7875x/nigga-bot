@@ -1,0 +1,35 @@
+[2025-02-25T18:07:38.109Z] [INFO] Loaded AppState successfully
+[2025-02-25T18:07:38.114Z] [INFO] [Nexus] Loaded AppState successfully
+[2025-02-25T18:07:38.117Z] [INFO] [Nexus] AppState found, attempting to log in with Project Nexus...
+[2025-02-25T18:07:44.460Z] [ERROR] [Nexus] Failed to initialize bot:
+[2025-02-25T18:07:44.461Z] [ERROR] Account suspended. Reason:
+[2025-02-25T18:10:42.558Z] [INFO] Loaded AppState successfully
+[2025-02-25T18:10:42.564Z] [INFO] Loaded AppState successfully
+[2025-02-25T18:10:42.566Z] [INFO] AppState found, attempting to log in with Project Nexus...
+[2025-02-25T18:10:47.359Z] [ERROR] Failed to initialize bot:
+[2025-02-25T18:10:47.360Z] [ERROR] Account suspended. Reason:
+[INFO] Loaded AppState successfully
+[INFO] [Nexus] Loaded AppState successfully
+[INFO] [Nexus] AppState found, attempting to log in with Project Nexus...
+[ERROR] [Nexus] Failed to initialize bot:
+[ERROR] Account suspended. Reason:
+[INFO] Loaded AppState successfully
+[INFO] [Nexus] Loaded AppState successfully
+[INFO] [Nexus] AppState found, attempting to log in with Project Nexus...
+[ERROR] [Nexus] Failed to initialize bot:
+[ERROR] Account suspended. Reason:
+[INFO] Loaded AppState successfully
+[INFO] [Nexus] Loaded AppState successfully
+[INFO] [Nexus] AppState found, attempting to log in with Project Nexus...
+[ERROR] [Nexus] Failed to initialize bot:
+[ERROR] Account suspended. Reason:
+[INFO] Loaded AppState successfully
+[INFO] [Nexus] Loaded AppState successfully
+[INFO] [Nexus] AppState found, attempting to log in with Project Nexus...
+[ERROR] [Nexus] Failed to initialize bot:
+[ERROR] Account suspended. Reason:
+[INFO] Loaded AppState successfully
+[INFO] [Nexus] Loaded AppState successfully
+[INFO] [Nexus] AppState found, attempting to log in with Project Nexus...
+[INFO] [Nexus] Logged in with user:
+[INFO] [Nexus] Safely logged in with AppState
