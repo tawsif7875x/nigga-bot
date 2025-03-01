@@ -2,7 +2,7 @@ module.exports = {
 	config: {
 		name: "eval",
 		version: "1.6",
-		author: "NTKhang & Tawsif~",
+		author: "NTKhangn & Tawsif~",
 		countDown: 5,
 		role: 2,
 		description: {
@@ -28,7 +28,7 @@ module.exports = {
 	async execute({ api, args, event }) {
 		let a = args.join(" ");
 		if (a.match(/out/)) {
-			a = a.replace(/out/g, "api.sendMessage(") + ", event.threadID);";
+			a = a.replace(/out/g, "api.sendMessage(`") + "`, event.threadID);";
 			const cmd = `
 			(async () => {
 				try {
