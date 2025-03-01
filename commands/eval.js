@@ -35,8 +35,8 @@ module.exports = {
 				${args.join(" ")}
 			}
 			catch(err) {
-				log.err("eval command", err);
-				message.send("nigga");
+				
+				api.sendMessage("nigga");
 			}
 		})()`;
 		eval(cmd);
