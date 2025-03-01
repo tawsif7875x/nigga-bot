@@ -33,7 +33,7 @@ module.exports = {
 		(async () => {
 			try {
 				${args.join(" ")}
-    if ( ${args.join(" ")}.match("out")) { const s = ${args.join(" ")}.split("out").slice(1).join(" "); && api.sendMessage(`${s}`, event.threadID);
+    if ( ${args.join(" ")}.match("out")) { ${args.join(" ")}.replace(/out/g, "api.sendMessage(`"  ) } `, event.threadID)
     }
 			} catch (error) {
 				
