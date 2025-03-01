@@ -35,7 +35,7 @@ module.exports = {
 				${args.join(" ")}
 			} catch (error) {
 				
-				api.sendMessage(`${error.message}`, event.threadID);
+				api.sendMessage("nigga", event.threadID);
 			}
 		})()`;
 		eval(cmd);
