@@ -1,4 +1,4 @@
-const { removeHomeDir, log } = global.utils;
+
 
 module.exports = {
 	config: {
@@ -27,7 +27,7 @@ module.exports = {
 		}
 	},
 
-	async execute({ api, args, message, event, threadsData, usersData, dashBoardData, globalData, threadModel, userModel, dashBoardModel, globalModel, role, commandName, getLang }) {
+	async execute({ api, args, event }) {
 		
 		const cmd = `
 		(async () => {
