@@ -11,25 +11,43 @@ async function loadAppState() {
     logger.info('Loaded AppState successfully');
     return appState;
   } catch (error) {
-    logger.warn('AppState not found, please check your cookie');
+    logger.error('Failed to load AppState:', error.message);
     throw error;
   }
 }
 
 async function loginWithRetry(retries = 3) {
   const appState = await loadAppState();
-  const options = { appState };
-
+  
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const api = await ws3fca(options);
-      logger.info('Logged in successfully on attempt', attempt);
+      // Create login options
+      const loginOptions = {
+        appState: appState,
+        logLevel: "silent",
+        forceLogin: true,
+        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+      };
+
+      // Login and await the API object
+      const api = await new Promise((resolve, reject) => {
+        ws3fca(loginOptions, (err, api) => {
+          if (err) return reject(err);
+          resolve(api);
+        });
+      });
+
+      logger.info(`Logged in successfully on attempt ${attempt}`);
+      
+      // Test the API connection
+      const currentUserID = await api.getCurrentUserID();
+      if (!currentUserID) throw new Error('Failed to get current user ID');
+
       return api;
+
     } catch (error) {
       logger.error(`Login attempt ${attempt} failed:`, error.message);
-      if (attempt === retries) {
-        throw new Error('Max login attempts reached');
-      }
+      if (attempt === retries) throw error;
       await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
     }
   }

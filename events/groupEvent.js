@@ -10,74 +10,91 @@ module.exports = {
     description: "Handles all group-related events"
   },
 
-  async execute({ api, event, Users, Threads }) {
-    const { logMessageType, logMessageData, threadID } = event;
+  async execute({ api, event }) {
+    if (!event || typeof event !== 'object') {
+      logger.warn('Received invalid group event');
+      return;
+    }
 
     try {
-      switch (logMessageType) {
+      // Safely destructure with default values
+      const {
+        type = '',
+        logMessageType = '',
+        logMessageData = {},
+        threadID = '',
+        participantIDs = [],
+        author = ''
+      } = event;
+
+      // Handle different event types
+      switch (logMessageType || type) {
         case 'log:subscribe':
-          const addedParticipants = logMessageData.addedParticipants;
-          for (const participant of addedParticipants) {
-            await Users.addUser(participant.userFbId, participant.fullName);
-            const welcomeMessage = {
-              body: `Welcome ${participant.fullName} to the group! 👋`,
-              mentions: [{
-                tag: participant.fullName,
-                id: participant.userFbId
-              }]
-            };
-            api.sendMessage(welcomeMessage, threadID);
+          if (!threadID || !logMessageData.addedParticipants) break;
+          
+          try {
+            const threadInfo = await api.getThreadInfo(threadID);
+            await dbManager.createGroup(threadID, threadInfo.threadName);
+
+            for (const participant of logMessageData.addedParticipants) {
+              await dbManager.createUser(participant.userFbId, participant.fullName);
+              api.sendMessage({
+                body: `Welcome ${participant.fullName} to the group! 👋`,
+                mentions: [{
+                  tag: participant.fullName,
+                  id: participant.userFbId
+                }]
+              }, threadID);
+            }
+          } catch (err) {
+            logger.error('Error handling new member:', err);
           }
           break;
 
         case 'log:unsubscribe':
-          const leftParticipantFbId = logMessageData.leftParticipantFbId;
-          const user = await Users.getData(leftParticipantFbId);
-          api.sendMessage(
-            `Goodbye ${user.name}! 👋`,
-            threadID
-          );
+          if (!threadID || !logMessageData.leftParticipantFbId) break;
+          
+          try {
+            const userInfo = await api.getUserInfo(logMessageData.leftParticipantFbId);
+            const name = userInfo[logMessageData.leftParticipantFbId]?.name || 'Member';
+            api.sendMessage(`Goodbye ${name}! 👋`, threadID);
+          } catch (err) {
+            logger.error('Error handling member leave:', err);
+          }
           break;
 
         case 'log:thread-name':
-          const newName = logMessageData.name;
-          await Threads.updateInfo(threadID, { name: newName });
-          api.sendMessage(
-            `Group name changed to: ${newName}`,
-            threadID
-          );
+          if (!threadID || !logMessageData.name) break;
+          
+          try {
+            await dbManager.updateGroupInfo(threadID, { name: logMessageData.name });
+            api.sendMessage(`Group name changed to: ${logMessageData.name}`, threadID);
+          } catch (err) {
+            logger.error('Error handling name change:', err);
+          }
           break;
 
         case 'log:thread-icon':
-          api.sendMessage(
-            `Group icon has been updated! 🖼️`,
-            threadID
-          );
+          if (!threadID) break;
+          api.sendMessage(`Group icon has been updated! 🖼️`, threadID);
           break;
 
         case 'log:thread-color':
-          api.sendMessage(
-            `Chat theme color has been changed! 🎨`,
-            threadID
-          );
+          if (!threadID) break;
+          api.sendMessage(`Chat theme color has been changed! 🎨`, threadID);
           break;
 
         case 'log:thread-call':
-          if (logMessageData.event === 'group_call_started') {
-            api.sendMessage(
-              `A group call has started! 📞`,
-              threadID
-            );
-          } else if (logMessageData.event === 'group_call_ended') {
-            api.sendMessage(
-              `The group call has ended! 📞`,
-              threadID
-            );
-          }
+          if (!threadID || !logMessageData.event) break;
+          
+          const callMessage = logMessageData.event === 'group_call_started' 
+            ? `A group call has started! 📞`
+            : `The group call has ended! 📞`;
+          api.sendMessage(callMessage, threadID);
           break;
       }
     } catch (error) {
-      console.error('[GROUP EVENT ERROR]:', error);
+      logger.error('[GROUP EVENT ERROR]:', error);
     }
   }
 };

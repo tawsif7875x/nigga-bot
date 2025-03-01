@@ -10,21 +10,24 @@ function loadCommands() {
   const commandFiles = fs.readdirSync(path.join(__dirname, '../commands'))
     .filter(file => file.endsWith('.js'));
 
+  commands.clear(); // Clear existing commands first
+
   for (const file of commandFiles) {
     try {
+      delete require.cache[require.resolve(`../commands/${file}`)]; // Clear require cache
       const command = require(`../commands/${file}`);
-      commands.set(command.config.name, command);
       
-      // Register aliases if they exist
-      if (command.config.aliases) {
-        command.config.aliases.forEach(alias => commands.set(alias, command));
+      // Only add command if it's not already registered
+      if (!commands.has(command.config.name)) {
+        commands.set(command.config.name, command);
+        logger.info(`Loaded command: ${command.config.name} [${command.config.category}]`);
       }
-
-      logger.info(`Loaded command: ${command.config.name} [${command.config.category}]`);
     } catch (error) {
       logger.error(`Failed to load command ${file}:`, error);
     }
   }
+
+  return commands;
 }
 
 async function handleCommand(api, event) {

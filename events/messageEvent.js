@@ -10,13 +10,31 @@ module.exports = {
   },
 
   async execute({ api, message, Users }) {
-    const { type, threadID, attachments, mentions } = message;
+    if (!message) {
+      logger.warn("Received empty message event");
+      return;
+    }
 
     try {
-      // Handle attachments
-      if (attachments.length > 0) {
+      // Safely destructure message properties with defaults
+      const {
+        type = 'message',
+        threadID = '',
+        messageID = '',
+        body = '',
+        senderID = '',
+        attachments = [],
+        mentions = {}
+      } = message;
+
+      // Log message for debugging
+      logger.info(`Processing message from ${senderID} in thread ${threadID}`);
+
+      // Handle attachments if they exist
+      if (attachments && attachments.length > 0) {
         for (const attachment of attachments) {
-          switch (attachment.type) {
+          const attachmentType = attachment?.type;
+          switch (attachmentType) {
             case 'photo':
               // Process photos
               break;
@@ -38,14 +56,14 @@ module.exports = {
 
       // Handle mentions
       if (mentions && Object.keys(mentions).length > 0) {
-        const currentUserID = api.getCurrentUserID();
+        const currentUserID = await api.getCurrentUserID();
         if (mentions[currentUserID]) {
-          api.sendMessage("How can I help you?", threadID);
+          await api.sendMessage("How can I help you?", threadID, messageID);
         }
       }
 
       // Auto reactions based on keywords
-      if (message.body) {
+      if (body) {
         const keywords = {
           'thank': '❤️',
           'good': '👍',
@@ -54,20 +72,20 @@ module.exports = {
         };
 
         for (const [keyword, reaction] of Object.entries(keywords)) {
-          if (message.body.toLowerCase().includes(keyword)) {
-            api.setMessageReaction(reaction, message.messageID, null, true);
+          if (body.toLowerCase().includes(keyword)) {
+            await api.setMessageReaction(reaction, messageID, null, true);
             break;
           }
         }
       }
 
       // Add experience for user activity
-      if (message.senderID) {
-        await Users.updateExp(message.senderID, 1);
+      if (senderID && Users) {
+        await Users.updateExp(senderID, 1);
       }
 
     } catch (error) {
-      console.error('[MESSAGE EVENT ERROR]:', error);
+      logger.error('[MESSAGE EVENT ERROR]:', error.message);
     }
   }
 };

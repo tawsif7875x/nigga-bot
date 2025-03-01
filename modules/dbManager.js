@@ -6,6 +6,13 @@ const config = require('../config.json');
 const fs = require('fs');
 
 const dbPath = path.join(__dirname, '../database/database.sqlite');
+
+// Ensure database directory exists
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
+
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     logger.error('Failed to open database:', err.message);
@@ -14,168 +21,98 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Initialize database tables
 db.serialize(() => {
-  // Users table - store user data and preferences
+  // Users table
   db.run(`CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
     name TEXT,
-    role INTEGER DEFAULT 0,
     exp INTEGER DEFAULT 0,
     money INTEGER DEFAULT 0,
     daily_streak INTEGER DEFAULT 0,
-    last_daily TEXT,
-    premium BOOLEAN DEFAULT 0,
+    last_daily DATETIME,
+    role INTEGER DEFAULT 0,
     banned BOOLEAN DEFAULT 0,
     ban_reason TEXT,
     warns INTEGER DEFAULT 0,
-    settings TEXT
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Groups table - store group configurations
+  // Groups table
   db.run(`CREATE TABLE IF NOT EXISTS groups (
     id TEXT PRIMARY KEY,
     name TEXT,
     settings TEXT,
     welcome_message TEXT,
-    goodbye_message TEXT,
     rules TEXT,
-    admin_only BOOLEAN DEFAULT 0,
-    nsfw_allowed BOOLEAN DEFAULT 0,
-    prefix TEXT,
     banned BOOLEAN DEFAULT 0,
-    lang TEXT DEFAULT 'en',
-    auto_reactions TEXT
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Economy table - store transaction history
-  db.run(`CREATE TABLE IF NOT EXISTS economy (
+  // Transactions table
+  db.run(`CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT,
     type TEXT,
     amount INTEGER,
-    timestamp TEXT,
     description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
   )`);
-
-  // Custom commands table
-  db.run(`CREATE TABLE IF NOT EXISTS custom_commands (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    group_id TEXT,
-    command TEXT,
-    response TEXT,
-    creator_id TEXT,
-    created_at TEXT,
-    FOREIGN KEY(group_id) REFERENCES groups(id)
-  )`);
-
-  // User interactions table
-  db.run(`CREATE TABLE IF NOT EXISTS interactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT,
-    target_id TEXT,
-    type TEXT,
-    count INTEGER DEFAULT 1,
-    last_time TEXT,
-    FOREIGN KEY(user_id) REFERENCES users(id)
-  )`);
-
-  // Add indexes for better performance
-  db.run("CREATE INDEX IF NOT EXISTS idx_users_exp ON users(exp)");
-  db.run("CREATE INDEX IF NOT EXISTS idx_users_money ON users(money)");
-  db.run("CREATE INDEX IF NOT EXISTS idx_economy_user_id ON economy(user_id)");
-  db.run("CREATE INDEX IF NOT EXISTS idx_interactions_user_id ON interactions(user_id)");
 });
 
-// User management functions
-async function addUser(id, name, role = 0) {
+// User functions
+async function getUser(id) {
   return new Promise((resolve, reject) => {
-    db.run(
-      'INSERT OR REPLACE INTO users (id, name, role) VALUES (?, ?, ?)',
-      [id, name, role],
-      (err) => {
-        if (err) reject(err);
-        resolve();
-      }
-    );
+    db.get('SELECT * FROM users WHERE id = ?', [id], (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
   });
 }
 
-async function updateUserExp(id, exp) {
+async function createUser(id, name) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // First check if user exists
+      const existingUser = await getUser(id);
+      if (existingUser) {
+        resolve(existingUser);
+        return;
+      }
+
+      // If user doesn't exist, create new
+      await db.run(
+        'INSERT INTO users (id, name) VALUES (?, ?)',
+        [id, name]
+      );
+      logger.info(`📝 New user added: ${name}`);
+      resolve({ id, name });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+async function updateExp(id, amount) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE users SET exp = exp + ? WHERE id = ?',
-      [exp, id],
+      [amount, id],
       (err) => {
         if (err) reject(err);
-        resolve();
+        else resolve();
       }
     );
   });
 }
 
-async function updateUserMoney(id, amount) {
+async function updateMoney(id, amount) {
   return new Promise((resolve, reject) => {
     db.run(
       'UPDATE users SET money = money + ? WHERE id = ?',
       [amount, id],
       (err) => {
         if (err) reject(err);
-        resolve();
-      }
-    );
-  });
-}
-
-// Group management functions
-async function addGroup(id, name, settings = {}) {
-  return new Promise((resolve, reject) => {
-    db.run(
-      'INSERT OR REPLACE INTO groups (id, name, settings) VALUES (?, ?, ?)',
-      [id, name, JSON.stringify(settings)],
-      (err) => {
-        if (err) reject(err);
-        resolve();
-      }
-    );
-  });
-}
-
-async function updateGroupSettings(id, settings) {
-  return new Promise((resolve, reject) => {
-    db.run(
-      'UPDATE groups SET settings = ? WHERE id = ?',
-      [JSON.stringify(settings), id],
-      (err) => {
-        if (err) reject(err);
-        resolve();
-      }
-    );
-  });
-}
-
-// Economy functions
-async function addTransaction(userId, type, amount, description) {
-  return new Promise((resolve, reject) => {
-    db.run(
-      'INSERT INTO economy (user_id, type, amount, timestamp, description) VALUES (?, ?, ?, datetime("now"), ?)',
-      [userId, type, amount, description],
-      (err) => {
-        if (err) reject(err);
-        resolve();
-      }
-    );
-  });
-}
-
-// Custom command functions
-async function addCustomCommand(groupId, command, response, creatorId) {
-  return new Promise((resolve, reject) => {
-    db.run(
-      'INSERT INTO custom_commands (group_id, command, response, creator_id, created_at) VALUES (?, ?, ?, ?, datetime("now"))',
-      [groupId, command, response, creatorId],
-      (err) => {
-        if (err) reject(err);
-        resolve();
+        else resolve();
       }
     );
   });
@@ -281,16 +218,73 @@ if (config.github.enabled && config.github.autoSync) {
   }, config.github.syncInterval);
 }
 
+// Group functions
+async function createGroup(threadID, name, settings = {}) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // Check if group exists
+      const existingGroup = await getGroup(threadID);
+      if (existingGroup) {
+        resolve(existingGroup);
+        return;
+      }
+
+      // If group doesn't exist, create new
+      await db.run(
+        'INSERT INTO groups (id, name, settings) VALUES (?, ?, ?)',
+        [threadID, name, JSON.stringify(settings)]
+      );
+      logger.info(`📝 New group added: ${name}`);
+      resolve({ id: threadID, name, settings });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+async function getGroup(threadID) {
+  return new Promise((resolve, reject) => {
+    db.get('SELECT * FROM groups WHERE id = ?', [threadID], (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
+  });
+}
+
+async function updateGroupInfo(threadID, info) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const group = await getGroup(threadID);
+      if (!group) {
+        // If group doesn't exist, create it
+        await createGroup(threadID, info.name || 'Unknown Group', info);
+      } else {
+        // Update existing group
+        const settings = { ...JSON.parse(group.settings || '{}'), ...info };
+        await db.run(
+          'UPDATE groups SET name = ?, settings = ? WHERE id = ?',
+          [info.name || group.name, JSON.stringify(settings), threadID]
+        );
+        logger.info(`Updated group info: ${info.name} (${threadID})`);
+      }
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 // Export all functions
 module.exports = {
-  addUser,
-  updateUserExp,
-  updateUserMoney,
-  addGroup,
-  updateGroupSettings,
-  addTransaction,
-  addCustomCommand,
+  db,
+  getUser,
+  createUser,
+  updateExp,
+  updateMoney,
   backupDatabase,
   runTransaction,
-  cleanupDatabase
+  cleanupDatabase,
+  createGroup,
+  getGroup,
+  updateGroupInfo
 };

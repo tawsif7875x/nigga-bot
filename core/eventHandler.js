@@ -59,8 +59,15 @@ function handleGroupEvent(api, message) {
 }
 
 function handleMessageEvent(api, message) {
+  if (!message) {
+    logger.warn('Received invalid message in handleMessageEvent');
+    return;
+  }
+  
   const event = events.get('messageEvent');
-  if (event) event.execute(api, message);
+  if (event) {
+    event.execute({ api, message, Users: global.Users });
+  }
 }
 
 function handleReactionEvent(api, message) {

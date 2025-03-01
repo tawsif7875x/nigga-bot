@@ -1,3 +1,5 @@
+const config = require('../config.json');
+
 module.exports = {
   config: {
     name: "help",
@@ -24,33 +26,48 @@ module.exports = {
         }
 
         return api.sendMessage({
-          body: `📝 COMMAND INFO\n\n` +
+          body: `╭─────༺♢༻─────╮\n` +
+                `    📜 Command Info\n` +
+                `╰─────༺♢༻─────╯\n\n` +
                 `Name: ${command.config.name}\n` +
                 `Version: ${command.config.version}\n` +
                 `Role: ${command.config.role}\n` +
                 `Category: ${command.config.category}\n` +
-                `Cooldown: ${command.config.countDown}s\n` +
-                `Description: ${command.config.longDescription}\n` +
-                `Usage: ${command.config.guide}`
+                `Cooldown: ${command.config.countDown}s\n\n` +
+                `Description:\n${command.config.longDescription}\n\n` +
+                `Usage:\n${command.config.guide}\n\n` +
+                `╭─────༺♢༻─────╮\n` +
+                `Author: ${command.config.author}\n` +
+                `╰─────༺♢༻─────╯`
         }, threadID);
       }
 
       // Group commands by category
       const categories = new Map();
       commands.forEach(cmd => {
-        const category = cmd.config.category;
+        const category = cmd.config.category.toUpperCase();
         if (!categories.has(category)) {
-          categories.set(category, []);
+          categories.set(category, new Set());
         }
-        categories.get(category).push(cmd.config.name);
+        categories.get(category).add(cmd.config.name);
       });
 
-      let helpMessage = "📚 COMMAND LIST\n\n";
+      let helpMessage = `╭─────༺♢༻─────╮\n`;
+      helpMessage += `    📚 Command List\n`;
+      helpMessage += `╰─────༺♢༻─────╯\n\n`;
+
       for (const [category, cmds] of categories) {
-        helpMessage += `『 ${category.toUpperCase()} 』\n`;
-        helpMessage += cmds.map(cmd => `❯ ${cmd}`).join("\n");
-        helpMessage += "\n\n";
+        helpMessage += `『 ${category} 』\n`;
+        cmds.forEach(cmd => {
+          helpMessage += `❯ ${cmd}\n`;
+        });
+        helpMessage += '\n';
       }
+
+      helpMessage += `╭─────༺♢༻─────╮\n`;
+      helpMessage += `Total Commands: ${commands.size}\n`;
+      helpMessage += `Type ${config.prefix}help [cmd] for details\n`;
+      helpMessage += `╰─────༺♢༻─────╯`;
 
       return api.sendMessage(helpMessage, threadID);
 
