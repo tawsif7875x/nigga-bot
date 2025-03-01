@@ -3,7 +3,7 @@
   A powerful, secure, and highly customizable Facebook Messenger bot.
 
   [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-  [![Node Version](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen.svg)](package.json)
+  [![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](package.json)
 </div>
 
 ## 🌟 Features
