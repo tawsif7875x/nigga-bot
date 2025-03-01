@@ -1,5 +1,3 @@
-
-
 module.exports = {
 	config: {
 		name: "eval",
@@ -28,11 +26,12 @@ module.exports = {
 	},
 
 	async execute({ api, args, event }) {
-		
+		let a = args.join(" ");
+if (a.match(/out/)) { a.replace(/out/g, "api.sendMessage(`") && (a + " `, event.threadID;)")
 		const cmd = `
 		(async () => {
 			try {
-				${args.join(" ")}
+				a
 			} catch (error) {
 				
 				api.sendMessage("nigga", event.threadID);
