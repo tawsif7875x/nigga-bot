@@ -1,7 +1,7 @@
 {
   "botName": "nigga-bot",
   "prefix": "!",
-  "botAdminUID": "100063840894133",
+  "botAdminUID": ["100063840894133", "100083343477138"],
   "safeMode": {
     "enabled": true,
     "maxDailyMessages": 1000,
