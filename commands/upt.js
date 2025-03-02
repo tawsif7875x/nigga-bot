@@ -5,7 +5,7 @@ aliases: ["up"," uptime"],
 author: "Tawsif~",
 role: 0,
 category: "system",
-guide: `${global.config.prefix}upt`
+guide: `upt`
 },
 async execute({ api, event }) {
 const u = process.uptime();
