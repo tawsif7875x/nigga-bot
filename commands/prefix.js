@@ -9,8 +9,9 @@ category: "no prefix",
 guide: `prefix`
 },
 onLoad: async function({ api, event, args }) {
-if (args[0] === "prefix") {
-api.sendMessage(`🌐 system prefix: ${config.prefix}\n🛸 your box chat prefix: ${config.prefix}`, event.threadID);
+  const t = args[0];
+if (t === "prefix") {
+api.sendMessage(`🌐 System prefix: ${config.prefix}\n🛸 Your box chat prefix: ${config.prefix}`, event.threadID);
 }
 }
 }
