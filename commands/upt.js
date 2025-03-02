@@ -2,10 +2,10 @@ module.exports = {
 config: {
 name: "upt",
 aliases: ["up"," uptime"],
-author: "Tawsif~"
+author: "Tawsif~",
 role: 0,
 category: "system",
-guide: `${global.config.prefix}`
+guide: `${global.config.prefix}upt`
 },
 async execute({ api, event }) {
 const u = process.uptime();
