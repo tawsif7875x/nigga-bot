@@ -1,7 +1,7 @@
 {
   "botName": "nigga-bot",
   "prefix": "!",
-  "botAdminUID": "100083343477138",
+  "botAdminUID": "100063840894133",
   "safeMode": {
     "enabled": true,
     "maxDailyMessages": 1000,
@@ -69,7 +69,7 @@
       "processInterval": 1000
     },
     "autoRestart": {
-      "enabled": true,
+      "enabled": false,
       "interval": 21600000,
       "memoryThreshold": 500,
       "uptimeThreshold": 43200000
