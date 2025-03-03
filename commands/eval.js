@@ -29,6 +29,8 @@ module.exports = {
 		let a = args.join(" ");
 		if (a.match(/out/)) {
 			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);";
+			} else { a = args.join(" ");
+			       }
 			const cmd = `
 			(async () => {
 				try {
@@ -38,6 +40,6 @@ module.exports = {
 				}
 			})()`;
 			eval(cmd);
-		}
+		
 	}
 };
