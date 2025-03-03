@@ -11,7 +11,7 @@ module.exports = {
     shortDescription: "Shows command list",
     longDescription: "Display all available commands or get info about a specific command",
     category: "system",
-    guide: "{prefix}help [command]"
+    guide: `${config.prefix}help [command]`
   },
 
   async execute({ api, event, args, commands }) {
@@ -26,18 +26,7 @@ module.exports = {
         }
 
         return api.sendMessage({
-          body: `╭────NAME────╮\n` +
-                ` ${command.config.name}\n` +
-                `╰───────────╯` +
-                `Version: ${command.config.version}\n` +
-                `Role: ${command.config.role}\n` +
-                `Category: ${command.config.category}\n` +
-                `Cooldown: ${command.config.countDown}s\n\n` +
-                `Description:\n${command.config.longDescription}\n\n` +
-                `Usage:\n${command.config.guide}\n\n` +
-                `╭────AUTHOR────╮\n` +
-                `${command.config.author}\n` +
-                `╰────────────╯`
+          body: `╭───『 Name 』───♡\n│ ${command.config.name}\n├───『 info 』───♡\n│ Description: ${command.config.shortDescription}\n│ Other names: ${command.config.aliases ?  Command.config.aliases.join(", ") : "Do not have"}\n│ Version: ${command.config.version || "1.0"}\n│ Role: ${command.config.role}\n│ Time per command: ${command.config.countDown || 1}s\n│ Author: ${command.config.author}\n├───『 Usage 』───♡\n│ ${command.config.guide}\n╰─────────────♡`
         }, threadID);
       }
 
@@ -51,28 +40,25 @@ module.exports = {
         categories.get(category).add(cmd.config.name);
       });
 
-      let helpMessage = `╭──────────╮\n`;
-      helpMessage += `    📚 Command List\n`;
-      helpMessage += `╰──────────╯\n\n`;
-
+      let helpMessage = ;
       for (const [category, cmds] of categories) {
-        helpMessage += `╭───『 ${category} 』\n`;
+        helpMessage += `╭──『 ${category} 』\n`;
         cmds.forEach(cmd => {
-          helpMessage += `♡ ${cmd}\n`;
+          helpMessage += `❯ ${cmd}\n`;
         });
         helpMessage += '\n';
       }
 
-      helpMessage += `╭──────────╮\n`;
+      helpMessage += `╭───『INFO』───╮\n`;
       helpMessage += `Total Commands: ${commands.size}\n`;
-      helpMessage += `Type ${config.prefix}help [cmd] for details\n`;
+      helpMessage += `Type ${config.prefix}help <cmd> for details\n`;
       helpMessage += `╰──────────╯`;
 
       return api.sendMessage(helpMessage, threadID);
 
     } catch (error) {
       console.error('[HELP COMMAND ERROR]:', error);
-      return api.sendMessage("❌ An error occurred!", threadID);
+      return api.sendMessage(`${error.message}`, threadID);
     }
   }
 };
