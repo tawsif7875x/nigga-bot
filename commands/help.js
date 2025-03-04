@@ -32,7 +32,7 @@ module.exports = {
 
       const categories = new Map();
       commands.forEach(cmd => {
-        const category = command.config.category.toUpperCase();
+        const category = cmd.config.category;
         if (!categories.has(category)) {
           categories.set(category, new Set());
         }
