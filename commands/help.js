@@ -57,7 +57,7 @@ module.exports = {
 
     } catch (error) {
       console.error('[HELP COMMAND ERROR]:', error);
-      return api.sendMessage("An error occurred while processing your request. Please try again later.", threadID);
+      return api.sendMessage(`${error.message}`, threadID);
     }
   }
 };
