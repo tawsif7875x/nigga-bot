@@ -44,15 +44,15 @@ module.exports = {
       for (const [category, cmds] of categories) {
         helpMessage += `╭──『 ${category} 』\n`;
         cmds.forEach(cmd => {
-          helpMessage += `❯ ${cmd}\n`;
+          helpMessage += `│ ♡${cmd}\n`;
         });
-        helpMessage += '\n';
+        helpMessage += '╰───────────◊';
       }
 
-      helpMessage += `╭───『INFO』───╮\n`;
-      helpMessage += `Total Commands: ${commands.size}\n`;
-      helpMessage += `Type ${config.prefix}help <cmd> for details\n`;
-      helpMessage += `╰──────────╯`;
+      helpMessage += `╭──『INFO』\n`;
+      helpMessage += `│ Commands: ${commands.size}\n`;
+      helpMessage += `│ ${config.prefix}help <cmd> for details\n`;
+      helpMessage += `╰───────────◊`;
 
       return api.sendMessage(helpMessage, threadID);
       }
