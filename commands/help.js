@@ -19,17 +19,6 @@ module.exports = {
     const commandName = args[0]?.toLowerCase();
 
     try {
-      if (commandName) {
-        const command = commands.get(commandName);
-        if (!command) {
-          return api.sendMessage("❌ Command not found!", threadID);
-        }
-
-        return api.sendMessage({
-          body: `╭───『 Name 』───♡\n│ ${command.config.name}\n├───『 info 』───♡\n│ Description: ${command.config.shortDescription}\n│ Other names: ${command.config.aliases ? command.config.aliases.join(", ") : "Do not have"}\n│ Version: ${command.config.version || "1.0"}\n│ Role: ${command.config.role}\n│ Time per command: ${command.config.countDown || 1}s\n│ Author: ${command.config.author}\n├───『 Usage 』───♡\n│ ${command.config.guide}\n╰─────────────♡`
-        }, threadID);
-      } else {
-
       const categories = new Map();
       commands.forEach(cmd => {
         const command = commands.get(commandName);
@@ -44,10 +33,7 @@ module.exports = {
       for (const [category, cmds] of categories) {
         helpMessage += `╭──『 ${category} 』\n`;
         cmds.forEach(cmd => {
-const cmd2 = cmds.name.sort();
-for(let i = 0; i < cmd2.length; i+=3) { const names = cmd2.slice(i, i + 3).map((item) => `♡${item}`);
-          helpMessage += `│ ${names.join(" ".repeat(Math.max(1, 5 - names.join("").length)))}\n`;
-}
+          helpMessage += `│ ♡${cmd}\n`;
         });
         helpMessage += '╰───────────◊';
       }
@@ -57,9 +43,10 @@ for(let i = 0; i < cmd2.length; i+=3) { const names = cmd2.slice(i, i + 3).map((
       helpMessage += `│ ${config.prefix}help <cmd> for details\n`;
       helpMessage += `╰───────────◊`;
 
-      return api.sendMessage(helpMessage, threadID);
-      }
+      // Adding three commands in a single line
+      helpMessage += `\nQuick Access: ${commands.slice(0, 3).map(cmd => cmd.config.name).join(', ')}`;
 
+      return api.sendMessage(helpMessage, threadID);
     } catch (error) {
       console.error('[HELP COMMAND ERROR]:', error);
       return api.sendMessage(`${error.message}`, threadID);
