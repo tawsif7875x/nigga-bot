@@ -44,7 +44,7 @@ module.exports = {
       for (const [category, cmds] of categories) {
         helpMessage += `╭──『 ${category} 』\n`;
         cmds.forEach(cmd => {
-const cmd2 = command.name.sort();
+const cmd2 = cmds.name.sort();
 for(let i = 0; i < cmd2.length; i+=3) { const names = cmd2.slice(i, i + 3).map((item) => `♡${item}`);
           helpMessage += `│ ${names.join(" ".repeat(Math.max(1, 5 - names.join("").length)))}\n`;
 }
