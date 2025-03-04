@@ -44,7 +44,7 @@ module.exports = {
       helpMessage += `╰───────────◊`;
 
       // Adding three commands in a single line
-      helpMessage += `\nQuick Access: ${commands.slice(0, 3).map(cmd => cmd.config.name).join(', ')}`;
+      helpMessage += `\nQuick Access: ${cmds.slice(0, 3).map(cmd => cmd.config.name).join(', ')}`;
 
       return api.sendMessage(helpMessage, threadID);
     } catch (error) {
