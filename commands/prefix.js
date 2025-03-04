@@ -6,9 +6,9 @@ aliases: [],
 author: "Tawsif~",
 role: 0,
 category: "no prefix",
-guide: `prefix`
+guide: "prefix"
 },
-onLoad: async execute({ api, event, args }) {
+onLoad async execute({ api, event, args }) {
   try {
   const t = event.body;
 if (t.match(/prefix/)) {
