@@ -5,7 +5,7 @@ config: {
 	author: "Tawsif~",
 	role: 0,
 },
- onLoad: function ({ api, event }) {
+ onLoad: function({ api, event }) {
 		const pathFile = `./restart.txt`;
 		if (fs.existsSync(pathFile)) {
 			const [tid, time] = fs.readFileSync(pathFile, "utf-8").split(" ");
@@ -14,7 +14,7 @@ config: {
 		}
 	},
 
-	execute: async exexute({ message, event, getLang }) {
+	async exexute({ message, event }) {
 		const pathFile = `./restart.txt`;
 		fs.writeFileSync(pathFile, `${event.threadID} ${Date.now()}`);
 		await api.sendMessage("🔄 | restarting", event.threadID);
