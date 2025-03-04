@@ -35,17 +35,13 @@ module.exports = {
         cmds.forEach(cmd => {
           helpMessage += `│ ♡${cmd}\n`;
         });
-        helpMessage += '╰───────────◊';
+        helpMessage += '╰───────────◊\n';
       }
 
       helpMessage += `╭──『INFO』\n`;
       helpMessage += `│ Commands: ${commands.size}\n`;
       helpMessage += `│ ${config.prefix}help <cmd> for details\n`;
       helpMessage += `╰───────────◊`;
-
-      // Adding three commands in a single line
-      helpMessage += `\nQuick Access: ${cmds.slice(0, 3).map(cmd => cmd.config.name).join(', ')}`;
-
       return api.sendMessage(helpMessage, threadID);
     } catch (error) {
       console.error('[HELP COMMAND ERROR]:', error);
