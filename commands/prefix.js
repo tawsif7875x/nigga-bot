@@ -8,7 +8,7 @@ role: 0,
 category: "no prefix",
 guide: `prefix`
 },
-async function({ api, event, args }) {
+onLoad: async execute({ api, event, args }) {
   try {
   const t = event.body;
 if (t.match(/prefix/)) {
