@@ -1,7 +1,8 @@
 module.exports = {
 config: {
-	name: "uid",
+	name: "unsend",
 	author: "Tawsif~",
+	category: "box chat",
 	role: 0,
 },
 async execute({ api, event }) {
