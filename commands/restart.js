@@ -14,7 +14,7 @@ config: {
 		}
 	},
 
-	onStart: async function ({ message, event, getLang }) {
+	execute: async exexute({ message, event, getLang }) {
 		const pathFile = `./restart.txt`;
 		fs.writeFileSync(pathFile, `${event.threadID} ${Date.now()}`);
 		await api.sendMessage("🔄 | restarting", event.threadID);
