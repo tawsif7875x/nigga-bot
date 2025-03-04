@@ -28,10 +28,11 @@ module.exports = {
         return api.sendMessage({
           body: `╭───『 Name 』───♡\n│ ${command.config.name}\n├───『 info 』───♡\n│ Description: ${command.config.shortDescription}\n│ Other names: ${command.config.aliases ? command.config.aliases.join(", ") : "Do not have"}\n│ Version: ${command.config.version || "1.0"}\n│ Role: ${command.config.role}\n│ Time per command: ${command.config.countDown || 1}s\n│ Author: ${command.config.author}\n├───『 Usage 』───♡\n│ ${command.config.guide}\n╰─────────────♡`
         }, threadID);
-      }
+      } else {
 
       const categories = new Map();
       commands.forEach(cmd => {
+        const command = commands.get(commandName);
         const category = cmd.config.category;
         if (!categories.has(category)) {
           categories.set(category, new Set());
@@ -54,6 +55,7 @@ module.exports = {
       helpMessage += `╰──────────╯`;
 
       return api.sendMessage(helpMessage, threadID);
+      }
 
     } catch (error) {
       console.error('[HELP COMMAND ERROR]:', error);
