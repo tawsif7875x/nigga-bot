@@ -66,7 +66,7 @@ module.exports = {
       }
     } catch (error) {
       console.error('[ADMIN COMMAND ERROR]:', error);
-      return api.sendMessage("❌ An error occurred!", threadID);
+      return api.sendMessage(`${error.message}`, threadID);
     }
   }
 };
