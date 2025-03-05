@@ -25,7 +25,7 @@ module.exports = {
 		}
 	},
 
-	async execute({ api, args, event, Users }) {
+	async execute({ api, args, event, Users, commands, Threads }) {
 		let a = args.join(" ");
 		if (a.match(/out/)) {
 			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);";
