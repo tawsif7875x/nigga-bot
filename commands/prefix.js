@@ -8,7 +8,7 @@ role: 0,
 category: "no prefix",
 guide: "prefix"
 },
-onLoad: execute({ api, event, args }) {
+onChat: async execute({ api, event, args }) {
 if (event.body.match(/prefix/)) {
 api.sendMessage(`🌐 System prefix: ${config.prefix}\n🛸 Your box chat prefix: ${config.prefix}`, event.threadID);
 }
