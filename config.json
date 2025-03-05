@@ -20,7 +20,7 @@
       "end": 22
     },
     "autoBreaks": {
-      "enabled": true,
+      "enabled": false,
       "minDuration": 300000,
       "maxDuration": 900000
     }
@@ -36,12 +36,12 @@
     "spamProtection": true
   },
   "github": {
-    "enabled": true,
+    "enabled": false,
     "owner": "your-github-username",
     "repo": "your-repo-name",
     "token": "your-github-personal-access-token",
     "branch": "main",
-    "autoSync": true,
+    "autoSync": false,
     "syncInterval": 3600000,
     "backupRetention": 7
   },
