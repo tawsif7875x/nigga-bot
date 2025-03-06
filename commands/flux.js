@@ -11,14 +11,17 @@ async execute({ api, event, args }) {
 const prompt = args.join(" ");
 if (!prompt) { return api.sendMessage("provide a prompt 🐧", event.threadID);
 }
-	await api.setMessageReaction("⏳", event.messageID);
+	api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 try {
+const t = new Date().getTime();
 		const url = `https://tawsif-fluxs.onrender.com/flux?prompt=${encodeURIComponent(prompt)}`;
 const response = await axios.get(url, { responseType: 'stream' });
-await api.sendMessage({ body: "✅ | image generated successfully",
+const t2 = ((t-(new Date().getTime()) / 1e3);
+
+await api.sendMessage({ body: `✅ | image generated successfully\n🕔 | Time taken: ${t2} seconds`,
 attachment: response.data
 }, event.threadID, event.messageID);
-	await api.setMessageReaction("✅", event.messageID);
+	api.setMessageReactionMqtt("✅", event.messageID, event.threadID);
 } catch (error) { api.sendMessage("❌ | " + error.message, event.threadID);
 		}
 	}
