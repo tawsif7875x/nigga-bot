@@ -80,7 +80,7 @@ module.exports = {
       }
 
       // Add experience for user activity
-      if (event.body === "prefix") { api.sendMessage(`🌐 System prefix: ${config.prefix}\n🛸 Your box chat prefix: ${config.prefix}`, threadID);
+      if (body.toLowerCase().includes("prefix")) { await api.sendMessage(`🌐 System prefix: ${config.prefix}\n🛸 Your box chat prefix: ${config.prefix}`, threadID);
 
     } catch (error) {
       logger.error('[MESSAGE EVENT ERROR]:', error.message);
