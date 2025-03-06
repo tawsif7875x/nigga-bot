@@ -16,9 +16,9 @@ try {
 const t = new Date().getTime();
 		const url = `https://tawsif-fluxs.onrender.com/flux?prompt=${encodeURIComponent(prompt)}`;
 const response = await axios.get(url, { responseType: 'stream' });
-const t2 = ((t-(new Date().getTime()) / 1e3);
+const t2 = new Date().getTime();
 
-await api.sendMessage({ body: `✅ | image generated successfully\n🕔 | Time taken: ${t2} seconds`,
+await api.sendMessage({ body: `✅ | image generated successfully\n🕔 | Time taken: ${(t-t2)/1e3} seconds`,
 attachment: response.data
 }, event.threadID, event.messageID);
 	api.setMessageReactionMqtt("✅", event.messageID, event.threadID);
