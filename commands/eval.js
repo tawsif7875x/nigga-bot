@@ -12,9 +12,7 @@ module.exports = {
 	async execute({ api, args, event, Users, Threads, commands }) {
 		let a = args.join(" ");
 		if (a.match(/out/)) {
-			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);";
-		} else { a = args.join(" ");
-		       }
+			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);"} else { a = args.join(" ");}
 		const cmd = `
 			(async () => {
 				try {
