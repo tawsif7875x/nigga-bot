@@ -1,9 +1,9 @@
 {
   "botName": "nigga-bot",
-  "prefix": "!",
+  "prefix": ",",
   "botAdminUID": "100063840894133",
   "safeMode": {
-    "enabled": true,
+    "enabled": false,
     "maxDailyMessages": 1000,
     "minMessageInterval": 2000,
     "maxMessageInterval": 5000,
@@ -26,7 +26,7 @@
     }
   },
   "database": {
-    "backupEnabled": true,
+    "backupEnabled": false,
     "backupInterval": 3600000
   },
   "moderation": {
@@ -46,13 +46,13 @@
     "backupRetention": 7
   },
   "performance": {
-    "cacheEnabled": true,
+    "cacheEnabled": false,
     "cacheTimeout": 300000,
-    "maxConcurrentCommands": 5,
+    "maxConcurrentCommands": 10,
     "commandQueueSize": 100,
     "messageRateLimit": {
-      "enabled": true,
-      "windowMs": 60000,
+      "enabled": false,
+      "windowMs": 0,
       "max": 10
     },
     "memory": {
