@@ -8,9 +8,10 @@ module.exports = {
     category: "no prefix",
     guide: "prefix"
   },
-  onLoad: async function execute({ api, event, args }) {
-    if (event.body.match(/prefix/)) {
-      api.sendMessage(`🌐 System prefix: ${config.prefix}\n🛸 Your box chat prefix: ${config.prefix}`, event.threadID);
+   async execute({ api, event, args }) {
+const p = args[0];
+     if (!p) { return api.sendMessage("provide a new prefix to change current one", event.threadID);
+             } else { config.prefix = ``${p}``; && api.sendMessage(`✅ | successfully changed prefix to: ${p}`, event.threadID);
     }
   }
 }
