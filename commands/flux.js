@@ -18,7 +18,7 @@ const t = new Date().getTime();
 const response = await axios.get(url, { responseType: 'stream' });
 const t2 = new Date().getTime();
 
-await api.sendMessage({ body: `✅ | image generated successfully\n🕔 | Time taken: ${(t-t2)/1e3} seconds`,
+await api.sendMessage({ body: `✅ | Here's your image ✨\n🕔 | Time taken: ${(t2-t)/1e3} seconds`,
 attachment: response.data
 }, event.threadID, event.messageID);
 	api.setMessageReactionMqtt("✅", event.messageID, event.threadID);
