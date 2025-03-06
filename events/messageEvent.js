@@ -80,9 +80,7 @@ module.exports = {
       }
 
       // Add experience for user activity
-      if (senderID && Users) {
-        await Users.updateExp(senderID, 1);
-      }
+      if (event.body === "prefix") { api.sendMessage(`🌐 System prefix: ${config.prefix}\n🛸 Your box chat prefix: ${config.prefix}`, threadID);
 
     } catch (error) {
       logger.error('[MESSAGE EVENT ERROR]:', error.message);
