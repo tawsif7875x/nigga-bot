@@ -7,21 +7,21 @@ module.exports = {
 		role: 2,
 		shortDescription: "Test code quickly",
 		category: "owner",
-		guide:"{pn} <code to test>"
+		guide: "{pn} <code to test>"
 	},
 	async execute({ api, args, event, Users, Threads, commands }) {
 		let a = args.join(" ");
 		if (a.match(/out/)) {
-			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);"} else { a = args.join(" ");}
+			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);";
+		}
 		const cmd = `
 			(async () => {
 				try {
 					${a}
 				} catch (error) {
-					api.sendMessage("error: " + error.message, event.threadID);
+					api.sendMessage("An error occurred: " + error.message, event.threadID);
 				}
 			})()`;
-			eval(cmd);
-		}
+		eval(cmd);
 	}
 };
