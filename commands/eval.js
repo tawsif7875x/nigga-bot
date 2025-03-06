@@ -20,7 +20,7 @@ module.exports = {
 				try {
 					${a}
 				} catch (error) {
-					api.sendMessage("❌ | " + error.message, event.threadID);
+					api.sendMessage("error: " + error.message, event.threadID);
 				}
 			})()`;
 			eval(cmd);
