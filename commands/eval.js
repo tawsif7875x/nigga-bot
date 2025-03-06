@@ -13,12 +13,14 @@ module.exports = {
 		let a = args.join(" ");
 		if (a.match(/out/)) {
 			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);";
-			const cmd = `
+		} else { a = args.join(" ");
+		       }
+		const cmd = `
 			(async () => {
 				try {
 					${a}
 				} catch (error) {
-					api.sendMessage("error:" + error.message, event.threadID);
+					api.sendMessage("" + error.message, event.threadID);
 				}
 			})()`;
 			eval(cmd);
