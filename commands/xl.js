@@ -18,7 +18,7 @@ const t = new Date().getTime();
 		const url = `https://tawsifs-xl.onrender.com/xl?prompt=${encodeURIComponent(prompt)}`;
 const response = await axios.get(url);
 const response2 = await axios.get(response.data.imageUrl, { responseType: 'arraybuffer'});
-const w = await fs.writeFileSync(response2, "./xl.png");
+const w = await fs.writeFile("./xl.png", response2.data);
 
 const t2 = new Date().getTime();
 
