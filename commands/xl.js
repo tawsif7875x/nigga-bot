@@ -19,7 +19,7 @@ const t = new Date().getTime();
 const response = await axios.get(url);
 	const imageUrl = response.data.imageUrl;
 const response2 = await axios.get(imageUrl, { responseType: 'arraybuffer'});
-const w = fs.writeFile('./xl.png', response2.data);
+const w = fs.writeFileSync('./xl.png', Buffer.from(response2.data), 'binary');
 
 const t2 = new Date().getTime();
 
