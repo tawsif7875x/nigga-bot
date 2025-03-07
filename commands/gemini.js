@@ -12,7 +12,7 @@ let prompt = args.join(" ");
 if (!prompt) { prompt = "hi";
 }
 let url = `https://gemini-api-v4.onrender.com/gemini?query=${encodeURIComponent(prompt)}&uid=${event.senderID}`;
-if (event.messageReply) { url = `https://gemini-api-v4.onrender.com/gemini/vision?query=${encodeURIComponent(prompt)}&url=${event.messageReply.attachments[0].url}&type=image`;
+if (event.messageReply) { url = `https://gemini-api-v4.onrender.com/gemini/vision?query=${encodeURIComponent(prompt)}&url=${encodeURIComponent(event.messageReply.attachments[0].url)}&type=image`;
 }
 try {
 const response = await axios.get(url);
