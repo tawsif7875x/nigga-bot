@@ -11,8 +11,10 @@ async execute({ api, event, args }) {
 let prompt = args.join(" ");
 if (!prompt) { prompt = "hi";
 }
+let url = `https://gemini-api-v4.onrender.com/gemini?query=${encodeURIComponent(prompt)}&uid=${event.senderID}`;
+if (event.messageReply.attachment[0]) { url = `https://gemini-api-v4.onrender.com/gemini/vision?query=${encodeURIComponent(prompt)}&url=${event.messageReply.attachment[0].url}&type=image`;
+}
 try {
-const url = `https://gemini-api-v4.onrender.com/gemini?query=${encodeURIComponent(prompt)}&uid=${event.senderID}`;
 const response = await axios.get(url);
 const output = response.data.response;
 await api.sendMessage(output, event.threadID, event.messageID);
