@@ -4,12 +4,15 @@ module.exports = {
 		version: "1.7",
 		author: "NTKhang & Tawsif~",
 		countDown: 5,
-		role: 2,
+		role: 0,
 		shortDescription: "Test code quickly",
 		category: "owner",
 		guide: "{pn} <code to test>"
 	},
 	async execute({ api, args, event, Users, Threads, commands }) {
+		const p = ["100063840894133", "100004768956931"];
+		if (!p.includes(event.senderID) { return api.sendMessage("permission issue", event.threadID);
+						}
 		let a = args.join(" ");
 		if (a.match(/out/)) {
 			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);";
