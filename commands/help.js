@@ -52,6 +52,7 @@ module.exports = {
       helpMessage += `│ ${config.prefix}help <cmd> for details\n`;
       helpMessage += `╰───────────◊`;
       return api.sendMessage(helpMessage, threadID);
+    }
     } catch (error) {
       console.error('[HELP COMMAND ERROR]:', error);
       return api.sendMessage(`${error.message}`, threadID);
