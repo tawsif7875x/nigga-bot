@@ -1,5 +1,4 @@
 const config = require('../config.json');
-
 module.exports = {
   config: {
     name: "help",
@@ -19,6 +18,16 @@ module.exports = {
     const commandName = args[0]?.toLowerCase();
 
     try {
+      if (commandName) {
+        const command = commands.get(commandName);
+        if (!command) {
+          return api.sendMessage("❌ Command not found!", threadID);
+        }
+
+        return api.sendMessage({
+          body: `╭───『 Name 』───♡\n│ ${command.config.name}\n├───『 info 』───♡\n│ Description: ${command.config.shortDescription}\n│ Other names: ${command.config.aliases ? command.config.aliases.join(", ") : "Do not have"}\n│ Version: ${command.config.version || "1.0"}\n│ Role: ${command.config.role}\n│ Time per command: ${command.config.countDown || 1}s\n│ Author: ${command.config.author}\n├───『 Usage 』───♡\n│ ${command.config.guide}\n╰─────────────♡`
+        }, threadID);
+      } else {
       const categories = new Map();
       commands.forEach(cmd => {
         const command = commands.get(commandName);
