@@ -8,6 +8,7 @@ config: {
 	category: "image",
 	countDown: 5,
 	role: 0,
+	guide: "xl <prompt> --ar=<ratio>"
 },
 async execute({ api, event, args }) {
 const prompt = args.join(" ");
