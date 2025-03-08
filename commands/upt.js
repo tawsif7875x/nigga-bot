@@ -19,7 +19,7 @@ async execute({ api, event }) {
     const edits = ["🕝","🕟","🕡","🕢",`${uptimeString}`];
 let msg = await api.sendMessage("🕧", event.threadID);
 
-edits.forEach((d, i) => setTimeout(() => api.editMessage(`${d}`, msg.messageID), 650 * i));
+edits.forEach((d, i) => setTimeout(() => api.editMessage(`${d}`, msg.messageID), 800 * i));
     } catch (error) {
       console.error(error);
       api.sendMessage("An error occurred while retrieving data.", event.threadID);
