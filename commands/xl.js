@@ -10,7 +10,7 @@ config: {
 },
 async execute({ api, event, args }) {
 const prompt = args.join(" ");
-if (!prompt) { return api.sendMessage("provide a prompt 🐧", event.threadID);
+if (!prompt) { return api.sendMessage("❌ | provide a prompt", event.threadID);
 }
 	api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 try {
