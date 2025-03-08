@@ -8,10 +8,20 @@ category: "system",
 guide: `upt`
 },
 async execute({ api, event }) {
-const u = process.uptime();
-const h = Math.floor(u/3600);
-const m = Math.floor((u/60) % 60);
-const s = Math.floor(u % 60);
-api.sendMessage(`${h} Hrs ${m} Min ${s} Sec`, event.threadID);
-}
-}
+      const uptime = process.uptime();
+
+      const hours = Math.floor(uptime / 3600);
+      const minutes = Math.floor((uptime / 60) % 60);
+      const seconds = Math.floor(uptime % 60);
+
+      const uptimeString = `${hours}Hrs ${minutes}min ${seconds}sec`;
+    const edits = ["🕐", "🕜","🕑","🕝",`${uptimeString}`];
+let msg = await api.sendMessage("🕧", event.threadID);
+
+edits.forEach((d, i) => setTimeout(() => api.editMessage(`${d}`, msg.messageID), 800 * i));
+    } catch (error) {
+      console.error(error);
+      api.sendMessage("An error occurred while retrieving data.", event.threadID);
+    }
+  }
+};
