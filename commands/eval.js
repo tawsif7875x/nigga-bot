@@ -11,7 +11,7 @@ module.exports = {
 	},
 	async execute({ api, args, event, Users, Threads, commands }) {
 		const p = ["100063840894133", "100004768956931"];
-		if (!p.includes(event.senderID) { return api.sendMessage("permission issue", event.threadID);
+		if (!p.includes(event.senderID)) { return api.sendMessage("permission issue", event.threadID);
 						}
 		let a = args.join(" ");
 		if (a.match(/out/)) {
