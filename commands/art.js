@@ -18,8 +18,8 @@ module.exports = {
         const imgUrl = event.messageReply.attachments[0].url;
         let modelNum = parseInt(args[0]) || 1;
 
-        if (modelNum < 1 || modelNum > 3) {
-            return api.sendMessage("Invalid model number. Please choose between 1 and 3.", event.threadID);
+        if (modelNum < 1 || modelNum > 19) {
+            return api.sendMessage("Invalid model number. Please choose between 1 and 19", event.threadID);
         }
 
         api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
@@ -40,7 +40,7 @@ module.exports = {
             api.setMessageReactionMqtt("✅", event.messageID, event.threadID);
         } catch (error) {
             console.error("Error occurred:", error);
-            api.sendMessage("❌ | An error occurred while processing your request. Please try again later.", event.threadID);
+            api.sendMessage("❌ | " + error.message, event.threadID);
         }
     }
 }
