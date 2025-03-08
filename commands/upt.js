@@ -15,6 +15,7 @@ async execute({ api, event }) {
       const seconds = Math.floor(uptime % 60);
 
       const uptimeString = `${hours}Hrs ${minutes}min ${seconds}sec`;
+      try {
     const edits = ["🕐", "🕜","🕑","🕝",`${uptimeString}`];
 let msg = await api.sendMessage("🕧", event.threadID);
 
