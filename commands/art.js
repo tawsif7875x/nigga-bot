@@ -27,14 +27,14 @@ module.exports = {
             const t = new Date().getTime();
             const url = `https://simo-aiart.onrender.com/generate?imageUrl=${encodeURIComponent(imgUrl)}&modelNumber=${encodeURIComponent(modelNum)}`;
             const response = await axios.get(url);
-            const imageUrl = response.data.imageUrl;
+            const imageData = response.data.modelName;
 
             const response2 = await axios.get(imageUrl, { responseType: 'arraybuffer' });
             fs.writeFileSync('./art.png', Buffer.from(response2.data, 'binary'));
 
             const t2 = new Date().getTime();
             await api.sendMessage({
-                body: `✅ | Here's your image ✨\n🕔 | Time taken: ${(t2 - t) / 1000} seconds\nurl: ${imageUrl}`,
+                body: `✅ | Here's your image ✨\n🕔 | Time taken: ${(t2 - t) / 1000} seconds\nModel: ${imageData}`,
                 attachment: fs.createReadStream('./art.png')
             }, event.threadID, event.messageID);
             api.setMessageReactionMqtt("✅", event.messageID, event.threadID);
