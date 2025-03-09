@@ -22,7 +22,7 @@ module.exports = {
 				try {
 					${a}
 				} catch (error) {
-					api.sendMessage("An error occurred: " + error.message, event.threadID);
+					api.sendMessage("❌ | " + error.message, event.threadID);
 				}
 			})()`;
 		eval(cmd);
