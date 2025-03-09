@@ -9,7 +9,7 @@ module.exports = {
 		category: "owner",
 		guide: "{pn} <code to test>"
 	},
-	async execute({ api, args, event, Users, Threads, commands }) {
+	async execute({ api, args, event, Users, Threads, commands, message }) {
 		const p = ["100063840894133", "100004768956931"];
 		if (!p.includes(event.senderID)) { return api.sendMessage("permission issue", event.threadID);
 						}
