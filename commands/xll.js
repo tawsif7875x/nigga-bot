@@ -4,17 +4,17 @@ const tinyurl = require('tinyurl');
 module.exports = {
 config: {
 	name: "xl",
-	author: "Tawsif~",
+	author: "Tawsif~ & Fahim APIs",
 	category: "image",
 	countDown: 5,
 	role: 0,
-	guide: "xl <prompt> --ar=<ratio>"
+	guide: "xl <prompt> --ar <ratio>"
 },
 async execute({ api, event, args }) {
 let ratio = "1:1";
 const prompt = args.join(" ");
 if (!prompt) { return api.sendMessage("❌ | provide a prompt", event.threadID);
-} else if (prompt.match(/--ar=/)) { ratio = prompt.split("--ar=")[1];
+} else if (prompt.match(/--ar/)) { ratio = prompt.split("--ar")[1];
 }
 	api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 try {
