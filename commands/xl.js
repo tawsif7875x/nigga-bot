@@ -3,7 +3,7 @@ const fs = require('fs');
 const tinyurl = require('tinyurl');
 module.exports = {
 config: {
-	name: "xl",
+	name: "xl31",
 	author: "Tawsif~",
 	category: "image",
 	countDown: 5,
