@@ -12,6 +12,7 @@ let user = event.senderID;
 if (!text) {
 if (event.messageReply) {
 user = event.messageReply.senderID;
+	} 
 } else { user = text;}
 	try {
 const avatar = `https://graph.facebook.com/${user}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
