@@ -137,7 +137,5 @@ async function initBot() {
 initBot();
 
 // Handle exit
-process.on('SIGINT', () => {
-  console.log(successGradient('\n\nShutting down Nexus Bot...\n'));
-  process.exit(0);
-});
+process.on('unhandledRejection', error => console.log(error));
+process.on('uncaughtException', error => console.log(error));
