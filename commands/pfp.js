@@ -16,7 +16,7 @@ user = event.messageReply.senderID;
 	try {
 const avatar = `https://graph.facebook.com/${user}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
 const response = await axios.get(avatar, {responseType: 'stream'});
-await api.sendMessage({attachment: response.data }, event.messageID, event.threadID);
+await api.sendMessage({attachment: response.data }, event.threadID, event.messageID);
 } catch (error) {
 api.sendMessage("❌ | " + error.message, event.threadID, event.messageID);
 		}
