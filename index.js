@@ -126,12 +126,7 @@ async function initBot() {
 
       handleEvent(api, message);
     });
-    async function({ api, event }) {
-    if (event.body === (require('./config.json')).prefix) {
-      api.sendMessage(`The command you are using doesn’t exist. Type ${config.prefix}help to see all available commands`, event.threadID);
-    }
-    }
-
+    
   } catch (error) {
     clearInterval(loadingInterval);
     console.log(gradient(['#DC2626', '#EF4444'])('\n❌ Error: ') + error.message);
