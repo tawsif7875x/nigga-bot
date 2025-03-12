@@ -60,9 +60,9 @@ module.exports = {
     let model = fs.readFileSync("./model.js", 'utf8');
     let model2 = fs.readFileSync("./model2.js", 'utf8');
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
-    let prompt = args.join(" ") || "hi";
-
-    if (args[0] === "set" || args[0] === "set2") {
+    let prompt = args.join(" ");
+if (!prompt) { return api.sendMessage("provide a query", event.threadID);
+} else if (args[0] === "set" || args[0] === "set2") {
       const modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
       if (tawsif.includes(event.senderID)) {
         if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) {
