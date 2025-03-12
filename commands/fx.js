@@ -7,15 +7,14 @@ config: {
 	category: "image",
 	countDown: 5,
 	role: 0,
-	guide: "fx <index num> | <reply>"
+	guide: "fx <effect index> | <reply>"
 },
 async execute({ api, event, args }) {
-const imgUrl = event.messageReply.attachments[0].url;
 if (!event.messageReply) { return api.sendMessage("❌ | reply to an image", event.threadID);
 }
-let modelNum = parseInt(args[0]);
-if (!modelNum) { modelNum = 1;
-} else if (modelNum < 1 || modelNum > 41) { return api.sendMessage("❌ | invalid effect index number", event.threadID);
+const imgUrl = event.messageReply.attachments[0].url;
+let modelNum = parseInt(args[0]) || 1;
+if (modelNum < 1 || modelNum > 41) { return api.sendMessage("❌ | invalid effect index number", event.threadID);
 }
 	api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 try {
