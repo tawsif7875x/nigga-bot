@@ -56,10 +56,16 @@ module.exports = {
       }
     }
 
+    const tawsif = "100063840894133";
     let model = fs.readFileSync("./model.js", 'utf8');
+    let model2 = fs.readFileSync("./model2.js", 'utf8');
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
-    const prompt = args.join(" ");
+    let prompt = args.join(" ");
+    if (!prompt) { prompt = "hi";
+                 }
     let sys = model;
+    if (!tawsif.includes(event.senderID)) { sys = model2;
+                                          }
     const result = await ai({
       prompt: prompt,
       name: name,
