@@ -85,6 +85,6 @@ module.exports = {
       model: "llama"
     });
 
-    await api.sendMessage(result.result || "No response received.", event.threadID);
+    await api.sendMessage(result.data.result || "No response received.", event.threadID);
   }
 }
