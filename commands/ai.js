@@ -48,8 +48,8 @@ module.exports = {
           }
         });
         return res.data;
-      } catch (err) {
-        console.error("Error occurred while fetching AI response:", err);
+      } catch (error) {
+        console.error("Error occurred while fetching AI response:", error);
         return { 
           result: `error: ${error.message}`
         };
@@ -60,26 +60,22 @@ module.exports = {
     let model = fs.readFileSync("./model.js", 'utf8');
     let model2 = fs.readFileSync("./model2.js", 'utf8');
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
-    let prompt = args.join(" ");
-    if (!prompt) { prompt = "hi";
-                 } else if (args[0] === "set") {
+    let prompt = args.join(" ") || "hi";
+
+    if (args[0] === "set" || args[0] === "set2") {
+      const modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
       if (p.includes(event.senderID)) {
-        if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) { fs.writeFileSync("./model.js", args[1]);
-                     } else { return api.sendMessage("provide a model name", event.threadID);
-                            }
-      } else { return api.sendMessage("you don't have permission to change model", event.threadID);
-             }
-                 } else if (args[0] === "set2") {
-      if (p.includes(event.senderID)) {
-        if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) { fs.writeFileSync("./model2.js", args[1]);
-                     } else { return api.sendMessage("provide a model name", event.threadID);
-                            }
-      } else { return api.sendMessage("you don't have permission to change model", event.threadID);
-  }
-          }
-    let sys = model;
-    if (!tawsif.includes(event.senderID)) { sys = model2;
-                                          }
+        if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) {
+          fs.writeFileSync(modelFile, args[1]);
+        } else {
+          return api.sendMessage("Provide a valid model name", event.threadID);
+        }
+      } else {
+        return api.sendMessage("You don't have permission to change the model", event.threadID);
+      }
+    }
+
+    let sys = tawsif.includes(event.senderID) ? model : model2;
     const result = await ai({
       prompt: prompt,
       name: name,
