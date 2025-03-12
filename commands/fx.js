@@ -15,7 +15,7 @@ if (!event.messageReply) { return api.sendMessage("reply something", event.threa
 }
 let modelNum = parseInt(args[0]);
 if (!modelNum) { modelNum = 1;}
-} else if ((modelNum < 1) && (modelNum > 41)) { return api.sendMessage("invalid fx number", event.threadID);
+} else if (modelNum < 1 || modelNum > 41) { return api.sendMessage("invalid effect index number", event.threadID);
 }
 	api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 try {
