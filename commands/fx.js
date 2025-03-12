@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+const t = require('tinyurl');
 module.exports = {
 config: {
 	name: "fx",
@@ -12,7 +13,7 @@ config: {
 async execute({ api, event, args }) {
 if (!event.messageReply) { return api.sendMessage("❌ | reply to an image", event.threadID);
 }
-const imgUrl = event.messageReply.attachments[0].url;
+const imgUrl = await t.shorten(event.messageReply.attachments[0].url);
 let modelNum = parseInt(args[0]) || 1;
 if (modelNum < 1 || modelNum > 41) { return api.sendMessage("❌ | invalid effect index number", event.threadID);
 }
