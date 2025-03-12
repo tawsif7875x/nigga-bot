@@ -57,12 +57,14 @@ module.exports = {
     }
     
     const tawsif = "100063840894133";
+    let model = fs.readFileSync("./model.js", 'utf8');
+    let model2 = fs.readFileSync("./model2.js", 'utf8');
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
     let prompt = args.join(" ") || "hi";
 
-    if (args[0].match(/set/) || args[0].match(/set2/)) {
-      const modelFile = args[0].match(/set/) ? "./model.js" : "./model2.js";
-      if (p.includes(event.senderID)) {
+    if (args[0] === "set" || args[0] === "set2") {
+      const modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
+      if (tawsif.includes(event.senderID)) {
         if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) {
           fs.writeFileSync(modelFile, args[1]);
         } else {
@@ -72,8 +74,7 @@ module.exports = {
         return api.sendMessage("You don't have permission to change the model", event.threadID);
       }
     }
-    let model = fs.readFileSync("./model.js", 'utf8');
-    let model2 = fs.readFileSync("./model2.js", 'utf8');
+
     let sys = tawsif.includes(event.senderID) ? model : model2;
     const result = await ai({
       prompt: prompt,
