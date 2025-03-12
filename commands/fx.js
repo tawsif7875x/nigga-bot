@@ -11,11 +11,11 @@ config: {
 },
 async execute({ api, event, args }) {
 const imgUrl = event.messageReply.attachments[0].url;
-if (!event.messageReply) { return api.sendMessage("reply something", event.threadID);
+if (!event.messageReply) { return api.sendMessage("❌ | reply to an image", event.threadID);
 }
 let modelNum = parseInt(args[0]);
-if (!modelNum) { modelNum = 1;}
-} else if (modelNum < 1 || modelNum > 41) { return api.sendMessage("invalid effect index number", event.threadID);
+if (!modelNum) { modelNum = 1;
+} else if (modelNum < 1 || modelNum > 41) { return api.sendMessage("❌ | invalid effect index number", event.threadID);
 }
 	api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 try {
