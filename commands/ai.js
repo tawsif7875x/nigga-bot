@@ -51,21 +51,15 @@ module.exports = {
       } catch (err) {
         console.error("Error occurred while fetching AI response:", err);
         return { 
-          result: "An error occurred while processing your request." 
+          result: `error: ${error.message}`
         };
       }
     }
 
     let model = fs.readFileSync("./model.js", 'utf8');
-    let model2 = fs.readFileSync("./model2.js", 'utf8');
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
     const prompt = args.join(" ");
     let sys = model;
-
-    if (event.senderID === "100063840894133") { 
-      sys = model2;
-    }
-
     const result = await ai({
       prompt: prompt,
       name: name,
