@@ -55,14 +55,28 @@ module.exports = {
         };
       }
     }
-
+    
     const tawsif = "100063840894133";
     let model = fs.readFileSync("./model.js", 'utf8');
     let model2 = fs.readFileSync("./model2.js", 'utf8');
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
     let prompt = args.join(" ");
     if (!prompt) { prompt = "hi";
-                 }
+                 } else if (args[0] === "set") {
+      if (p.includes(event.senderID)) {
+        if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) { fs.writeFileSync("./model.js", args[1]);
+                     } else { return api.sendMessage("provide a model name", event.threadID);
+                            }
+      } else { return api.sendMessage("you don't have permission to change model", event.threadID);
+             }
+                 } else if (args[0] === "set2") {
+      if (p.includes(event.senderID)) {
+        if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) { fs.writeFileSync("./model2.js", args[1]);
+                     } else { return api.sendMessage("provide a model name", event.threadID);
+                            }
+      } else { return api.sendMessage("you don't have permission to change model", event.threadID);
+  }
+          }
     let sys = model;
     if (!tawsif.includes(event.senderID)) { sys = model2;
                                           }
