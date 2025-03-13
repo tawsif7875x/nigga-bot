@@ -18,7 +18,7 @@ config: {
 },
 async execute({ api, event, args }) {
   const link = `${await baseApiUrl()}/baby`;
-  const dipto = args.join(" ").toLowerCase();
+  const dipto = args.join(" ");
   const uid = event.senderID;
   try {
     if (!args[0]) {
@@ -29,8 +29,8 @@ async execute({ api, event, args }) {
     const d = (await axios.get(`${link}?text=${dipto}&senderID=${uid}&font=1`)).data.reply;
     await api.sendMessage(d, event.threadID);
   } catch (error) {
-    console.log(error);
-    api.sendMessage("Check console for error", event.threadID, event.messageID);
+    console.log(error.message);
+    api.sendMessage("error: " + error.message, event.threadID, event.messageID);
   }
 }
 }
