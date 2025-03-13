@@ -13,10 +13,12 @@ module.exports = {
   },
   
   async execute({ event, api, args }) {
-    try {
       const userText = args.join(" ");
       const uid1 = event.senderID;
-      let uid = event.type === "message_reply" ? event.messageReply.senderID : uid1);
+      let uid;
+if (event.messageReply) { uid = event.messageReply.senderID
+} else { uid = uid1;
+}
 
       const avatarUrl = `https://graph.facebook.com/${uid}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
       const userName = (await api.getUserInfo(uid))[uid].name;
@@ -27,10 +29,10 @@ module.exports = {
         : `https://www.noobs-api.rf.gd/dipto/fbfakechat?name=${userName}&dp=${encodeURIComponent(avatarUrl)}&text=${userText}`;
 
       const response = await axios.get(chatImageUrl, { responseType: 'arraybuffer' });
-      fs.writeFileSync("./q.png", Buffer.from(response.data, 'binary'));
-      await api.sendMessage({ attachment: fs.createReadStream("./q.png") });
+     const writer = fs.writeFileSync("./q.png", Buffer.from(response.data, 'binary'));
+      await api.sendMessage({ attachment: fs.createReadStream("./q.png") }, event.threadID);
 } catch (error) { 
-      api.sendMessage("❌ |" + error.message, event.threadID);
+      api.sendMessage("❌ |" + error.message, event.threadID, event.messageID);
     }
   }
 };
