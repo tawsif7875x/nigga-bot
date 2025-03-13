@@ -71,6 +71,7 @@ module.exports = {
       if (tawsif.includes(event.senderID)) {
         if (modelText.match(/lover|toxic|default|horny|helpful|friendly/)) {
           fs.writeFileSync(modelFile, modelText);
+          return api.sendMessage(`changed assistant to ${modelText}`, event.threadID);
         } else {
           return api.sendMessage("Please provide a valid model name.", event.threadID);
         }
