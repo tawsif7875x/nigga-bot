@@ -9,7 +9,7 @@ module.exports = {
     guide: "ai <query>"
   },
   async execute({ api, event, args }) {
-  async function ai({ 
+    async function ai({ 
       prompt, 
       id, 
       name, 
@@ -57,13 +57,14 @@ module.exports = {
     }
     
     const tawsif = "100063840894133";
-    let model = fs.readFileSync("./model.js");
-    let model2 = fs.readFileSync("./model2.js");
+    let model = fs.readFileSync("./model.js", 'utf8');
+    let model2 = fs.readFileSync("./model2.js", 'utf8');
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
-let modelFile = ;
-let modelText = args[1];
+    let modelFile;
+    let modelText = args[1];
     let prompt = args.join(" ");
-        if (!prompt) { 
+    
+    if (!prompt) { 
       return api.sendMessage("Please provide a query.", event.threadID);
     } else if (args[0] === "set" || args[0] === "set2") {
       modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
@@ -78,9 +79,7 @@ let modelText = args[1];
       }
     }
 
-    let sys = model2;
-if (tawsif.includes(event.senderID)) { sys = model;
-}
+    let sys = tawsif.includes(event.senderID) ? model : model2;
     const result = await ai({
       prompt: prompt,
       name: name,
