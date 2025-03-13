@@ -83,7 +83,7 @@ async function handleCommand(api, event) {
     });
   } catch (error) {
     logger.error(`Error executing ${command.config.name}:`, error);
-    api.sendMessage("❌ An error occurred while executing this command.", threadID);
+    api.sendMessage("❌ | " + error.message, threadID);
   }
 }
 
