@@ -6,13 +6,14 @@ module.exports = {
     aliases: ["fchat", "fakec"],
     version: "1.0",
     role: 1,
-    author: "Dipto",
+    author: "Tawsif~ & Dipto APIs",
     description: "Get a fake chat of user",
     category: "fun",
     countDown: 10,
   },
   
   async execute({ event, api, args }) {
+try {
       const userText = args.join(" ");
       const uid1 = event.senderID;
       let uid;
