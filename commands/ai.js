@@ -51,28 +51,28 @@ module.exports = {
       } catch (error) {
         console.error("Error occurred while fetching AI response:", error);
         return { 
-          result: "an error occurred"
+          result: `Error: ${error.response ? error.response.data.message : error.message}`
         };
       }
     }
     
     const tawsif = "100063840894133";
-    let model = fs.readFileSync("./model.js", 'utf8');
-    let model2 = fs.readFileSync("./model2.js", 'utf8');
+    let model = fs.readFileSync("./model.js");
+    let model2 = fs.readFileSync("./model2.js");
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
     let prompt = args.join(" ");
-if (!prompt) { return api.sendMessage("provide a query", event.threadID);
-} else if (args[0] === "set" || args[0] === "set2") {
+        if (!prompt) { 
+      return api.sendMessage("Please provide a query.", event.threadID);
+    } else if (args[0] === "set" || args[0] === "set2") {
       const modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
       if (tawsif.includes(event.senderID)) {
         if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) {
           fs.writeFileSync(modelFile, args[1]);
-api.sendMessage(`changed model to ${args[1]}`, event.threadID);
         } else {
-          return api.sendMessage("Provide a valid model name", event.threadID);
+          return api.sendMessage("Please provide a valid model name.", event.threadID);
         }
       } else {
-        return api.sendMessage("You don't have permission to change the model", event.threadID);
+        return api.sendMessage("You do not have permission to change the model.", event.threadID);
       }
     }
 
@@ -86,6 +86,6 @@ api.sendMessage(`changed model to ${args[1]}`, event.threadID);
       model: "llama"
     });
 
-    await api.sendMessage(result.data.result || "No response received.", event.threadID);
+    await api.sendMessage(result.result || "No response received.", event.threadID);
   }
 }
