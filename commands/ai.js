@@ -9,7 +9,7 @@ module.exports = {
     guide: "ai <query>"
   },
   async execute({ api, event, args }) {
-    async function ai({ 
+  async function ai({ 
       prompt, 
       id, 
       name, 
@@ -17,7 +17,7 @@ module.exports = {
       gender, 
       model, 
       nsfw = true, 
-      link = ""
+      link = undefined
     }) {
       try {
         const res = await axios.post("https://apis-v71.onrender.com/g4o_v2", {
@@ -31,7 +31,7 @@ module.exports = {
           }],
           gender,
           nsfw,
-          url: link || undefined,
+          url: link,
           config: [{
             gemini: {
               apikey: "AIzaSyAqigdIL9j61bP-KfZ1iz6tI9Q5Gx2Ex_o",
@@ -60,14 +60,16 @@ module.exports = {
     let model = fs.readFileSync("./model.js");
     let model2 = fs.readFileSync("./model2.js");
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
+let modelFile = ;
+let modelText = args[1];
     let prompt = args.join(" ");
         if (!prompt) { 
       return api.sendMessage("Please provide a query.", event.threadID);
     } else if (args[0] === "set" || args[0] === "set2") {
-      const modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
+      modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
       if (tawsif.includes(event.senderID)) {
-        if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) {
-          fs.writeFileSync(modelFile, args[1]);
+        if (modelText.match(/lover|toxic|default|horny|helpful|friendly/)) {
+          fs.writeFileSync(modelFile, modelText);
         } else {
           return api.sendMessage("Please provide a valid model name.", event.threadID);
         }
@@ -76,7 +78,9 @@ module.exports = {
       }
     }
 
-    let sys = tawsif.includes(event.senderID) ? model : model2;
+    let sys = model2;
+if (tawsif.includes(event.senderID)) { sys = model;
+}
     const result = await ai({
       prompt: prompt,
       name: name,
