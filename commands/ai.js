@@ -51,7 +51,7 @@ module.exports = {
       } catch (error) {
         console.error("Error occurred while fetching AI response:", error);
         return { 
-          result: `error: ${error.message}`
+          result: "an error occurred"
         };
       }
     }
@@ -67,6 +67,7 @@ if (!prompt) { return api.sendMessage("provide a query", event.threadID);
       if (tawsif.includes(event.senderID)) {
         if (args[1].match(/lover|toxic|default|horny|helpful|friendly/)) {
           fs.writeFileSync(modelFile, args[1]);
+api.sendMessage(`changed model to ${args[1]}`, event.threadID);
         } else {
           return api.sendMessage("Provide a valid model name", event.threadID);
         }
