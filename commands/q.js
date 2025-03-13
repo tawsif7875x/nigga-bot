@@ -16,7 +16,7 @@ module.exports = {
       const userText = args.join(" ");
       const uid1 = event.senderID;
       let uid;
-if (event.messageReply) { uid = event.messageReply.senderID
+if (event.messageReply) { uid = event.messageReply.senderID;
 } else { uid = uid1;
 }
 
@@ -24,13 +24,14 @@ if (event.messageReply) { uid = event.messageReply.senderID
       const userName = (await api.getUserInfo(uid))[uid].name;
       const ci = event?.messageReply?.attachments[0]?.url;
 
-      const chatImageUrl = ci 
+      let chatImageUrl = ci 
         ? `https://www.noobs-api.rf.gd/dipto/fbfakechat?name=${userName}&dp=${encodeURIComponent(avatarUrl)}&text=${userText}&chatimg=${encodeURIComponent(ci)}`
         : `https://www.noobs-api.rf.gd/dipto/fbfakechat?name=${userName}&dp=${encodeURIComponent(avatarUrl)}&text=${userText}`;
 
       const response = await axios.get(chatImageUrl, { responseType: 'arraybuffer' });
      const writer = fs.writeFileSync("./q.png", Buffer.from(response.data, 'binary'));
-      await api.sendMessage({ attachment: fs.createReadStream("./q.png") }, event.threadID);
+      await api.sendMessage({ attachment: fs.createReadStream("./q.png")
+}, event.threadID, event.messageID);
 } catch (error) { 
       api.sendMessage("❌ |" + error.message, event.threadID, event.messageID);
     }
