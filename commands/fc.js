@@ -1,7 +1,5 @@
-
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
-const path = require('path');
 
 module.exports = {
     config: {
@@ -14,8 +12,8 @@ module.exports = {
     },
     async execute({ api, event, args }) {
         try {
-            async function drawTheme(ctx, themePath, h) {
-                const img = await loadImage(themePath);
+            async function drawTheme(ctx, themeUrl, h) {
+                const img = await loadImage(themeUrl);
                 const width = 1000;
                 const height = h;
                 const startX = (img.width - width) / 2;
@@ -26,8 +24,7 @@ module.exports = {
 
                 ctx.drawImage(img, startX, startY, width, height, 0, 0, width, height);
             }
-
-function drawChatBubble(ctx, text, x, y, reduce, zoomFactor, leftCornerTopRadius = 28 * 2, leftCornerBottomRadius = 28 * 2) {
+            function drawChatBubble(ctx, text, x, y, reduce, zoomFactor, leftCornerTopRadius = 28 * 2, leftCornerBottomRadius = 28 * 2) {
     const padding = 13 * zoomFactor;
     const lineHeight = 60;
     let bubbleRadius = 28 * zoomFactor;
@@ -132,20 +129,21 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
     });
 
     return totalHeight;
-}
+                    }
+                                
 
             async function generateChatImage() {
                 const canvas = createCanvas(1000, 600);
                 const ctx = canvas.getContext('2d');
                 const texts = ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
-                const themePath = path.join(__dirname, "pizza.png");
+                const themeUrl = "https://example.com/path/to/your/image.png"; // Updated to URL
 
-                const avatarUrl = `https://graph.facebook.com/${event.senderID}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
+                const avatarUrl = `https://graph.facebook.com/${event.senderID}/picture?width=512&height=512&access_token=YOUR_ACCESS_TOKEN`;
                 const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
                 const totalBubbleHeight = drawMultipleChatBubbles(ctx, texts, 140, 50, null, 2);
                 const h = totalBubbleHeight + 130;
 
-                await drawTheme(ctx, themePath, h);
+                await drawTheme(ctx, themeUrl, h);
                 drawMultipleChatBubbles(ctx, texts, 140, 50, null, 2);
 
                 const profileY = h - 75;
@@ -167,3 +165,4 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
         }
     }
 };
+    
