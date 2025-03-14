@@ -11,7 +11,7 @@ module.exports = {
    async execute({ api, event, args }) {
 const p = args[0];
      if (!p) { return api.sendMessage("provide a new prefix to change the current one", event.threadID);
-             } else { config.prefix = `${p}`; && api.sendMessage(`✅ | successfully changed prefix to: ${p}`, event.threadID);
+             } else { config.prefix = `"${p}",`; && api.sendMessage(`✅ | successfully changed prefix to: ${p}`, event.threadID);
     }
   }
 }
