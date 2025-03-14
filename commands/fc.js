@@ -136,9 +136,9 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
                 const canvas = createCanvas(1000, 600);
                 const ctx = canvas.getContext('2d');
                 const texts = ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
-                const themeUrl = "https://example.com/path/to/your/image.png"; // Updated to URL
+                const themeUrl = "https://i.imgur.com/bi4AF7I.png"; // Updated to URL
 
-                const avatarUrl = `https://graph.facebook.com/${event.senderID}/picture?width=512&height=512&access_token=YOUR_ACCESS_TOKEN`;
+                const avatarUrl = `https://graph.facebook.com/${event.senderID}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
                 const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
                 const totalBubbleHeight = drawMultipleChatBubbles(ctx, texts, 140, 50, null, 2);
                 const h = totalBubbleHeight + 130;
