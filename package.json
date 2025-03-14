@@ -13,7 +13,9 @@
     "sqlite3": "^5.1.6",
     "@octokit/rest": "^19.0.13",
     "gradient-string": "^2.0.2",
-    "tinyurl": "^1.1.7"
+    "tinyurl": "^1.1.7",
+    "canvas": "^3.1.0",
+    "path": "^0.12.7"
   },
   "engines": {
     "node": ">=22.0.0"
