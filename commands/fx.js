@@ -20,7 +20,7 @@ if (modelNum < 1 || modelNum > 41) { return api.sendMessage("❌ | invalid effec
 	api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 try {
 const t = new Date().getTime();
-		const url = `https://www.arch2devs.ct.ws/api/imageFx?effectIndex=${modelNum}&imageUrl=${encodeURIComponent(imgUrl)}`;
+		const url = `https://www.arch2devs.ct.ws/api/imageFx?effectIndex=${modelNum}&imageUrl=${imgUrl}`;
 const response = await axios.get(url);
 	const imageUrl = response.data.imageUrl;
 const response2 = await axios.get(imageUrl, { responseType: 'arraybuffer'});
