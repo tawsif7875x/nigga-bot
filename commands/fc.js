@@ -1,6 +1,5 @@
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
-const fetch = require('node-fetch');
 
 module.exports = {
     config: {
@@ -157,7 +156,7 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
 
                 const pngStream = canvas.createPNGStream();
                 pngStream.path = "fc.png";
-                f.createWriteStream("./fc.png", pngStream);
+                f.writeFileSync("./fc.png", pngStream);
                                 await api.sendMessage({ attachment: f.createReadStream("./fc.png")}, event.threadID);
                 
             }
