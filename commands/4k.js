@@ -1,4 +1,5 @@
 const axios = require('axios');
+const fs = require('fs');
 module.exports = {
     config: {
         name: "4k",
@@ -22,12 +23,13 @@ module.exports = {
             const response = await axios.get(url);
             const imageUrl = response.data.image;
 
-            const response2 = await axios.get(imageUrl, { responseType: 'stream' });
+            const response2 = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+            const w = fs.writeFileSync("./4k.png", Buffer.from(response2, 'binary'));
             
             const t2 = new Date().getTime();
             await api.sendMessage({
-                body: `✅ | Here's your image ✨\n🕔 | Time taken: ${(t2 - t) / 1000} seconds\nModel: ${response.data.modelName}`,
-                attachment: response2.data
+                body: `✅ | Here's your image ✨\n🕔 | Time taken: ${(t2 - t) / 1000} seconds`,
+                attachment: fs.createReadStream("./4k.png")
             }, event.threadID, event.messageID);
             api.setMessageReactionMqtt("✅", event.messageID, event.threadID);
         } catch (error) {
