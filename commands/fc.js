@@ -156,11 +156,12 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
 
                 const pngStream = canvas.createPNGStream();
                 pngStream.path = "fc.png";
-                return pngStream;
+                fs.crrateWriteStream("./fc.png", pngStream);
+                                await api.sendMessage({ attachment: fs.createReadStream("./fc.png")}, event.threadID);
+                
             }
 
-            const fcPng = await generateChatImage();
-await api.sendMessage({ attachment: fcPng }, event.threadID);
+            generateChatImage();
 
         } catch (error) {
             console.error(error);
