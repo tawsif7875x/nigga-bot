@@ -138,8 +138,8 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
                 const texts = ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
                 const themeUrl = "https://i.imgur.com/bi4AF7I.png"; // Updated to URL
 
-                const avatarUrl = `https://graph.facebook.com/${event.senderID}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
-                const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
+                const avatarUrl = `https://graph.facebook.com/100063840894133/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
+                const name = (await api.getUserInfo(100063840894133))[100063840894133].name;
                 const totalBubbleHeight = drawMultipleChatBubbles(ctx, texts, 140, 50, null, 2);
                 const h = totalBubbleHeight + 130;
 
@@ -155,7 +155,7 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
 
                 const pngStream = canvas.createPNGStream();
                 pngStream.path = "fc.png";
-                return: pngStream;
+                return pngStream;
             }
 
             const f = await generateChatImage();
