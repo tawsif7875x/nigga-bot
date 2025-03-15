@@ -20,7 +20,7 @@ module.exports = {
             const t = new Date().getTime();
             const url = `https://smfahim.onrender.com/4k?url=${encodeURIComponent(imgUrl)}`;
             const response = await axios.get(url);
-            const imageUrl = response.data.imageUrl;
+            const imageUrl = response.data.image;
 
             const response2 = await axios.get(imageUrl, { responseType: 'stream' });
             
