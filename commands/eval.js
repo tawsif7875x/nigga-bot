@@ -1,3 +1,5 @@
+const a = require('axios');
+const f = require('fs');
 module.exports = {
 	config: {
 		name: "eval",
