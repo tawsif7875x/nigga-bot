@@ -159,8 +159,8 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
                 return pngStream;
             }
 
-            const f = await generateChatImage();
-await api.sendMessage({ attachment: f }, event.threadID);
+            const fcPng = await generateChatImage();
+await api.sendMessage({ attachment: fcPng }, event.threadID);
 
         } catch (error) {
             console.error(error);
