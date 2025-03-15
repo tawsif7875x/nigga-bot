@@ -134,6 +134,7 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
                                 
 
             async function generateChatImage() {
+                const f = require ('fs');
                 const canvas = createCanvas(1000, 600);
                 const ctx = canvas.getContext('2d');
                 const texts = ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
@@ -156,8 +157,8 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
 
                 const pngStream = canvas.createPNGStream();
                 pngStream.path = "fc.png";
-                fs.createWriteStream("./fc.png", pngStream);
-                                await api.sendMessage({ attachment: fs.createReadStream("./fc.png")}, event.threadID);
+                f.createWriteStream("./fc.png", pngStream);
+                                await api.sendMessage({ attachment: f.createReadStream("./fc.png")}, event.threadID);
                 
             }
 
