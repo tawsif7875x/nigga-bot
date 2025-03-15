@@ -24,7 +24,7 @@ module.exports = {
             const imageUrl = response.data.image;
 
             const response2 = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-            const w = fs.writeFileSync("./4k.png", Buffer.from(response2, 'binary'));
+            const w = fs.writeFileSync("./4k.png", Buffer.from(response2.data, 'binary'));
             
             const t2 = new Date().getTime();
             await api.sendMessage({
