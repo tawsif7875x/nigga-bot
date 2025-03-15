@@ -11,7 +11,7 @@
   },
   "botBehavior": {
     "typing": {
-      "enabled": true,
+      "enabled": false,
       "minSpeed": 50,
       "maxSpeed": 100
     },
