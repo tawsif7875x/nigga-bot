@@ -9,6 +9,7 @@ config: {
 async execute({ api, event }) {
 const imageUrl = event.messageReply.attachments[0].thumbnailUrl;
 if (!event?.messageReply?.attachments[0]?.thumbnailUrl) { return api.sendMessage("reply to an image", event.threadID);
+}
 api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 setTimeout(() => {
 const response = await axios.get(imageUrl, {responseType: 'stream'});
