@@ -161,7 +161,7 @@ function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) 
                 
             }
 
-            generateChatImage();
+            const result = await generateChatImage();
 
         } catch (error) {
             console.error(error);
