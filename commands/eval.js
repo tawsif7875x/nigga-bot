@@ -46,7 +46,7 @@ module.exports = {
 				${args.join(" ")}
 			}
 			catch(err) {
-				out(err.stack);
+				out("❌ | " + err.message);
 			}
 		})()`; //F
 		eval(cmd);
