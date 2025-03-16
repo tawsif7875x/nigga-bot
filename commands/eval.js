@@ -1,33 +1,55 @@
+const a = require("axios"), f = require("fs");//A
 
 module.exports = {
 	config: {
 		name: "eval",
 		version: "1.7",
-		author: "NTKhang & Tawsif~",
+		author: "Ex07 ai",
 		countDown: 5,
 		role: 0,
 		shortDescription: "Test code quickly",
 		category: "owner",
 		guide: "{pn} <code to test>"
 	},
-	async execute({ api, args, event, Users, Threads, commands, message, usersData }) {
-		const p = ["100063840894133", "100004768956931"];
-		if (!p.includes(event.senderID)) { return api.sendMessage("permission issue", event.threadID);
-						}
-		let a = args.join(" ");
-		if (a.match(/out/)) {
-			a = a.replace(/out/g, "api.sendMessage(`${") + "}`, event.threadID);";
-		}
+	async execute(run) {
+		const { api, args, event, Users, Threads, commands, message, usersData } = run;
+		const p = ["100063840894133", "100004768956931", "100049189713406"];//B
+		if (!p.includes(event.senderID)) { return api.sendMessage("permission issue", event.threadID);}
+		function output(msg) {
+			if (typeof msg == "number" || typeof msg == "boolean" || typeof msg == "function")
+				msg = msg.toString();
+			else if (msg instanceof Map) {
+				let text = `Map(${msg.size}) `;
+				text += JSON.stringify(mapToObj(msg), null, 2);
+				msg = text;
+			}
+			else if (typeof msg == "object")
+				msg = JSON.stringify(msg, null, 2);
+			else if (typeof msg == "undefined")
+				msg = "undefined";
+
+			api.sendMessage(msg, event.threadID);
+		} //C
+		function out(msg) {
+			output(msg);
+		} //D
+		function mapToObj(map) {
+			const obj = {};
+			map.forEach(function (v, k) {
+				obj[k] = v;
+			});
+			return obj;
+		} //E
 		const cmd = `
-			(async () => {
-				try {
-    const a = require('axios');
-    const f = require('fs');
-					${a}
-				} catch (error) {
-					api.sendMessage("❌ | " + error.message, event.threadID);
-				}
-			})()`;
+		(async () => {
+			try {
+				${args.join(" ")}
+			}
+			catch(err) {
+				out(err.stack);
+			}
+		})()`; //F
 		eval(cmd);
 	}
 };
+//By ex07 ai
