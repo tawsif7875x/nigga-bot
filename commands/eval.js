@@ -1,5 +1,4 @@
-const a = require('axios');
-const f = require('fs');
+
 module.exports = {
 	config: {
 		name: "eval",
@@ -22,6 +21,8 @@ module.exports = {
 		const cmd = `
 			(async () => {
 				try {
+    const a = require('axios');
+    const f = require('fs');
 					${a}
 				} catch (error) {
 					api.sendMessage("❌ | " + error.message, event.threadID);
