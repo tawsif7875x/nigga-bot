@@ -126,6 +126,7 @@ async function handleCommand(api, event) {
       api,
       event,
       args,
+      message,
       commands,
       prefix: config.prefix,
       Users: global.Users,
