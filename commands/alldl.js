@@ -6,16 +6,18 @@ config: {
 	role: 0,
 	guide: "alldl <url> | <reply>"
 },
-async execute({ api, event }) {
+async execute({ api, event, args }) {
 try {
 let type = "sd";
 if ((args[1]).match(/hd/)) { type = "hd";
 }
 let videoUrl;
-if (args[0]) { videoUrl = args[0];
+if (args[0]) { 
+if ((args[0]).match(/.com/)) { videoUrl = args[0];
+} else { return api.sendMessage("provide or reply to a valid URL", event.threadID);
+}
 } else if (event.messageReply) { videoUrl = event.messageReply.body;
-				type = args[0] || sd;
-} else { return api.sendMessage("provide a valid URL", event.threadID);
+} else { return api.sendMessage("provide or reply to a valid URL", event.threadID);
 }
 api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 const apiUrl = `https://smfahim.onrender.com/download?url=${videoUrl}`
