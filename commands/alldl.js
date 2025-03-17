@@ -24,7 +24,7 @@ api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 const apiUrl = `https://smfahim.onrender.com/download?url=${videoUrl}`;
 const response = await axios.get(apiUrl);
 const vUrl = response.data.links[type];
-const v = await axios.get(response, {responseType: 'stream'});
+const v = await axios.get(vUrl, {responseType: 'stream'});
 await api.sendMessage({body: `${response.data.title}\nQuality: ${type.toUpperCase()}`, attachment: v.data }, event.threadID, event.messageID);
 } catch (error) {
 api.sendMessage("❌ | " + error.message, event.threadID, event.messageID);
