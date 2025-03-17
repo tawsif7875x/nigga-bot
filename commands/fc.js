@@ -1,5 +1,6 @@
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
+const path = require('path');
 const fetch = require('node-fetch');
 
 module.exports = {
@@ -17,16 +18,15 @@ module.exports = {
                 const img = await loadImage(themeUrl);
                 const width = 1000;
                 const height = h;
-                const startX = (img.width - width) / 2;
-                const startY = (img.height - height) / 2;
 
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.canvas.width = width;
                 ctx.canvas.height = height;
 
-                ctx.drawImage(img, startX, startY, width, height, 0, 0, width, height);
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.drawImage(img, 0, 0, width, height);
             }
 
-            function drawChatBubble(ctx, text, x, y, reduce, zoomFactor, leftCornerTopRadius = 28 * 2, leftCornerBottomRadius = 28 * 2) {
+            function drawChatBubble(ctx, text, x, y, zoomFactor, leftCornerTopRadius = 28 * 2, leftCornerBottomRadius = 28 * 2) {
                 const padding = 13 * zoomFactor;
                 const lineHeight = 60;
                 let bubbleRadius = 28 * zoomFactor;
@@ -62,7 +62,7 @@ module.exports = {
                 const bubbleHeight = lines.length * lineHeight + padding * 1.6;
 
                 const textStartX = x + padding;
-                const textStartY = y + padding;
+                const textStartY = y + padding + fontSize;
 
                 ctx.beginPath();
                 ctx.moveTo(x + bubbleRadius, y);
@@ -106,7 +106,7 @@ module.exports = {
                 ctx.restore();
             }
 
-            function drawMultipleChatBubbles(ctx, texts, x, startY, reduce, zoomFactor = 1) {
+            function drawMultipleChatBubbles(ctx, texts, x, startY, zoomFactor = 1) {
                 let currentY = startY;
                 let totalHeight = 0;
 
@@ -125,7 +125,7 @@ module.exports = {
                         TCR = 5;
                         BCR = 5;
                     }
-                    const bubbleHeight = drawChatBubble(ctx, text, x, currentY, reduce, zoomFactor, TCR, BCR);
+                    const bubbleHeight = drawChatBubble(ctx, text, x, currentY, zoomFactor, TCR, BCR);
                     currentY += bubbleHeight + 6;
                     totalHeight += bubbleHeight;
                 });
@@ -137,15 +137,21 @@ module.exports = {
                 const canvas = createCanvas(1000, 600);
                 const ctx = canvas.getContext('2d');
                 const texts = ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
-                const themeUrl = "https://i.imgur.com/bi4AF7I.png"; // Updated to URL
+                const themeUrl = "https://i.imgur.com/bi4AF7I.png";
 
-                const avatarUrl = `https://graph.facebook.com/100063840894133/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
-                const name = (await api.getUserInfo(100063840894133))[100063840894133].name;
-                const totalBubbleHeight = drawMultipleChatBubbles(ctx, texts, 140, 50, null, 2);
+                const accessToken = process.env.FACEBOOK_ACCESS_TOKEN; // Use environment variable
+                const avatarUrl = `https://graph.facebook.com/100063840894133/picture?width=512&height=512&access_token=${accessToken}`;
+                let name = "User";
+                try {
+                    name = (await api.getUserInfo(100063840894133))[100063840894133].name;
+                } catch (error) {
+                    console.error("Failed to fetch user info:", error);
+                }
+
+                const totalBubbleHeight = drawMultipleChatBubbles(ctx, texts, 140, 50, 2);
                 const h = totalBubbleHeight + 130;
 
                 await drawTheme(ctx, themeUrl, h);
-                drawMultipleChatBubbles(ctx, texts, 140, 50, null, 2);
 
                 const profileY = h - 75;
                 await drawProfile(ctx, avatarUrl, 80, profileY, 80);
@@ -154,20 +160,21 @@ module.exports = {
                 ctx.fillStyle = "#848482";
                 ctx.fillText(name.split(" ")[0], 180, 10);
 
+                const filePath = path.join(__dirname, "fc.png");
                 const buffer = canvas.toBuffer('image/png');
-                fs.writeFileSync("./fc.png", buffer);
+                fs.writeFileSync(filePath, buffer);
 
-                console.log("Image generated successfully!"); // Debugging log
+                console.log("Image generated successfully!");
 
                 await api.sendMessage({ 
-                    attachment: fs.createReadStream("./fc.png")
+                    attachment: fs.createReadStream(filePath)
                 }, event.threadID);
             }
 
             generateChatImage();
 
         } catch (error) {
-            console.error("Error generating image:", error.stack); // More detailed error logging
+            console.error("Error generating image:", error.stack);
             api.sendMessage("❌ | " + error.message, event.threadID);
         }
     }
