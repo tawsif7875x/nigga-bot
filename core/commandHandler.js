@@ -46,13 +46,6 @@ async function handleCommand(api, event) {
     }
   }
   function message(api, event) {
-	async function sendMessageError(err) {
-		if (typeof err === "object" && !err.stack)
-			err = utils.removeHomeDir(JSON.stringify(err, null, 2));
-		else
-			err = utils.removeHomeDir(`${err.name || err.error}: ${err.message}`);
-		return await api.sendMessage(utils.getText("utils", "errorOccurred", err), event.threadID, event.messageID);
-	}
 	return {
 		send: async (form, callback) => {
 			try {
