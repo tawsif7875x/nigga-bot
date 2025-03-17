@@ -9,8 +9,8 @@ config: {
 async execute({ api, event, args }) {
 try {
 let type;
-if (!args[1]) { type = "sd";
-} else if ((args[1]).match(/hd/)) { type = "hd";
+if (!args[1]) { type = "data.links.sd";
+} else if ((args[1]).match(/hd/)) { type = "data.links.hd";
 }
 let videoUrl;
 if (args[0]) { 
