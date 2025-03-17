@@ -170,7 +170,6 @@ module.exports = {
                     attachment: fs.createReadStream(filePath)
                 }, event.threadID);
             }
-
             generateChatImage();
 
         } catch (error) {
