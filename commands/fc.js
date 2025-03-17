@@ -161,7 +161,7 @@ module.exports = {
                 }, event.threadID);
             }
 
-            await generateChatImage();
+            generateChatImage();
 
         } catch (error) {
             console.error(error);
