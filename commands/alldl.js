@@ -9,8 +9,8 @@ config: {
 async execute({ api, event, args }) {
 try {
 let type;
-if (!args[1]) { type = "data.links.sd";
-} else if ((args[1]).match(/hd/)) { type = "data.links.hd";
+if (!args[1]) { type = "sd";
+} else if ((args[1]).match(/hd/)) { type = "hd";
 }
 let videoUrl;
 if (args[0]) { 
@@ -22,9 +22,8 @@ if ((args[0]).match(/com/)) { videoUrl = args[0];
 }
 api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 const apiUrl = `https://smfahim.onrender.com/download?url=${videoUrl}`;
-const response = await axios.get(apiUrl);
-const vUrl = response[type];
-const v = await axios.get(vUrl, {responseType: 'stream'});
+const response = (await axios.get(apiUrl)).data.links[type];
+const v = await axios.get(response, {responseType: 'stream'});
 await api.sendMessage({attachment: v.data }, event.threadID, event.messageID);
 } catch (error) {
 api.sendMessage("❌ | " + error.message, event.threadID, event.messageID);
