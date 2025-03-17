@@ -4,7 +4,7 @@ config: {
 	name: "alldl",
 	author: "Tawsif~ & Fahim APIs",
 	role: 0,
-	guide: "alldl <url> | <reply>"
+	guide: "alldl <url> <sd/hd> | <reply>"
 },
 async execute({ api, event, args }) {
 try {
@@ -24,7 +24,7 @@ api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 const apiUrl = `https://smfahim.onrender.com/download?url=${videoUrl}`;
 const response = (await axios.get(apiUrl)).data.links[type];
 const v = await axios.get(response, {responseType: 'stream'});
-await api.sendMessage({attachment: v.data }, event.threadID, event.messageID);
+await api.sendMessage({body: `${response.data.title}\nQuality: ${type.toUpperCase()}`, attachment: v.data }, event.threadID, event.messageID);
 } catch (error) {
 api.sendMessage("❌ | " + error.message, event.threadID, event.messageID);
 		}
