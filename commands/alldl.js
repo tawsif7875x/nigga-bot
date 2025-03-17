@@ -14,11 +14,12 @@ if ((args[1]).match(/hd/)) { type = "hd";
 let videoUrl;
 if (args[0]) { videoUrl = args[0];
 } else if (event.messageReply) { videoUrl = event.messageReply.body;
+				type = args[0] || sd;
 } else { return api.sendMessage("provide a valid URL", event.threadID);
 }
 api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 const apiUrl = `https://smfahim.onrender.com/download?url=${videoUrl}`
-const response = (await axios.get(videoUrl)).`${type}`;
+const response = (await axios.get(videoUrl))[type];
 const v = await axios.get(response, {responseType: 'stream'});
 await api.sendMessage({attachment: v.data }, event.threadID, event.messageID);
 } catch (error) {
