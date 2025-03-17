@@ -1,7 +1,7 @@
 # Nexus Bot
 
 <p align="center">
-  <img src="https://i.imgur.com/YXDN62y.png" alt="Nexus Bot Logo" width="200" height="200">
+  <img src="https://i.ibb.co.com/DHTHkYh3/Nexus-Lab-Update.png" alt="Nexus Bot Logo" width="200" height="200">
 </p>
 
 <p align="center">
