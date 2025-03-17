@@ -13,10 +13,10 @@ if (event?.messageReply?.attachments[0]?.thumbnailUrl) { imageUrl = event.messag
 } else { return api.sendMessage("reply to an image", event.threadID);
 }
 api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
-setTimeout(() => {
 const response = await axios.get(imageUrl, {responseType: 'stream'});
-}, 5000);
-await api.sendMessage({body: "✅ | Here's your image✨", attachment: response.data }, event.threadID, event.messageID);
+setTimeout(() => {
+await api.sendMessage({body: "✅ | Here's your -4k image✨", attachment: response.data }, event.threadID, event.messageID);
+}, 3000);
 } catch (error) {
 api.sendMessage("❌ | " + error.message, event.threadID, event.messageID);
 		}
