@@ -46,6 +46,7 @@ class Analytics {
       analyticsDb.run(
         `INSERT INTO command_usage (command, user_id, thread_id, execution_time, success) 
          VALUES (?, ?, ?, ?, ?)`,
+
         [command, userId, threadId, executionTime, success ? 1 : 0],
         (err) => err ? reject(err) : resolve()
       );
@@ -57,6 +58,7 @@ class Analytics {
       analyticsDb.run(
         `INSERT INTO user_activity (user_id, thread_id, activity_type, details) 
          VALUES (?, ?, ?, ?)`,
+
         [userId, threadId, activityType, JSON.stringify(details)],
         (err) => err ? reject(err) : resolve()
       );
@@ -68,6 +70,7 @@ class Analytics {
       analyticsDb.run(
         `INSERT INTO error_logs (error_type, error_message, stack_trace, additional_data) 
          VALUES (?, ?, ?, ?)`,
+
         [errorType, errorMessage, stackTrace, JSON.stringify(additionalData)],
         (err) => err ? reject(err) : resolve()
       );
@@ -104,6 +107,63 @@ class Analytics {
       analyticsDb.all(query, [userId], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
+      });
+    });
+  }
+
+  static async getPerformanceStats(timeRange = '24h') {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT 
+          strftime('%Y-%m-%d %H:00:00', timestamp) as hour,
+          AVG(execution_time) as avg_response_time,
+          COUNT(*) as request_count
+        FROM command_usage
+        WHERE timestamp >= datetime('now', '-${timeRange}')
+        GROUP BY hour
+        ORDER BY hour DESC`;
+
+      analyticsDb.all(query, [], (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+  }
+
+  static async getErrorStats(timeRange = '24h') {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT 
+          error_type,
+          COUNT(*) as count,
+          MAX(timestamp) as last_occurrence
+        FROM error_logs
+        WHERE timestamp >= datetime('now', '-${timeRange}')
+        GROUP BY error_type
+        ORDER BY count DESC`;
+
+      analyticsDb.all(query, [], (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+  }
+
+  static async getDailyStats() {
+    const today = new Date().toISOString().split('T')[0];
+    
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT
+          COUNT(DISTINCT user_id) as unique_users,
+          COUNT(*) as total_commands,
+          AVG(execution_time) as avg_response_time
+        FROM command_usage
+        WHERE date(timestamp) = date('${today}')`;
+
+      analyticsDb.get(query, [], (err, stats) => {
+        if (err) reject(err);
+        else resolve(stats);
       });
     });
   }

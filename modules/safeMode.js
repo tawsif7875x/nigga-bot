@@ -2,6 +2,22 @@ const config = require('../config.json');
 const logger = require('../utils/logger');
 const rateLimit = require('../utils/rateLimit');
 
+// Add human behavior simulation
+const humanBehavior = {
+  typingSpeed: {
+    min: 50,
+    max: 200
+  },
+  readingTime: {
+    min: 1000,
+    max: 5000
+  },
+  replyDelay: {
+    min: 2000,
+    max: 10000
+  }
+};
+
 let isInBreak = false;
 let dailyMessageCount = 0;
 
@@ -76,4 +92,15 @@ setInterval(() => {
   }
 }, 60000);
 
-module.exports = { processMessage };
+function simulateHumanTyping(messageLength) {
+  const typingSpeed = Math.random() * 
+    (humanBehavior.typingSpeed.max - humanBehavior.typingSpeed.min) + 
+    humanBehavior.typingSpeed.min;
+  return Math.floor((messageLength / typingSpeed) * 60 * 1000);
+}
+
+// Add to exports
+module.exports = { 
+  processMessage, 
+  simulateHumanTyping
+};

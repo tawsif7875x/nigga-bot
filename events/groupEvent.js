@@ -1,4 +1,5 @@
 const logger = require('../utils/logger');
+const messageUtils = require('../utils/messageUtils');
 const dbManager = require('../modules/dbManager');
 const config = require('../config.json');
 
@@ -7,7 +8,7 @@ module.exports = {
     name: "groupEvent",
     version: "1.0.0",
     author: "NexusTeam",
-    description: "Handles all group-related events"
+    description: "Handles group events like member add/remove"
   },
 
   async execute({ api, event }) {
@@ -17,55 +18,68 @@ module.exports = {
     }
 
     try {
-      // Safely destructure with default values
-      const {
-        type = '',
-        logMessageType = '',
-        logMessageData = {},
-        threadID = '',
-        participantIDs = [],
-        author = ''
-      } = event;
+      // Only handle relevant event types
+      if (event.type !== "event") return;
+
+      const { threadID, logMessageType, logMessageData } = event;
+
+      // Member added to group
+      if (logMessageType === "log:subscribe") {
+        const addedUserIDs = logMessageData.addedParticipants.map(user => user.userFbId);
+
+        // Skip if the bot was added
+        if (addedUserIDs.includes(api.getCurrentUserID())) return;
+
+        // Get user info of added participants
+        const userInfo = await new Promise((resolve, reject) => {
+          api.getUserInfo(addedUserIDs, (err, info) => {
+            if (err) reject(err);
+            else resolve(info);
+          });
+        });
+
+        // Format welcome message with mentions
+        const mentions = addedUserIDs.map(id => ({
+          id: id,
+          tag: `@${userInfo[id].firstName || 'User'}`
+        }));
+
+        const welcomeText = `Welcome to the group ${mentions.map(m => m.tag).join(', ')}! 👋`;
+
+        // Send welcome message with properly formatted mentions
+        await messageUtils.sendMessage(
+          api,
+          messageUtils.createMention(welcomeText, mentions),
+          threadID
+        );
+      }
+
+      // Member removed from group
+      if (logMessageType === "log:unsubscribe") {
+        const removedUserID = logMessageData.leftParticipantFbId;
+
+        // Skip if the bot was removed
+        if (removedUserID === api.getCurrentUserID()) return;
+
+        // Get user info of removed participant
+        const userInfo = await new Promise((resolve, reject) => {
+          api.getUserInfo(removedUserID, (err, info) => {
+            if (err) reject(err);
+            else resolve(info);
+          });
+        });
+
+        const name = userInfo[removedUserID]?.name || 'Someone';
+
+        // Send goodbye message
+        await api.sendMessage(`${name} has left the group. 👋`, threadID);
+      }
 
       // Handle different event types
-      switch (logMessageType || type) {
-        case 'log:subscribe':
-          if (!threadID || !logMessageData.addedParticipants) break;
-          
-          try {
-            const threadInfo = await api.getThreadInfo(threadID);
-            await dbManager.createGroup(threadID, threadInfo.threadName);
-
-            for (const participant of logMessageData.addedParticipants) {
-              await dbManager.createUser(participant.userFbId, participant.fullName);
-              api.sendMessage({
-                body: `Welcome ${participant.fullName} to the group! 👋`,
-                mentions: [{
-                  tag: participant.fullName,
-                  id: participant.userFbId
-                }]
-              }, threadID);
-            }
-          } catch (err) {
-            logger.error('Error handling new member:', err);
-          }
-          break;
-
-        case 'log:unsubscribe':
-          if (!threadID || !logMessageData.leftParticipantFbId) break;
-          
-          try {
-            const userInfo = await api.getUserInfo(logMessageData.leftParticipantFbId);
-            const name = userInfo[logMessageData.leftParticipantFbId]?.name || 'Member';
-            api.sendMessage(`Goodbye ${name}! 👋`, threadID);
-          } catch (err) {
-            logger.error('Error handling member leave:', err);
-          }
-          break;
-
+      switch (logMessageType) {
         case 'log:thread-name':
           if (!threadID || !logMessageData.name) break;
-          
+
           try {
             await dbManager.updateGroupInfo(threadID, { name: logMessageData.name });
             api.sendMessage(`Group name changed to: ${logMessageData.name}`, threadID);
@@ -86,15 +100,15 @@ module.exports = {
 
         case 'log:thread-call':
           if (!threadID || !logMessageData.event) break;
-          
-          const callMessage = logMessageData.event === 'group_call_started' 
+
+          const callMessage = logMessageData.event === 'group_call_started'
             ? `A group call has started! 📞`
             : `The group call has ended! 📞`;
           api.sendMessage(callMessage, threadID);
           break;
       }
     } catch (error) {
-      logger.error('[GROUP EVENT ERROR]:', error);
+      logger.error("Error in groupEvent handler:", error);
     }
   }
 };

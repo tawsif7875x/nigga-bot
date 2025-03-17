@@ -1,40 +1,49 @@
-const config = require('../config.json');
+const logger = require('../utils/logger');
 
 module.exports = {
-  config: {
-    name: "introMessage",
-    version: "1.0.0",
-    author: "NexusTeam",
-    description: "Send welcome message when bot joins new group"
-  },
+    config: {
+        name: "introMessage",
+        version: "1.0.0",
+        description: "Send intro messages to new participants"
+    },
+    execute: async function ({ api, event, config }) {
+        try {
+            // Only process add_participants events
+            if (!event || event.type !== 'event' || event.logMessageType !== 'log:subscribe') return;
 
-  async execute({ api, event, Threads }) {
-    const { threadID } = event;
-    try {
-      const threadInfo = await Threads.getData(threadID);
-      const welcomeMessage = {
-        body: `👋 𝗛𝗘𝗟𝗟𝗢 𝗘𝗩𝗘𝗥𝗬𝗢𝗡𝗘!\n\n` +
-              `I am ${global.config.botName}, your friendly messenger bot.\n` +
-              `Type ${global.config.prefix}help to see what I can do!\n\n` +
-              `🔰 Some quick commands:\n` +
-              `➤ ${global.config.prefix}info - Bot information\n` +
-              `➤ ${global.config.prefix}help - Commands list\n` +
-              `➤ ${global.config.prefix}rules - Group rules`
-      };
-
-      await api.sendMessage(welcomeMessage, threadID);
-
-      // Save thread settings
-      await Threads.setData(threadID, {
-        settings: {
-          sendWelcome: true,
-          welcomeMessage: null,
-          prefix: global.config.prefix
+            // Exit if no participants were added
+            const addedParticipants = event.logMessageData?.addedParticipants || [];
+            if (addedParticipants.length === 0) return;
+            
+            // Get thread info
+            let threadName = "this group";
+            try {
+                const threadInfo = await api.getThreadInfo(event.threadID);
+                threadName = threadInfo.threadName || "this group";
+            } catch (err) {
+                logger.error(`Error getting thread info: ${err.message}`);
+            }
+            
+            // Create welcome message
+            for (const user of addedParticipants) {
+                // Skip if the added participant is the bot itself
+                if (user.userFbId === api.getCurrentUserID()) continue;
+                
+                // Get user name
+                let userName = user.fullName || "Friend";
+                
+                // Create and send welcome message
+                const welcomeMessage = `Welcome ${userName} to ${threadName}! 👋\n\nI'm Nexus Bot, your helpful assistant. Use "${config?.prefix || '!'}help" to see what I can do!`;
+                
+                // Send welcome message with slight delay to avoid rate limits
+                setTimeout(() => {
+                    api.sendMessage(welcomeMessage, event.threadID)
+                      .catch(err => logger.error(`Failed to send welcome message: ${err.message}`));
+                }, 1000);
+            }
+            
+        } catch (error) {
+            logger.error('Intro message error:', error.message);
         }
-      });
-
-    } catch (error) {
-      console.error('Intro message error:', error);
     }
-  }
 };

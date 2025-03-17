@@ -1,65 +1,112 @@
+const logger = require('../utils/logger');
 const fs = require('fs');
 const path = require('path');
-const ws3fca = require('ws3-fca');
-const logger = require('../utils/logger');
-const dbManager = require('./dbManager');
+const { applyFixes } = require('../utils/apiFixes');
 
-async function loadAppState() {
-  const appStatePath = path.join(__dirname, '../appstate.json');
+// Fallback retries
+const MAX_LOGIN_ATTEMPTS = 3;
+const RETRY_DELAY = 5000;
+
+/**
+ * Login to Facebook using environment variables or config
+ */
+async function login() {
   try {
-    const appState = JSON.parse(fs.readFileSync(appStatePath, 'utf8'));
+    // Load appstate
+    const appstatePath = path.join(process.cwd(), 'appstate.json');
+
+    if (!fs.existsSync(appstatePath)) {
+      throw new Error("Appstate file not found. Please create an appstate.json file.");
+    }
+
+    const appstate = JSON.parse(fs.readFileSync(appstatePath, 'utf8'));
     logger.info('Loaded AppState successfully');
-    return appState;
+    
+    // Load the ws3-fca module
+    const ws3fca = require('ws3-fca');
+    
+    // Login with the original login function first
+    const api = await new Promise((resolve, reject) => {
+      ws3fca({
+        appState: appstate,
+        logLevel: "silent", // Don't spam the console
+        selfListen: true,
+        listenEvents: true,
+        forceLogin: true
+      }, (err, api) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(api);
+      });
+    });
+    
+    // Apply our fixes to the API object
+    const fixedApi = applyFixes(api);
+    
+    logger.info('Facebook login successful');
+    return fixedApi;
   } catch (error) {
-    logger.error('Failed to load AppState:', error.message);
+    logger.error('Facebook login failed:', error.message || error);
     throw error;
   }
 }
 
-async function loginWithRetry(retries = 3) {
-  const appState = await loadAppState();
-  
-  for (let attempt = 1; attempt <= retries; attempt++) {
+/**
+ * Login with retry mechanism
+ */
+async function loginWithRetry() {
+  let attempts = 0;
+
+  while (attempts < MAX_LOGIN_ATTEMPTS) {
     try {
-      // Create login options
-      const loginOptions = {
-        appState: appState,
-        logLevel: "silent",
-        forceLogin: true,
-        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-      };
-
-      // Login and await the API object
-      const api = await new Promise((resolve, reject) => {
-        ws3fca(loginOptions, (err, api) => {
-          if (err) return reject(err);
-          resolve(api);
-        });
-      });
-
-      logger.info(`Logged in successfully on attempt ${attempt}`);
-      
-      // Test the API connection
-      const currentUserID = await api.getCurrentUserID();
-      if (!currentUserID) throw new Error('Failed to get current user ID');
-
-      return api;
-
+      return await login();
     } catch (error) {
-      logger.error(`Login attempt ${attempt} failed:`, error.message);
-      if (attempt === retries) throw error;
-      await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+      attempts++;
+
+      if (attempts >= MAX_LOGIN_ATTEMPTS) {
+        logger.error(`Failed to login after ${MAX_LOGIN_ATTEMPTS} attempts`);
+        throw error;
+      }
+      
+      logger.warn(`Login attempt ${attempts} failed. Retrying in ${RETRY_DELAY/1000} seconds...`);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
     }
   }
 }
 
-async function checkPermissions(userId) {
-  const user = await dbManager.getUser(userId);
-  if (!user) {
-    logger.warn(`User ${userId} not found`);
-    return false;
+/**
+ * Refresh Facebook connection without full relogin
+ * @param {Object} api - Current API instance
+ */
+async function refreshConnection(api) {
+  try {
+    // Ping Facebook to check if the connection is still active
+    await api.getAppState();
+    logger.info("Facebook connection still active");
+    return api; // Connection is still good
+  } catch (error) {
+    logger.warn("Facebook connection lost, attempting to refresh");
+    
+    try {
+      // Try relogging in
+      const newApi = await loginWithRetry();
+      
+      // Copy over event listeners and other important properties
+      Object.assign(api, newApi);
+      
+      logger.info("Facebook connection refreshed successfully");
+      return api;
+    } catch (refreshError) {
+      logger.error("Failed to refresh Facebook connection:", refreshError);
+      throw refreshError;
+    }
   }
-  return user.role >= 2; // 2 represents botAdmin
 }
 
-module.exports = { loadAppState, loginWithRetry, checkPermissions };
+module.exports = {
+  login,
+  loginWithRetry,
+  refreshConnection
+};

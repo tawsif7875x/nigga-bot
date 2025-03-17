@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database/data.db"
+}
+
+model User {
+  id        String   @id
+  name      String
+  exp       Int      @default(0)
+  money     Int      @default(0)
+  role      Int      @default(0) // 0: normal, 1: admin, 2: superadmin, 3: owner
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+  groups       GroupMember[]
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  type        String
+  amount      Int
+  description String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Group {
+  id        String       @id
+  name      String
+  settings  String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  members   GroupMember[]
+}
+
+model GroupMember {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  groupId   String
+  role      Int      @default(0) // 0: normal, 1: admin
+  joinedAt  DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id])
+  group     Group    @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])
+}
+
+model Analytics {
+  id        Int      @id @default(autoincrement())
+  type      String   // command, user, thread, etc.
+  value     Int      @default(0)
+  label     String   // name/description
+  timestamp DateTime @default(now())
+}
+
+model CommandAnalytics {
+  id         Int      @id @default(autoincrement())
+  commandName String
+  usageCount Int      @default(0)
+  lastUsed   DateTime @default(now())
+  category   String?
+}

@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('../utils/logger');
-const config = require('../config.json');
 
 const events = new Map();
 
@@ -9,85 +8,46 @@ function loadEvents() {
   const eventFiles = fs.readdirSync(path.join(__dirname, '../events'))
     .filter(file => file.endsWith('.js'));
 
+  events.clear(); // Clear existing events first
+
   for (const file of eventFiles) {
     try {
+      delete require.cache[require.resolve(`../events/${file}`)];
       const event = require(`../events/${file}`);
       if (event.config && event.config.name) {
         events.set(event.config.name, event);
         logger.info(`Loaded event: ${event.config.name}`);
-      } else {
-        logger.warn(`Skipped event ${file}: Missing config or name`);
       }
     } catch (error) {
-      logger.error(`Failed to load event ${file}:`, error);
+      logger.error(`Failed to load event ${file}: ${error.message}`);
     }
   }
-
-  return events;
 }
 
-async function handleEvent(api, message) {
+async function handleEvent(api, event) {
   try {
-    switch (message.type) {
-      case 'event':
-        handleGroupEvent(api, message);
-        break;
-      case 'message':
-        handleMessageEvent(api, message);
-        break;
-      case 'message_reaction':
-        handleReactionEvent(api, message);
-        break;
-      case 'presence':
-        handlePresenceEvent(api, message);
-        break;
-      case 'typ':
-        handleTypingEvent(api, message);
-        break;
-      case 'read_receipt':
-        handleReadReceiptEvent(api, message);
-        break;
+    // Use global config if available, or fallback to empty object
+    const config = global.config || {};
+    
+    // Execute each event handler
+    for (const [name, handler] of events) {
+      try {
+        if (handler && typeof handler.execute === 'function') {
+          // Wrap execution in try/catch to prevent one handler from breaking others
+          await handler.execute({
+            api,
+            event,
+            config
+          });
+        }
+      } catch (handlerError) {
+        logger.error(`Error in event handler ${name}:`, handlerError.message);
+        // Continue with other handlers despite the error
+      }
     }
   } catch (error) {
-    logger.error(`Error handling event: ${error.message}`);
+    logger.error('Error in event system:', error);
   }
-}
-
-function handleGroupEvent(api, message) {
-  const event = events.get('groupEvent');
-  if (event) event.execute(api, message);
-}
-
-function handleMessageEvent(api, message) {
-  if (!message) {
-    logger.warn('Received invalid message in handleMessageEvent');
-    return;
-  }
-  
-  const event = events.get('messageEvent');
-  if (event) {
-    event.execute({ api, message, Users: global.Users });
-  }
-}
-
-function handleReactionEvent(api, message) {
-  const event = events.get('reactionEvent');
-  if (event) event.execute(api, message);
-}
-
-function handlePresenceEvent(api, message) {
-  const event = events.get('presenceEvent');
-  if (event) event.execute(api, message);
-}
-
-function handleTypingEvent(api, message) {
-  const event = events.get('typingEvent');
-  if (event) event.execute(api, message);
-}
-
-function handleReadReceiptEvent(api, message) {
-  const event = events.get('readReceiptEvent');
-  if (event) event.execute(api, message);
 }
 
 module.exports = { loadEvents, handleEvent, events };

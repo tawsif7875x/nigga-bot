@@ -1,39 +1,164 @@
 module.exports = {
   config: {
-    name: "example",
-    aliases: ["ex", "test"],
-    version: "1.0",
-    author: "YourName",
-    role: 0, // 0: everyone, 1: admin, 2: bot admin
-    cooldown: 5, // cooldown in seconds
-    description: "Example command description",
-    usage: "{prefix}example [option]",
-    category: "general"
+    name: "example", // Command name [required]
+    aliases: ["ex", "test", "demo"], // Alternative command names [optional]
+    version: "1.0.0", // Command version [optional]
+    author: "Your Name", // Command author [optional]
+    countDown: 5, // Command cooldown in seconds [optional, default: 5]
+    role: 0, // Permission level [optional, default: 0]
+    // Roles: 0 = all users, 1 = group admin, 2 = bot admin, 3 = bot owner
+    
+    shortDescription: "A short command description", // [required]
+    longDescription: "A more detailed description of what the command does and how to use it", // [optional]
+    category: "general", // Command category for help menu [optional]
+    guide: "{prefix}example [option] [value]\n\n" + // Usage guide [recommended]
+           "Options:\n" +
+           "   -text: Input text\n" +
+           "   -num: Input number\n\n" +
+           "Example:\n" +
+           "   {prefix}example -text hello -num 42"
   },
 
+  // Language translations [optional]
   languages: {
     "en": {
-      "success": "Command executed successfully!",
-      "error": "An error occurred: %1"
+      "success": "Success: %1",
+      "error": "Error: %1",
+      "invalidOption": "Invalid option '%1'",
+      "missingValue": "Missing value for option '%1'",
+      "example": "Example usage: %1"
     },
-    "bn": {
-      "success": "কমান্ড সফলভাবে চালানো হয়েছে!",
-      "error": "একটি ত্রুটি ঘটেছে: %1"
+    "vi": {
+      "success": "Thành công: %1",
+      "error": "Lỗi: %1",
+      "invalidOption": "Tùy chọn không hợp lệ '%1'",
+      "missingValue": "Thiếu giá trị cho tùy chọn '%1'",
+      "example": "Ví dụ sử dụng: %1"
     }
   },
 
-  onLoad: async function() {
-    // Optional: Run when command is loaded
-    // Example: Create database tables, load resources
+  // Runs when command is loaded [optional]
+  onLoad: async function({ api, configPath }) {
+    // Example: Create required files/folders
+    const fs = require("fs");
+    const path = require("path");
+    
+    // Create command data folder
+    const dataPath = path.join(configPath, 'commands', 'example');
+    if (!fs.existsSync(dataPath)) {
+      fs.mkdirSync(dataPath, { recursive: true });
+    }
   },
 
-  execute: async function({ api, event, args, Currencies, Users, Threads, getLang }) {
+  // Main command execution [required]
+  execute: async function({ api, event, args, commandName, getLang, prefix, Users, Threads }) {
     const { threadID, messageID, senderID } = event;
+    
     try {
-      // Your command code here
-      return api.sendMessage(getLang("success"), threadID, messageID);
+      // Parse command arguments/options
+      const options = parseArgs(args);
+      
+      // Example error handling with translations
+      if (!options.text) {
+        return api.sendMessage(
+          getLang("missingValue", "text") + "\n" +
+          getLang("example", `${prefix}${commandName} -text hello`),
+          threadID, messageID
+        );
+      }
+
+      // Example user data access
+      const userName = await Users.getName(senderID);
+      
+      // Example thread data access
+      const threadInfo = await Threads.getData(threadID);
+      
+      // Example response
+      const response = `Command executed by: ${userName}\n` +
+                      `Thread name: ${threadInfo.name}\n` +
+                      `Input text: ${options.text}\n` +
+                      `Input number: ${options.num || 'not provided'}`;
+                      
+      // Send response
+      return api.sendMessage(response, threadID, messageID);
+      
     } catch (error) {
+      // Error handling
+      console.error(`Error in ${commandName}:`, error);
       return api.sendMessage(getLang("error", error.message), threadID, messageID);
     }
   }
 };
+
+// Helper function to parse command arguments
+function parseArgs(args) {
+  const options = {};
+  let currentOption = null;
+  
+  for (const arg of args) {
+    if (arg.startsWith('-')) {
+      currentOption = arg.slice(1);
+      options[currentOption] = true;
+    } else if (currentOption) {
+      options[currentOption] = arg;
+      currentOption = null;
+    }
+  }
+  
+  return options;
+}
+
+/* Command Development Guide:
+
+1. Configuration (config object):
+   - name: Command name (required)
+   - aliases: Alternative names
+   - version: Command version
+   - author: Your name
+   - countDown: Cooldown in seconds
+   - role: Permission level (0-3)
+   - descriptions: Short and long descriptions
+   - category: Command category
+   - guide: Usage instructions
+
+2. Languages (languages object):
+   - Add translations for different languages
+   - Use %1, %2, etc. for variables
+   - Support English and Vietnamese by default
+
+3. Initialization (onLoad function):
+   - Runs when command is first loaded
+   - Set up required files/folders
+   - Initialize databases/caches
+
+4. Command Logic (execute function):
+   - Main command functionality
+   - Access to api, event, args, etc.
+   - Use try/catch for error handling
+   - Support translations with getLang()
+
+5. Available APIs/Utils:
+   api: Facebook chat API
+   event: Message event data
+   args: Command arguments
+   Users: User database functions
+   Threads: Thread database functions
+   getLang: Translation function
+   prefix: Command prefix
+
+6. Best Practices:
+   - Add proper error handling
+   - Use translations for messages
+   - Include usage examples
+   - Document your code
+   - Clean up resources
+   - Follow naming conventions
+   - Test thoroughly
+
+7. Testing:
+   - Test all command options
+   - Test with different permission levels
+   - Test error cases
+   - Test with missing arguments
+   - Test with invalid input
+*/

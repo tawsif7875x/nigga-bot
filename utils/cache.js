@@ -1,37 +1,33 @@
-const config = require('../config.json');
+const NodeCache = require('node-cache');
 
 class Cache {
-  constructor() {
-    this.store = new Map();
-    this.timeout = config.performance.cacheTimeout;
-  }
-
-  set(key, value) {
-    if (!config.performance.cacheEnabled) return;
-    
-    this.store.set(key, {
-      value,
-      timestamp: Date.now()
-    });
-  }
-
-  get(key) {
-    if (!config.performance.cacheEnabled) return null;
-    
-    const data = this.store.get(key);
-    if (!data) return null;
-
-    if (Date.now() - data.timestamp > this.timeout) {
-      this.store.delete(key);
-      return null;
+    constructor(ttlSeconds = 3600) {
+        this.cache = new NodeCache({
+            stdTTL: ttlSeconds,
+            checkperiod: ttlSeconds * 0.2,
+            useClones: false
+        });
     }
 
-    return data.value;
-  }
+    get(key) {
+        return this.cache.get(key);
+    }
 
-  clear() {
-    this.store.clear();
-  }
+    set(key, value, ttl = 3600) {
+        return this.cache.set(key, value, ttl);
+    }
+
+    del(key) {
+        return this.cache.del(key);
+    }
+
+    flush() {
+        return this.cache.flushAll();
+    }
+
+    stats() {
+        return this.cache.getStats();
+    }
 }
 
 module.exports = new Cache();
