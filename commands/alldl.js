@@ -22,8 +22,9 @@ if ((args[0]).match(/com/)) { videoUrl = args[0];
 }
 api.setMessageReactionMqtt("⏳", event.messageID, event.threadID);
 const apiUrl = `https://smfahim.onrender.com/download?url=${videoUrl}`;
-const response = (await axios.get(apiUrl))[type];
-const v = await axios.get(response, {responseType: 'stream'});
+const response = await axios.get(apiUrl);
+const vUrl = response[type];
+const v = await axios.get(vUrl, {responseType: 'stream'});
 await api.sendMessage({attachment: v.data }, event.threadID, event.messageID);
 } catch (error) {
 api.sendMessage("❌ | " + error.message, event.threadID, event.messageID);
