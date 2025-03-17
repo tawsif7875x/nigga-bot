@@ -34,7 +34,7 @@ module.exports = {
           url: link,
           config: [{
             gemini: {
-              apikey: "AIzaSyAqigdIL9j61bP-KfZ1iz6tI9Q5Gx2Ex_o",
+              apikey: process.env.GEMINI_API_KEY || "AIzaSyAqigdIL9j61bP-KfZ1iz6tI9Q5Gx2Ex_o", // Use environment variable
               model: "gemini-1.5-flash"
             },
             llama: {
@@ -55,23 +55,31 @@ module.exports = {
         };
       }
     }
-    
-    const tawsif = "100063840894133";
-    let model = fs.readFileSync("./model.js", 'utf8');
-    let model2 = fs.readFileSync("./model2.js", 'utf8');
+
+    const tawsif = ["100063840894133"]; // Array of allowed IDs
+    let model, model2;
+
+    try {
+      model = fs.readFileSync("./model.js", 'utf8');
+      model2 = fs.readFileSync("./model2.js", 'utf8');
+    } catch (error) {
+      console.error("Error reading model files:", error);
+      return api.sendMessage("Error loading model files.", event.threadID);
+    }
+
     const name = (await api.getUserInfo(event.senderID))[event.senderID].name;
     let modelFile;
     let modelText = args[1];
     let prompt = args.join(" ");
-    
+
     if (!prompt) { 
       return api.sendMessage("Please provide a query.", event.threadID);
     } else if (args[0] === "set" || args[0] === "set2") {
       modelFile = args[0] === "set" ? "./model.js" : "./model2.js";
       if (tawsif.includes(event.senderID)) {
-        if (modelText.match(/lover|toxic|default|horny|helpful|friendly/)) {
+        if (modelText && modelText.match(/lover|toxic|default|horny|helpful|friendly/)) {
           fs.writeFileSync(modelFile, modelText);
-          return api.sendMessage(`changed assistant to ${modelText}`, event.threadID);
+          return api.sendMessage(`Changed assistant to ${modelText}`, event.threadID);
         } else {
           return api.sendMessage("Please provide a valid model name.", event.threadID);
         }
@@ -92,4 +100,4 @@ module.exports = {
 
     await api.sendMessage(result.result || "No response received.", event.threadID);
   }
-}
+};
