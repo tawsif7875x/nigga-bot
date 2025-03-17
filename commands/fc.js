@@ -136,7 +136,7 @@ module.exports = {
                 const canvas = createCanvas(1000, 600);
                 const ctx = canvas.getContext('2d');
                 const texts = ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
-                const themeUrl = "https://i.imgur.com/bi4AF7I.png"; // Updated to URL
+                const themeUrl = "https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/pizza.png"; // Updated to URL
 
                 const avatarUrl = `https://graph.facebook.com/100063840894133/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
                 const name = (await api.getUserInfo(100063840894133))[100063840894133].name;
@@ -156,6 +156,8 @@ module.exports = {
                 const buffer = canvas.toBuffer('image/png');
                 fs.writeFileSync("./fc.png", buffer);
 
+                console.log("Image generated successfully!"); // Debugging log
+
                 await api.sendMessage({ 
                     attachment: fs.createReadStream("./fc.png")
                 }, event.threadID);
@@ -164,7 +166,7 @@ module.exports = {
             generateChatImage();
 
         } catch (error) {
-            console.error(error);
+            console.error("Error generating image:", error.stack); // More detailed error logging
             api.sendMessage("❌ | " + error.message, event.threadID);
         }
     }
