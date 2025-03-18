@@ -1,7 +1,6 @@
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
 
 module.exports = {
     config: {
@@ -22,7 +21,7 @@ module.exports = {
                 ctx.canvas.width = width;
                 ctx.canvas.height = height;
 
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.clearRect(0, 0, width, height);
                 ctx.drawImage(img, 0, 0, width, height);
             }
 
@@ -95,14 +94,13 @@ module.exports = {
                 const radius = size / 2;
 
                 const startX = (avatar.width - squareSize) / 2;
-                const startY = (avatar.height - squareSize) / 2;
+                const startROY = (avatar.height - squareSize) / 2;
 
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(x, y, radius, 0, Math.PI * 2);
                 ctx.clip();
-
-                ctx.drawImage(avatar, startX, startY, squareSize, squareSize, x - radius, y - radius, size, size);
+                ctx.drawImage(avatar, startX, startROY, squareSize, squareSize, x - radius, y - radius, size, size);
                 ctx.restore();
             }
 
@@ -134,16 +132,25 @@ module.exports = {
             }
 
             async function generateChatImage() {
+                // Use input text if provided, otherwise use default
+                const texts = args.length > 0 ? args.join(" ").split("\n") : ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
+                
                 const canvas = createCanvas(1000, 600);
                 const ctx = canvas.getContext('2d');
-                const texts = ["Hello", "bro", "I'm gay", "hhhh I'm not kidding"];
                 const themeUrl = "https://i.imgur.com/bi4AF7I.png";
+                
+                const accessToken = process.env.FACEBOOK_ACCESS_TOKEN;
+                if (!accessToken) {
+                    throw new Error("Facebook access token not configured");
+                }
 
-                const accessToken = process.env.FACEBOOK_ACCESS_TOKEN; // Use environment variable
-                const avatarUrl = `https://graph.facebook.com/100063840894133/picture?width=512&height=512&access_token=${accessToken}`;
+                const userID = event.senderID || "100063840894133";
+                const avatarUrl = `https://graph.facebook.com/${userID}/picture?width=512&height=512&access_token=${accessToken}`;
+                
                 let name = "User";
                 try {
-                    name = (await api.getUserInfo(100063840894133))[100063840894133].name;
+                    const userInfo = await api.getUserInfo(userID);
+                    name = userInfo[userID]?.name || "User";
                 } catch (error) {
                     console.error("Failed to fetch user info:", error);
                 }
@@ -152,7 +159,6 @@ module.exports = {
                 const h = totalBubbleHeight + 130;
 
                 await drawTheme(ctx, themeUrl, h);
-
                 const profileY = h - 75;
                 await drawProfile(ctx, avatarUrl, 80, profileY, 80);
 
@@ -160,21 +166,24 @@ module.exports = {
                 ctx.fillStyle = "#848482";
                 ctx.fillText(name.split(" ")[0], 180, 10);
 
-                const filePath = path.join(__dirname, "fc.png");
+                const outputPath = path.resolve(__dirname, "fc.png");
                 const buffer = canvas.toBuffer('image/png');
-                fs.writeFileSync(filePath, buffer);
-
-                console.log("Image generated successfully!");
+                fs.writeFileSync(outputPath, buffer);
 
                 await api.sendMessage({ 
-                    attachment: fs.createReadStream(filePath)
-                }, event.threadID);
+                    body: "Here's your generated image:",
+                    attachment: fs.createReadStream(outputPath)
+                }, event.threadID, () => {
+                    // Clean up file after sending
+                    fs.unlinkSync(outputPath);
+                });
             }
-            generateChatImage();
+
+            await generateChatImage();
 
         } catch (error) {
             console.error("Error generating image:", error.stack);
-            api.sendMessage("❌ | " + error.message, event.threadID);
+            await api.sendMessage(`❌ | Error: ${error.message}`, event.threadID);
         }
     }
 };
