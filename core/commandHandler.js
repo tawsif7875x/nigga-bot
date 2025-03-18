@@ -80,7 +80,7 @@ async function handleCommand(api, event) {
   } else {
     return null; 
   }
-			     },        reaction: async (emoji, messageID, callback) => api.setMessageReaction(emoji, messageID, callback, true),         err: async (err) => sendMessageError(err),         error: async (err) => sendMessageError(err)     }; }  const message = msg(api, event);
+			     },        reaction: async (emoji, messageID, callback) => api.setMessageReaction(emoji, messageID, callback, true),         err: async (err) => sendMessageError(err),         error: async (err) => sendMessageError(err)     }; }  const message = msg(api, event, getStreamFromURL);
 
   // Check cooldown
   const timestamps = cooldowns.get(command.config.name);
