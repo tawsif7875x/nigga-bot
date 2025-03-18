@@ -29,24 +29,6 @@ module.exports = {
     lines.push(line.trim());
     return lines;
   },
-  drawBubbleLayer: function (ctx, x, y, width, height, radius, color) {
-    ctx.save();
-    ctx.globalCompositeOperation = "source-over"; // Change here
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    ctx.arcTo(x + width, y, x + width, y + radius, radius);
-    ctx.lineTo(x + width, y + height - radius);
-    ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-    ctx.lineTo(x + radius, y + height);
-    ctx.arcTo(x, y + height, x, y + height - radius, radius);
-    ctx.lineTo(x, y + radius);
-    ctx.arcTo(x, y, x + radius, y, radius);
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.restore();
-  },
   async execute({ args, usersData, threadsData, api, event }) {
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
@@ -81,23 +63,36 @@ module.exports = {
     let commentText = mentionText.join(" "); // Join the array into a single string
     const commentLines = await this.wrapText(ctx, commentText, commentMaxWidth);
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
-const bubbleLines = await this.wrapText(ctx, commentText, commentMaxWidth);
-    const bubbleMaxWidth = canvas.width - 50;
-    const bubbleX = commentX - 20;
-    const bubbleY = commentY - 35;
-    const bubbleWidth = ctx.measureText(commentText).width + 38; // Removed ownText reference
-    const bubbleHeight = commentLines.length * 35 + 20; // Removed ownText reference
-    const bubbleRadius = 28;
-    const bubbleColor = "#333";
-    this.drawBubbleLayer(ctx, bubbleX, bubbleY, bubbleWidth, bubbleHeight, bubbleRadius, bubbleColor);
+
+    // Calculate the dimensions of the speech bubble
+    const bubblePadding = 10;
+    const bubbleWidth = commentMaxWidth + bubblePadding * 2;
+    const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
+
+    // Draw the speech bubble
+    ctx.fillStyle = "#FFFFFF";
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(commentX - bubblePadding, commentY - bubblePadding, bubbleWidth, bubbleHeight, 20);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Draw the comment text inside the bubble
+    ctx.fillStyle = "#000000";
     commentLines.forEach((line, index) => {
       ctx.fillText(line, commentX, commentY + index * 28);
     });
+
+    // Draw the name text
     ctx.font = "400 19px Arial";
     ctx.fillStyle = "#808080";
     nameLines.forEach((line, index) => {
       ctx.fillText(line, nameX, nameY + index * 28);
     });
+
+    // Draw the avatar
     const avatarX = 30;
     const avatarY = 60;
     const avatarWidth = 60;
@@ -108,6 +103,7 @@ const bubbleLines = await this.wrapText(ctx, commentText, commentMaxWidth);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
+
     const imageBuffer = canvas.toBuffer();
     fs.writeFileSync(pathImg, imageBuffer);
     return api.sendMessage({ attachment: fs.createReadStream(pathImg) },
