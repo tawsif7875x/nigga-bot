@@ -46,22 +46,37 @@ module.exports = {
     fs.writeFileSync(pathImg, Buffer.from(getbackground, "binary"));
     let baseImage = await loadImage(pathImg);
     let baseAvt1 = await loadImage(pathAvt1);
-    let canvas = createCanvas(commentMaxWidth + 200, commentLines + 100);
+
+    // Create a temporary canvas to measure text dimensions
+    let tempCanvas = createCanvas(1, 1);
+    let tempCtx = tempCanvas.getContext("2d");
+    tempCtx.font = "500 25px Arial";
+
+    const userInput = args.join(" ");
+    let mentionText = userInput.split("|").map(text => text.trim());
+    let commentText = mentionText.join(" ");
+
+    // Measure the comment text
+    const commentMaxWidth = 500; // Set a max width for the comment
+    const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
+
+    // Calculate canvas dimensions based on the text
+    const canvasWidth = commentMaxWidth + 200;
+    const canvasHeight = commentLines.length * 28 + 200;
+
+    let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
     ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
-    const commentMaxWidth = canvas.width - 200;
+
     const commentX = 145;
-    const commentY = 100; // Text position (unchanged)
+    const commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
     const nameX = 135;
     const nameY = 45;
     ctx.font = "500 25px Arial";
-    ctx.fillStyle = "#FFFFFF"; // Text color set to white
-    const userInput = args.join(" ");
-    let mentionText = userInput.split("|").map(text => text.trim());
-    let commentText = mentionText.join(" "); // Join the array into a single string
-    const commentLines = await this.wrapText(ctx, commentText, commentMaxWidth);
+    ctx.fillStyle = "#FFFFFF";
+
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
 
     // Calculate the dimensions of the speech bubble
@@ -72,10 +87,10 @@ module.exports = {
 
     // Adjust the bubble's vertical position without affecting the text
     const bubbleX = commentX - 10;
-    const bubbleY = commentY - 20; // Move the bubble 20 pixels higher
+    const bubbleY = commentY - 20;
 
     // Draw the speech bubble
-    ctx.fillStyle = "#333333"; // Bubble color set to dark gray
+    ctx.fillStyle = "#333333";
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -84,8 +99,8 @@ module.exports = {
     ctx.fill();
     ctx.stroke();
 
-    // Draw the comment text inside the bubble (using the original commentY)
-    ctx.fillStyle = "#FFFFFF"; // Text color set to white
+    // Draw the comment text inside the bubble
+    ctx.fillStyle = "#FFFFFF";
     commentLines.forEach((line, index) => {
       ctx.fillText(line, commentX, commentY + index * 28);
     });
