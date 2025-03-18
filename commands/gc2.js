@@ -65,7 +65,7 @@ module.exports = {
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
 
     // Calculate the dimensions of the speech bubble
-    const bubblePadding = 12;
+    const bubblePadding = 18;
     const bubbleMaxWidth = commentMaxWidth + 5;
     const bubbleWidth = Math.min(ctx.measureText(commentText).width + bubblePadding * 2, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
