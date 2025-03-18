@@ -45,50 +45,8 @@ async function handleCommand(api, event) {
       return api.sendMessage("⚠️ You don't have permission to use this command.", threadID);
     }
   }
-  function messages(api, event) {
-	return {
-		send: async (form, callback) => {
-			try {
-				global.statusAccountBot = 'good';
-				return await api.sendMessage(form, event.threadID, callback);
-			}
-			catch (err) {
-				if (JSON.stringify(err).includes('spam')) {
-					setErrorUptime();
-					throw err;
-				}
-			}
-		},
-		reply: async (form, callback) => {
-			try {
-				global.statusAccountBot = 'good';
-				return await api.sendMessage(form, event.threadID, callback, event.messageID);
-			}
-			catch (err) {
-				if (JSON.stringify(err).includes('spam')) {
-					setErrorUptime();
-					throw err;
-				}
-			}
-		},
-		unsend: async (messageID, callback) => await api.unsendMessage(messageID, callback),
-		reaction: async (emoji, messageID, callback) => {
-			try {
-				global.statusAccountBot = 'good';
-				return await api.setMessageReaction(emoji, messageID, callback, true);
-			}
-			catch (err) {
-				if (JSON.stringify(err).includes('spam')) {
-					setErrorUptime();
-					throw err;
-				}
-			}
-		},
-		err: async (err) => await sendMessageError(err),
-		error: async (err) => await sendMessageError(err)
-	};
-}
-const message = messages(api, event);
+  function msg(api, event) {     return {         send: async (form, callback) => api.sendMessage(form, event.threadID, callback),         reply: async (form, callback) => api.sendMessage(form, event.threadID, callback, event.messageID),         unsend: async (messageID, callback) => api.unsendMessage(messageID, callback),         reaction: async (emoji, messageID, callback) => api.setMessageReaction(emoji, messageID, callback, true),         err: async (err) => sendMessageError(err),         error: async (err) => sendMessageError(err)     }; }  const message = msg(api, event);
+ 
   // Check cooldown
   const timestamps = cooldowns.get(command.config.name);
   if (timestamps) {
