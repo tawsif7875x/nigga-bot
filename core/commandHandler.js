@@ -45,7 +45,7 @@ async function handleCommand(api, event) {
       return api.sendMessage("⚠️ You don't have permission to use this command.", threadID);
     }
   }
-  function message(api, event) {
+  function messages(api, event) {
 	return {
 		send: async (form, callback) => {
 			try {
@@ -88,7 +88,7 @@ async function handleCommand(api, event) {
 		error: async (err) => await sendMessageError(err)
 	};
 }
-
+const message = messages(api, event);
   // Check cooldown
   const timestamps = cooldowns.get(command.config.name);
   if (timestamps) {
