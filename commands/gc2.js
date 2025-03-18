@@ -35,7 +35,7 @@ module.exports = {
     let mentionedID = Object.keys(event.mentions)[0] || event.senderID;
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
     let ThreadInfo = await api.getThreadInfo(event.threadID);
-    let background = ["https://i.postimg.cc/6pyLxmTV/IMG-20230630-235606.jpg"];
+    let background = ["https://i.ibb.co.com/6RDwstjH/images-7.jpg"];
     let rd = background[0];
     let getAvtmot = (await axios.get(
       `https://graph.facebook.com/${mentionedID}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`,
@@ -79,7 +79,7 @@ module.exports = {
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30);
+    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 25);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
