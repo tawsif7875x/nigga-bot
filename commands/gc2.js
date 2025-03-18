@@ -1,6 +1,7 @@
 const { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
+
 module.exports = {
  config: {
   name: "gc2",
