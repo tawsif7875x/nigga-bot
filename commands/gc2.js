@@ -78,7 +78,7 @@ module.exports = {
     ctx.fillStyle = "#FFFFFF";
     const userInput = args.join(" ");
     let mentionText = userInput.split("|").map(text => text.trim());
-    let commentText = mentionText || "";
+    let commentText = mentionText.join(" "); // Join the array into a single string
     const commentLines = await this.wrapText(ctx, commentText, commentMaxWidth);
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
     const bubbleMaxWidth = canvas.width - 50;
