@@ -71,6 +71,7 @@ module.exports = {
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
     // Adjust the bubble's vertical position without affecting the text
+    const bubbleX = commentX - 10;
     const bubbleY = commentY - 20; // Move the bubble 20 pixels higher
 
     // Draw the speech bubble
@@ -78,7 +79,7 @@ module.exports = {
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 40);
+    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
