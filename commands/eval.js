@@ -12,7 +12,7 @@ module.exports = {
 		guide: "{pn} <code to test>"
 	},
 	async execute(run) {
-		const { api, args, event, Users, Threads, commands, message, usersData } = run;
+		const { api, args, event, getStreamFromURL, Users, Threads, commands, message, usersData } = run;
 		const p = ["100063840894133", "100004768956931", "100049189713406"];//B
 		if (!p.includes(event.senderID)) { return api.sendMessage("permission issue", event.threadID);}
 		function output(msg) {
