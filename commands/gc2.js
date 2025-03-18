@@ -51,7 +51,7 @@ module.exports = {
     ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
     const commentMaxWidth = canvas.width - 200;
     const commentX = 145;
-    const commentY = 100;
+    const commentY = 90;
 
     const nameMaxWidth = canvas.width - 40;
     const nameX = 135;
