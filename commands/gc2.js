@@ -85,22 +85,36 @@ module.exports = {
   const bubbleMaxWidth = canvas.width - 50; 
   const bubbleX = commentX - 20;
   const bubbleY = commentY - 35;
-  const bubbleWidth = Math.max(ctx.measureText(commentText).width, ctx.measureText(ownText).width) + 38;
+  
+  // Calculate the bubble width, ensuring it does not exceed bubbleMaxWidth
+  const bubbleWidth = Math.min(Math.max(ctx.measureText(commentText).width, ctx.measureText(ownText).width) + 38, bubbleMaxWidth);
+  
+  // Calculate the bubble height based on the number of lines
   const bubbleHeight = (commentLines.length + (ownText ? 1 : 0)) * 35 + 20;
+  
   const bubbleRadius = 28;
   const bubbleColor = "#333";
+  
+  // Draw the bubble
   this.drawBubbleLayer(ctx, bubbleX, bubbleY, bubbleWidth, bubbleHeight, bubbleRadius, bubbleColor);
+  
+  // Draw the text inside the bubble
   commentLines.forEach((line, index) => {
    ctx.fillText(line, commentX, commentY + index * 28);
   });
+  
   if (ownText) {
    ctx.fillText(ownText, commentX, commentY + commentLines.length * 28 + 20);
   }
+  
+  // Draw the name
   ctx.font = "400 19px Arial";
   ctx.fillStyle = "#808080";
   nameLines.forEach((line, index) => {
    ctx.fillText(line, nameX, nameY + index * 28);
   });
+  
+  // Draw the avatar
   const avatarX = 30;
   const avatarY = 60;
   const avatarWidth = 60;
@@ -111,8 +125,12 @@ module.exports = {
   ctx.closePath();
   ctx.clip();
   ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
+  
+  // Save the image
   const imageBuffer = canvas.toBuffer();
   fs.writeFileSync(pathImg, imageBuffer);
+  
+  // Send the image
   return api.sendMessage({attachment: fs.createReadStream(pathImg)},
    event.threadID, event.messageID);
  },
