@@ -65,12 +65,12 @@ module.exports = {
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
 
     // Calculate the dimensions of the speech bubble
-    const bubblePadding = 10;
+    const bubblePadding = 20;
     const bubbleMaxWidth = commentMaxWidth + bubblePadding * 2;
 const bubbleWidth = ctx.measureText(commentText).width + 35; // Removed ownText reference
     const bubbleHeight = commentLines.length * 35 + bubblePadding * 2; // Removed ownText reference
     // Draw the speech bubble
-    ctx.fillStyle = "#FFFFFF";
+    ctx.fillStyle = "#808080";
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -80,7 +80,7 @@ const bubbleWidth = ctx.measureText(commentText).width + 35; // Removed ownText 
     ctx.stroke();
 
     // Draw the comment text inside the bubble
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "#FFFFFF";
     commentLines.forEach((line, index) => {
       ctx.fillText(line, commentX, commentY + index * 28);
     });
