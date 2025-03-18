@@ -66,9 +66,9 @@ module.exports = {
 
     // Calculate the dimensions of the speech bubble
     const bubblePadding = 10;
-    const bubbleWidth = commentMaxWidth + bubblePadding * 2;
-    const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
-
+    const bubbleMaxWidth = commentMaxWidth + bubblePadding * 2;
+const bubbleWidth = ctx.measureText(commentText).width + 35; // Removed ownText reference
+    const bubbleHeight = commentLines.length * 35 + bubblePadding * 2; // Removed ownText reference
     // Draw the speech bubble
     ctx.fillStyle = "#FFFFFF";
     ctx.strokeStyle = "#000000";
