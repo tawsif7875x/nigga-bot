@@ -81,6 +81,7 @@ module.exports = {
     let commentText = mentionText.join(" "); // Join the array into a single string
     const commentLines = await this.wrapText(ctx, commentText, commentMaxWidth);
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
+const bubbleLines = await this.wrapText(ctx, commentText, commentMaxWidth);
     const bubbleMaxWidth = canvas.width - 50;
     const bubbleX = commentX - 20;
     const bubbleY = commentY - 35;
