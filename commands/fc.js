@@ -1,6 +1,7 @@
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
 const path = require('path');
+const fetch = require('node-fetch');
 
 module.exports = {
     config: {
