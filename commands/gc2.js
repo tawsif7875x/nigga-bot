@@ -46,7 +46,7 @@ module.exports = {
     fs.writeFileSync(pathImg, Buffer.from(getbackground, "binary"));
     let baseImage = await loadImage(pathImg);
     let baseAvt1 = await loadImage(pathAvt1);
-    let canvas = createCanvas(baseImage.width, baseImage.height);
+    let canvas = createCanvas(commentMaxWidth + 200, commentLines + 100);
     let ctx = canvas.getContext("2d");
     ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
     const commentMaxWidth = canvas.width - 200;
