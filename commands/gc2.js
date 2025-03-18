@@ -57,12 +57,12 @@ module.exports = {
     let commentText = mentionText.join(" ");
 
     // Measure the comment text
-    const commentMaxWidth = 500; // Set a max width for the comment
+    const commentMaxWidth = 480; // Set a max width for the comment
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
     // Calculate canvas dimensions based on the text
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = commentLines.length * 28 + 200;
+    const canvasHeight = commentLines.length * 28 + 100;
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -81,7 +81,7 @@ module.exports = {
 
     // Calculate the dimensions of the speech bubble
     const bubblePadding = 18;
-    const bubbleMaxWidth = commentMaxWidth + 5;
+    const bubbleMaxWidth = commentMaxWidth + 10;
     const bubbleWidth = Math.min(ctx.measureText(commentText).width + bubblePadding * 2, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
@@ -92,7 +92,7 @@ module.exports = {
     // Draw the speech bubble
     ctx.fillStyle = "#333333";
     ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 0;
     ctx.beginPath();
     ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 25);
     ctx.closePath();
