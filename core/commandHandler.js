@@ -46,7 +46,31 @@ async function handleCommand(api, event) {
     }
   }
   function msg(api, event) {     return {         send: async (form, callback) => api.sendMessage(form, event.threadID, callback),         reply: async (form, callback) => api.sendMessage(form, event.threadID, callback, event.messageID),         unsend: async (messageID, callback) => api.unsendMessage(messageID, callback),         reaction: async (emoji, messageID, callback) => api.setMessageReaction(emoji, messageID, callback, true),         err: async (err) => sendMessageError(err),         error: async (err) => sendMessageError(err)     }; }  const message = msg(api, event);
- 
+
+const axios = require('axios');
+ async function getStreamFromURL(url = "", pathName = "", options = {}) {
+	if (!options && typeof pathName === "object") {
+		options = pathName;
+		pathName = "";
+	}
+	try {
+		if (!url || typeof url !== "string")
+			throw new Error(`The first argument (url) must be a string`);
+		const response = await axios({
+			url,
+			method: "GET",
+			responseType: "stream",
+			...options
+		});
+		if (!pathName)
+			pathName = "n.png"
+		response.data.path = pathName;
+		return response.data;
+	}
+	catch (err) {
+		throw err;
+	}
+} 
   // Check cooldown
   const timestamps = cooldowns.get(command.config.name);
   if (timestamps) {
@@ -79,6 +103,7 @@ async function handleCommand(api, event) {
       args,
       message,
       commands,
+      getStreamFromURL,
       prefix: config.prefix,
       Users: global.Users,
       Threads: global.Threads
