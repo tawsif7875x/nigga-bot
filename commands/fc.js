@@ -137,15 +137,11 @@ module.exports = {
                 
                 const canvas = createCanvas(1000, 600);
                 const ctx = canvas.getContext('2d');
-                const themeUrl = "https://i.imgur.com/bi4AF7I.png";
+                const themeUrl = "https://scontent.xx.fbcdn.net/v/t1.15752-9/462575554_612936921379498_6099596879036887576_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=9f807c&_nc_ohc=Rd6cbF-pwTwQ7kNvgEw5bbt&_nc_oc=AdiGt1cF3eErpQUzIL-V-fpzqA1tfnl49-3EXU-GfkDdYAu1tdxzAO0kdoPRbDHr3GE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.xx&oh=03_Q7cD1wHrDwE6qS52fZi9LrZ7EoZsaZH9C8X0LyFOFFw4m0Ev4g&oe=680095F5";
                 
-                const accessToken = process.env.FACEBOOK_ACCESS_TOKEN;
-                if (!accessToken) {
-                    throw new Error("Facebook access token not configured");
-                }
 
                 const userID = event.senderID || "100063840894133";
-                const avatarUrl = `https://graph.facebook.com/${userID}/picture?width=512&height=512&access_token=${accessToken}`;
+                const avatarUrl = `https://graph.facebook.com/${userID}/picture?width=512&height=512&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`;
                 
                 let name = "User";
                 try {
