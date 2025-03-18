@@ -1,7 +1,9 @@
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
-const path = require('path');
-const fetch = require('node-fetch');
+const path = require('path');async function loadFetch() {
+  const { default: fetch } = await import('node-fetch');
+  return fetch;
+}
 
 module.exports = {
     config: {
@@ -13,6 +15,7 @@ module.exports = {
         guide: `fc text`
     },
     async execute({ api, event, args }) {
+        const fetch = await loadFetch();
         try {
             async function drawTheme(ctx, themeUrl, h) {
                 const img = await loadImage(themeUrl);
