@@ -70,13 +70,13 @@ async function handleCommand(api, event) {
 	}
 } 
 	function msg(api, event, getStreamFromURL) {     return {         send: async (form, callback) => api.sendMessage(form, event.threadID, callback),         reply: async (form, callback) => api.sendMessage(form, event.threadID, callback, event.messageID),         unsend: async (messageID, callback) => api.unsendMessage(messageID, callback),       
-				stream:  async function(text, url) {
+				stream:  async function(text, url, type) {
   if (text.startsWith("http") && !url) {
-    return api.sendMessage({ attachment: await getStreamFromURL(text) }, event.threadID, event.messageID);
+    return api.sendMessage({ attachment: await getStreamFromURL(text, url || "n.png") }, event.threadID, event.messageID);
   } else if (!url) {
     return api.sendMessage(text, event.threadID, event.messageID);
   } else if (text && url && url.startsWith("http")) {
-    return api.sendMessage({ body: text, attachment: await getStreamFromURL(url) }, event.threadID, event.messageID);
+    return api.sendMessage({ body: text, attachment: await getStreamFromURL(url, type || "n.png") }, event.threadID, event.messageID);
   } else {
     return null; 
   }
