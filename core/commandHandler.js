@@ -45,7 +45,7 @@ async function handleCommand(api, event) {
       return api.sendMessage("⚠️ You don't have permission to use this command.", threadID);
     }
   }
-  function msg(api, event, getStreamFromURL) {     return {         send: async (form, callback) => api.sendMessage(form, event.threadID, callback),         reply: async (form, callback) => api.sendMessage(form, event.threadID, callback, event.messageID),         unsend: async (messageID, callback) => api.unsendMessage(messageID, callback),        stream: async (url) => api.sendMessage({attachment: await getStreamFromURL(url)}, event.threadID, callback),        reaction: async (emoji, messageID, callback) => api.setMessageReaction(emoji, messageID, callback, true),         err: async (err) => sendMessageError(err),         error: async (err) => sendMessageError(err)     }; }  const message = msg(api, event);
+  function msg(api, event, getStreamFromURL) {     return {         send: async (form, callback) => api.sendMessage(form, event.threadID, callback),         reply: async (form, callback) => api.sendMessage(form, event.threadID, callback, event.messageID),         unsend: async (messageID, callback) => api.unsendMessage(messageID, callback),        stream: async (form, callback) => api.sendMessage({attachment: await getStreamFromURL(form)}, event.threadID, callback),        reaction: async (emoji, messageID, callback) => api.setMessageReaction(emoji, messageID, callback, true),         err: async (err) => sendMessageError(err),         error: async (err) => sendMessageError(err)     }; }  const message = msg(api, event);
 
 const axios = require('axios');
  async function getStreamFromURL(url = "", pathName = "", options = {}) {
