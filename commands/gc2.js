@@ -62,7 +62,7 @@ module.exports = {
 
     // Calculate canvas dimensions based on the text
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = commentLines.length * 28 + 100;
+    const canvasHeight = commentLines.length * 28 + 200;
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
