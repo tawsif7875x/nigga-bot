@@ -136,7 +136,7 @@ module.exports = {
 
     // Draw the avatar
     const avatarX = 30;
-    const avatarY = canvasHeight - 170;
+    const avatarY = canvasHeight - 160;
     const avatarWidth = 60;
     const avatarHeight = 60;
 
