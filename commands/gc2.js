@@ -117,7 +117,7 @@ module.exports = {
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
     // Adjust the bubble's vertical position without affecting the text
-    const bubbleX = commentX - 100;
+    const bubbleX = 25;
     const bubbleY = commentY - 20;
 
     // Draw the speech bubble
