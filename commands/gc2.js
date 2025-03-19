@@ -98,7 +98,7 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    const commentX = 130;
+    const commentX = 125; // Adjusted to move the bubble slightly to the left
     const commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
