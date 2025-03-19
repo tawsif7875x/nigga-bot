@@ -102,9 +102,9 @@ module.exports = {
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
 
     // Calculate the dimensions of the speech bubble
-    const bubblePadding = 22;
+    const bubblePadding = 17;
     const bubbleMaxWidth = commentMaxWidth + 20;
-    const bubbleWidth = Math.min(ctx.measureText(commentText).width + bubblePadding * 2, bubbleMaxWidth);
+    const bubbleWidth = Math.min(ctx.measureText(commentText).width + 40, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
     // Adjust the bubble's vertical position without affecting the text
@@ -116,7 +116,7 @@ module.exports = {
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 0;
     ctx.beginPath();
-    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 25);
+    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
