@@ -57,7 +57,7 @@ module.exports = {
     let commentText = mentionText.join(" ");
 
     // Measure the comment text
-    const commentMaxWidth = 480; // Set a max width for the comment
+    const commentMaxWidth = 450; // Set a max width for the comment
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
     // Calculate canvas dimensions based on the text
@@ -103,8 +103,8 @@ module.exports = {
 
     // Calculate the dimensions of the speech bubble
     const bubblePadding = 17;
-    const bubbleMaxWidth = commentMaxWidth + 20;
-    const bubbleWidth = Math.min(ctx.measureText(commentText).width + 40, bubbleMaxWidth);
+    const bubbleMaxWidth = commentMaxWidth + 40;
+    const bubbleWidth = Math.min(ctx.measureText(commentText).width + 35, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
     // Adjust the bubble's vertical position without affecting the text
@@ -113,7 +113,7 @@ module.exports = {
 
     // Draw the speech bubble
     ctx.fillStyle = "#333333";
-    ctx.strokeStyle = "#000000";
+    ctx.strokeStyle = "#333333";
     ctx.lineWidth = 0;
     ctx.beginPath();
     ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30);
