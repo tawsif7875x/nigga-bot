@@ -60,9 +60,19 @@ module.exports = {
     const commentMaxWidth = 450; // Set a max width for the comment
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
+    // Measure the name text
+    const nameMaxWidth = commentMaxWidth;
+    const nameLines = await this.wrapText(tempCtx, mentionedName, nameMaxWidth);
+
+    // Calculate total text height
+    const lineHeight = 28;
+    const nameHeight = nameLines.length * lineHeight;
+    const commentHeight = commentLines.length * lineHeight;
+    const totalTextHeight = nameHeight + commentHeight + 50; // Add padding
+
     // Calculate canvas dimensions based on the text
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = commentLines.length * 28 + 200;
+    const canvasHeight = totalTextHeight + 100; // Add extra space for the avatar
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -90,33 +100,35 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    const commentX = 145;
-    const commentY = 100;
-
-    const nameMaxWidth = canvas.width - 40;
+    // Draw the name text
     const nameX = 135;
     const nameY = 45;
     ctx.font = "500 25px Arial";
     ctx.fillStyle = "#FFFFFF";
+    nameLines.forEach((line, index) => {
+      ctx.fillText(line, nameX, nameY + index * lineHeight);
+    });
 
-    const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
+    // Draw the comment text
+    const commentX = 145;
+    const commentY = nameY + nameHeight + 20; // Position below the name
+    ctx.font = "500 25px Arial";
+    ctx.fillStyle = "#FFFFFF";
 
-    // Calculate the dimensions of the speech bubble
+    // Draw the speech bubble
     const bubblePadding = 18;
     const bubbleMaxWidth = commentMaxWidth + 35;
     const bubbleWidth = Math.min(ctx.measureText(commentText).width + 40, bubbleMaxWidth);
-    const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
+    const bubbleHeight = commentLines.length * lineHeight + bubblePadding * 2;
 
-    // Adjust the bubble's vertical position without affecting the text
-    const bubbleX = commentX - 13;
-    const bubbleY = commentY - 20;
+    const bubbleX = commentX - bubblePadding;
+    const bubbleY = commentY - bubblePadding;
 
-    // Draw the speech bubble
     ctx.fillStyle = "#333333";
     ctx.strokeStyle = "#333333";
     ctx.lineWidth = 0;
     ctx.beginPath();
-    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30);
+    ctx.roundRect(bubbleX, bubbleY, bubbleWidth, bubbleHeight, 30);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
@@ -124,21 +136,14 @@ module.exports = {
     // Draw the comment text inside the bubble
     ctx.fillStyle = "#FFFFFF";
     commentLines.forEach((line, index) => {
-      ctx.fillText(line, commentX, commentY + index * 28);
+      ctx.fillText(line, commentX, commentY + index * lineHeight);
     });
 
-    // Draw the name text
-    ctx.font = "400 19px Arial";
-    ctx.fillStyle = "#FFFFFF";
-    nameLines.forEach((line, index) => {
-      ctx.fillText(line, nameX, nameY + index * 28);
-    });
-
-    // Draw the avatar
-    const avatarX = 30;
-    const avatarY = 60;
+    // Draw the avatar at the bottom
     const avatarWidth = 60;
     const avatarHeight = 60;
+    const avatarX = 30;
+    const avatarY = canvasHeight - avatarHeight - 20; // Position at the bottom
 
     ctx.beginPath();
     ctx.arc(avatarX + avatarWidth / 2, avatarY + avatarHeight / 2, avatarWidth / 2, 0, Math.PI * 2);
