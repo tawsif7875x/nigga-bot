@@ -13,20 +13,28 @@ module.exports = {
     shortDescription: "get fakechat image"
   },
   wrapText: async function (ctx, text, maxWidth) {
-    const words = text.split(" ");
+    const segments = text.split("++"); // Split text by "++"
     const lines = [];
-    let line = "";
-    for (const word of words) {
-      const currentLine = `${line}${word} `;
-      const currentLineWidth = ctx.measureText(currentLine).width;
-      if (currentLineWidth <= maxWidth) {
-        line = currentLine;
-      } else {
-        lines.push(line.trim());
-        line = `${word} `;
+    
+    for (const segment of segments) {
+      const words = segment.split(" ");
+      let line = "";
+      
+      for (const word of words) {
+        const currentLine = `${line}${word} `;
+        const currentLineWidth = ctx.measureText(currentLine).width;
+        
+        if (currentLineWidth <= maxWidth) {
+          line = currentLine;
+        } else {
+          lines.push(line.trim());
+          line = `${word} `;
+        }
       }
+      
+      lines.push(line.trim());
     }
-    lines.push(line.trim());
+    
     return lines;
   },
   async execute({ args, usersData, threadsData, api, event }) {
@@ -136,7 +144,7 @@ module.exports = {
 
     // Draw the avatar
     const avatarX = 30;
-    const avatarY = canvasHeight - 168;
+    const avatarY = canvasHeight - 165;
     const avatarWidth = 60;
     const avatarHeight = 60;
 
