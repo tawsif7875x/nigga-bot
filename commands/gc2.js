@@ -54,7 +54,7 @@ module.exports = {
     fs.writeFileSync(pathImg, Buffer.from(getbackground, "binary"));
     let baseImage = await loadImage(pathImg);
     let baseAvt1 = await loadImage(pathAvt1);
-	let baseAvt2 = await loadImage(pathAvt1);
+    let baseAvt2 = await loadImage(pathAvt1);
 
     // Create a temporary canvas to measure text dimensions
     let tempCanvas = createCanvas(1, 1);
@@ -150,14 +150,16 @@ module.exports = {
     const avatarWidth = 60;
     const avatarHeight = 60;
 
+    ctx.save(); // Save the current context state
     ctx.beginPath();
     ctx.arc(avatarX + avatarWidth / 2, avatarY + avatarHeight / 2, avatarWidth / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
+    ctx.restore(); // Restore the context state
 
     // Draw the cloned avatar on the right side with a smaller size
-    const clonedAvatarX = 60; // Adjust the X position for the right side
+    const clonedAvatarX = canvasWidth - 100; // Adjust the X position for the right side
     const clonedAvatarY = canvasHeight - 165;
     const clonedAvatarWidth = 30; // Smaller size
     const clonedAvatarHeight = 30; // Smaller size
