@@ -98,7 +98,7 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    const commentX = 125; // Adjusted to move the bubble slightly to the left
+    const commentX = 145;
     const commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
@@ -116,8 +116,8 @@ module.exports = {
     const bubbleWidth = Math.min(longestLineWidth + 45, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
-    // Adjust the bubble's vertical position without affecting the text
-    const bubbleX = commentX - 100;
+    // Adjust the bubble's horizontal position without affecting the text
+    const bubbleX = commentX - 50; // Move the bubble to the left
     const bubbleY = commentY - 20;
 
     // Draw the speech bubble
@@ -125,7 +125,7 @@ module.exports = {
     ctx.strokeStyle = "#333333";
     ctx.lineWidth = 0;
     ctx.beginPath();
-    ctx.roundRect(commentX - bubblePadding, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30);
+    ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30); // Use bubbleX directly
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
@@ -133,7 +133,7 @@ module.exports = {
     // Draw the comment text inside the bubble
     ctx.fillStyle = "#FFFFFF";
     commentLines.forEach((line, index) => {
-      ctx.fillText(line, commentX, commentY + index * 28);
+      ctx.fillText(line, commentX, commentY + index * 28); // Keep the comment text position unchanged
     });
 
     // Draw the name text
