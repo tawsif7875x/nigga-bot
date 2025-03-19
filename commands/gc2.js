@@ -98,11 +98,11 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    const commentX = 145;
+    const commentX = 135;
     const commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
-    const nameX = 135;
+    const nameX = 125;
     const nameY = 45;
     ctx.font = "500 25px Arial";
     ctx.fillStyle = "#FFFFFF";
