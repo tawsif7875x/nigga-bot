@@ -102,13 +102,13 @@ module.exports = {
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
 
     // Calculate the dimensions of the speech bubble
-    const bubblePadding = 17;
-    const bubbleMaxWidth = commentMaxWidth + 40;
-    const bubbleWidth = Math.min(ctx.measureText(commentText).width + 35, bubbleMaxWidth);
+    const bubblePadding = 18;
+    const bubbleMaxWidth = commentMaxWidth + 35;
+    const bubbleWidth = Math.min(ctx.measureText(commentText).width + 40, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
     // Adjust the bubble's vertical position without affecting the text
-    const bubbleX = commentX - 10;
+    const bubbleX = commentX - 13;
     const bubbleY = commentY - 20;
 
     // Draw the speech bubble
