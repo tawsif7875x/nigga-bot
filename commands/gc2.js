@@ -66,7 +66,29 @@ module.exports = {
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
-    ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+
+    // Calculate the aspect ratio of the background image
+    const bgAspectRatio = baseImage.width / baseImage.height;
+    const canvasAspectRatio = canvasWidth / canvasHeight;
+
+    let bgWidth, bgHeight, bgX, bgY;
+
+    if (bgAspectRatio > canvasAspectRatio) {
+      // Background is wider than canvas
+      bgHeight = canvasHeight;
+      bgWidth = bgHeight * bgAspectRatio;
+      bgX = (canvasWidth - bgWidth) / 2;
+      bgY = 0;
+    } else {
+      // Background is taller than canvas
+      bgWidth = canvasWidth;
+      bgHeight = bgWidth / bgAspectRatio;
+      bgX = 0;
+      bgY = canvasHeight - bgHeight; // Align to the bottom
+    }
+
+    // Draw the background image
+    ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
     const commentX = 145;
     const commentY = 100;
