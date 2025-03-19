@@ -54,6 +54,7 @@ module.exports = {
     fs.writeFileSync(pathImg, Buffer.from(getbackground, "binary"));
     let baseImage = await loadImage(pathImg);
     let baseAvt1 = await loadImage(pathAvt1);
+	let baseAvt2 = await loadImage(pathAvt1);
 
     // Create a temporary canvas to measure text dimensions
     let tempCanvas = createCanvas(1, 1);
@@ -166,7 +167,7 @@ module.exports = {
     ctx.arc(clonedAvatarX + clonedAvatarWidth / 2, clonedAvatarY + clonedAvatarHeight / 2, clonedAvatarWidth / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
-    ctx.drawImage(baseAvt1, clonedAvatarX, clonedAvatarY, clonedAvatarWidth, clonedAvatarHeight);
+    ctx.drawImage(baseAvt2, clonedAvatarX, clonedAvatarY, clonedAvatarWidth, clonedAvatarHeight);
     ctx.restore(); // Restore the context state
 
     const imageBuffer = canvas.toBuffer();
