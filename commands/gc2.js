@@ -1,3 +1,4 @@
+editing king
 const { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
@@ -113,11 +114,11 @@ module.exports = {
     const bubblePadding = 18;
     const bubbleMaxWidth = commentMaxWidth + 35;
     const longestLineWidth = Math.max(...commentLines.map(line => ctx.measureText(line).width));
-    const bubbleWidth = Math.min(longestLineWidth + 40, bubbleMaxWidth);
+    const bubbleWidth = Math.min(longestLineWidth + 45, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
     // Adjust the bubble's vertical position without affecting the text
-    const bubbleX = commentX - 13;
+    const bubbleX = commentX - 18;
     const bubbleY = commentY - 20;
 
     // Draw the speech bubble
