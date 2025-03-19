@@ -144,7 +144,7 @@ module.exports = {
     });
 
     // Draw the avatar
-    const avatarX = 30;
+    const avatarX = 20;
     const avatarY = canvasHeight - 165;
     const avatarWidth = 60;
     const avatarHeight = 60;
