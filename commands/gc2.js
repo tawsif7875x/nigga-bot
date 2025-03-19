@@ -143,7 +143,7 @@ module.exports = {
       ctx.fillText(line, nameX, nameY + index * 28);
     });
 
-    // Draw the avatar
+    // Draw the avatar on the left side
     const avatarX = 20;
     const avatarY = canvasHeight - 165;
     const avatarWidth = 60;
@@ -154,6 +154,20 @@ module.exports = {
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
+
+    // Draw the cloned avatar on the right side with a smaller size
+    const clonedAvatarX = canvasWidth - 80; // Adjust the X position for the right side
+    const clonedAvatarY = canvasHeight - 165;
+    const clonedAvatarWidth = 20; // Smaller size
+    const clonedAvatarHeight = 20; // Smaller size
+
+    ctx.save(); // Save the current context state
+    ctx.beginPath();
+    ctx.arc(clonedAvatarX + clonedAvatarWidth / 2, clonedAvatarY + clonedAvatarHeight / 2, clonedAvatarWidth / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(baseAvt1, clonedAvatarX, clonedAvatarY, clonedAvatarWidth, clonedAvatarHeight);
+    ctx.restore(); // Restore the context state
 
     const imageBuffer = canvas.toBuffer();
     fs.writeFileSync(pathImg, imageBuffer);
