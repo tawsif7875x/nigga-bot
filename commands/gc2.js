@@ -1,3 +1,4 @@
+cloned avatar
 const { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
@@ -156,10 +157,10 @@ module.exports = {
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
 
     // Draw the cloned avatar on the right side with a smaller size
-    const clonedAvatarX = canvasWidth - 80; // Adjust the X position for the right side
+    const clonedAvatarX = 20; // Adjust the X position for the right side
     const clonedAvatarY = canvasHeight - 165;
-    const clonedAvatarWidth = 20; // Smaller size
-    const clonedAvatarHeight = 20; // Smaller size
+    const clonedAvatarWidth = 30; // Smaller size
+    const clonedAvatarHeight = 30; // Smaller size
 
     ctx.save(); // Save the current context state
     ctx.beginPath();
