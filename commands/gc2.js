@@ -112,7 +112,8 @@ module.exports = {
     // Calculate the dimensions of the speech bubble
     const bubblePadding = 18;
     const bubbleMaxWidth = commentMaxWidth + 35;
-    const bubbleWidth = Math.min(ctx.measureText(commentText).width + 40, bubbleMaxWidth);
+    const longestLineWidth = Math.max(...commentLines.map(line => ctx.measureText(line).width));
+    const bubbleWidth = Math.min(longestLineWidth + 40, bubbleMaxWidth);
     const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
 
     // Adjust the bubble's vertical position without affecting the text
