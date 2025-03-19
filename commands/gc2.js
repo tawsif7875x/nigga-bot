@@ -157,7 +157,7 @@ module.exports = {
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
 
     // Draw the cloned avatar on the right side with a smaller size
-    const clonedAvatarX = 20; // Adjust the X position for the right side
+    const clonedAvatarX = 60; // Adjust the X position for the right side
     const clonedAvatarY = canvasHeight - 165;
     const clonedAvatarWidth = 30; // Smaller size
     const clonedAvatarHeight = 30; // Smaller size
