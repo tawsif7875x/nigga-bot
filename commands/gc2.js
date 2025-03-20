@@ -99,13 +99,13 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    const commentX = 135;
+    const commentX = 130;
     const commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
-    const nameX = 125;
+    const nameX = 120;
     const nameY = 45;
-    ctx.font = "500 25px Arial";
+    ctx.font = "500 27px Arial";
     ctx.fillStyle = "#FFFFFF";
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
