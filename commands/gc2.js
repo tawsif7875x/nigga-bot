@@ -86,7 +86,7 @@ module.exports = {
 
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = totalBubbleHeight + 200; // Add some padding
+    const canvasHeight = totalBubbleHeight + 120; // Add some padding
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -159,7 +159,7 @@ module.exports = {
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [0, 30, 30, 30]);
       } else {
         // Middle bubbles: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [30, 30, 30, 30]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [0, 30, 30, 0]);
       }
 
       ctx.closePath();
