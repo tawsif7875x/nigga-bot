@@ -153,13 +153,13 @@ module.exports = {
       // Adjust the border radius based on the bubble position
       if (i === 0) {
         // First bubble: down-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [30, 30, 30, 0]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [30, 30, 30, 5]);
       } else if (i === bubbleTexts.length - 1) {
         // Last bubble: up-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [0, 30, 30, 30]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [5, 30, 30, 30]);
       } else {
         // Middle bubbles: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [0, 30, 30, 0]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [5, 30, 30, 5]);
       }
 
       ctx.closePath();
@@ -173,7 +173,7 @@ module.exports = {
       });
 
       // Update the Y offset for the next bubble
-      bubbleYOffset += bubbleHeight + 10; // Add some spacing between bubbles
+      bubbleYOffset += bubbleHeight + 5; // Add some spacing between bubbles
     }
 
     // Draw the name text
