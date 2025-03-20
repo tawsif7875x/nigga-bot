@@ -121,9 +121,9 @@ module.exports = {
     const bubbleX = commentX - 24; // Move the bubble to the left
     const bubbleY = commentY - 20;
 
-    // Draw the speech bubble
-    ctx.fillStyle = "#333333";
-    ctx.strokeStyle = "#333333";
+    // Draw the speech bubble with 70% opacity
+    ctx.fillStyle = "rgba(51, 51, 51, 0.7)"; // 70% opacity
+    ctx.strokeStyle = "rgba(51, 51, 51, 0.7)"; // 70% opacity
     ctx.lineWidth = 0;
     ctx.beginPath();
     ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30); // Use bubbleX directly
@@ -159,7 +159,7 @@ module.exports = {
     ctx.restore(); // Restore the context state
 
     // Draw the cloned avatar on the right side with a smaller size
-    const clonedAvatarX = canvasWidth - 50; // Adjust the X position for the right side
+    const clonedAvatarX = canvasWidth - 45; // Adjust the X position for the right side
     const clonedAvatarY = canvasHeight - 125;
     const clonedAvatarWidth = 25; // Smaller size
     const clonedAvatarHeight = 25; // Smaller size
