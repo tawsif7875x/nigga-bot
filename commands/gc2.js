@@ -147,8 +147,8 @@ module.exports = {
     // Draw the avatar on the left side
     const avatarX = 20;
     const avatarY = canvasHeight - 165;
-    const avatarWidth = 60;
-    const avatarHeight = 60;
+    const avatarWidth = 55;
+    const avatarHeight = 55;
 
     ctx.save(); // Save the current context state
     ctx.beginPath();
@@ -159,7 +159,7 @@ module.exports = {
     ctx.restore(); // Restore the context state
 
     // Draw the cloned avatar on the right side with a smaller size
-    const clonedAvatarX = canvasWidth - 45; // Adjust the X position for the right side
+    const clonedAvatarX = canvasWidth - 40; // Adjust the X position for the right side
     const clonedAvatarY = canvasHeight - 125;
     const clonedAvatarWidth = 25; // Smaller size
     const clonedAvatarHeight = 25; // Smaller size
