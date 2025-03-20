@@ -1,3 +1,4 @@
+separated bubble
 const { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
@@ -12,13 +13,15 @@ module.exports = {
     category: "fun",
     shortDescription: "get fakechat image"
   },
+
   wrapText: async function (ctx, text, maxWidth) {
     const segments = text.split("++"); // Split text by "++"
-    const lines = [];
+    const bubbles = [];
     
     for (const segment of segments) {
       const words = segment.split(" ");
       let line = "";
+      const lines = [];
       
       for (const word of words) {
         const currentLine = `${line}${word} `;
@@ -33,10 +36,12 @@ module.exports = {
       }
       
       lines.push(line.trim());
+      bubbles.push(lines);
     }
     
-    return lines;
+    return bubbles;
   },
+
   async execute({ args, usersData, threadsData, api, event }) {
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
@@ -67,11 +72,11 @@ module.exports = {
 
     // Measure the comment text
     const commentMaxWidth = 450; // Set a max width for the comment
-    const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
+    const commentBubbles = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
     // Calculate canvas dimensions based on the text
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = commentLines.length * 28 + 200;
+    const canvasHeight = commentBubbles.reduce((acc, bubble) => acc + bubble.length * 28 + 50, 200);
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -99,43 +104,16 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    const commentX = 130;
-    const commentY = 100;
+    const commentX = 135;
+    let commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
-    const nameX = 120;
+    const nameX = 125;
     const nameY = 45;
-    ctx.font = "500 27px Arial";
+    ctx.font = "500 25px Arial";
     ctx.fillStyle = "#FFFFFF";
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
-
-    // Calculate the dimensions of the speech bubble
-    const bubblePadding = 18;
-    const bubbleMaxWidth = commentMaxWidth + 35;
-    const longestLineWidth = Math.max(...commentLines.map(line => ctx.measureText(line).width));
-    const bubbleWidth = Math.min(longestLineWidth + 45, bubbleMaxWidth);
-    const bubbleHeight = commentLines.length * 28 + bubblePadding * 2;
-
-    // Adjust the bubble's horizontal position without affecting the text
-    const bubbleX = commentX - 24; // Move the bubble to the left
-    const bubbleY = commentY - 20;
-
-    // Draw the speech bubble with 70% opacity
-    ctx.fillStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
-    ctx.strokeStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
-    ctx.lineWidth = 0;
-    ctx.beginPath();
-    ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30); // Use bubbleX directly
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    // Draw the comment text inside the bubble
-    ctx.fillStyle = "#FFFFFF";
-    commentLines.forEach((line, index) => {
-      ctx.fillText(line, commentX, commentY + index * 28); // Keep the comment text position unchanged
-    });
 
     // Draw the name text
     ctx.font = "400 19px Arial";
@@ -143,6 +121,38 @@ module.exports = {
     nameLines.forEach((line, index) => {
       ctx.fillText(line, nameX, nameY + index * 28);
     });
+
+    // Draw each bubble
+    for (const bubbleLines of commentBubbles) {
+      const bubblePadding = 18;
+      const bubbleMaxWidth = commentMaxWidth + 35;
+      const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width));
+      const bubbleWidth = Math.min(longestLineWidth + 45, bubbleMaxWidth);
+      const bubbleHeight = bubbleLines.length * 28 + bubblePadding * 2;
+
+      // Adjust the bubble's horizontal position without affecting the text
+      const bubbleX = commentX - 24; // Move the bubble to the left
+      const bubbleY = commentY - 20;
+
+      // Draw the speech bubble with 70% opacity
+      ctx.fillStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
+      ctx.strokeStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
+      ctx.lineWidth = 0;
+      ctx.beginPath();
+      ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30); // Use bubbleX directly
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw the comment text inside the bubble
+      ctx.fillStyle = "#FFFFFF";
+      bubbleLines.forEach((line, index) => {
+        ctx.fillText(line, commentX, commentY + index * 28); // Keep the comment text position unchanged
+      });
+
+      // Update the Y position for the next bubble
+      commentY += bubbleHeight + 20;
+    }
 
     // Draw the avatar on the left side
     const avatarX = 20;
