@@ -69,9 +69,24 @@ module.exports = {
     const commentMaxWidth = 450; // Set a max width for the comment
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
-    // Calculate canvas dimensions based on the text
+    // Split the comment text into multiple bubbles based on "++"
+    const bubbleTexts = commentText.split("++");
+
+    // Calculate the total height required for all bubbles
+    let totalBubbleHeight = 0;
+    for (let i = 0; i < bubbleTexts.length; i++) {
+      const bubbleText = bubbleTexts[i].trim();
+      if (!bubbleText) continue;
+
+      const bubbleLines = await this.wrapText(tempCtx, bubbleText, commentMaxWidth);
+      const bubblePadding = 18;
+      const bubbleHeight = bubbleLines.length * 28 + bubblePadding * 2;
+      totalBubbleHeight += bubbleHeight + 10; // Add some spacing between bubbles
+    }
+
+    // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = commentLines.length * 28 + 200;
+    const canvasHeight = totalBubbleHeight + 200; // Add some padding
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -110,9 +125,6 @@ module.exports = {
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
 
-    // Split the comment text into multiple bubbles based on "++"
-    const bubbleTexts = commentText.split("++");
-
     // Draw each bubble separately
     let bubbleYOffset = 0;
     for (let i = 0; i < bubbleTexts.length; i++) {
@@ -147,7 +159,7 @@ module.exports = {
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [0, 30, 30, 30]);
       } else {
         // Middle bubbles: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [30, 30, 30, 30]);
       }
 
       ctx.closePath();
