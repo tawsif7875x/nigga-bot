@@ -86,7 +86,7 @@ module.exports = {
 
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = totalBubbleHeight + 120; // Add some padding
+    const canvasHeight = totalBubbleHeight + 160; // Add some padding
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
