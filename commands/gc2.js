@@ -122,8 +122,8 @@ module.exports = {
     const bubbleY = commentY - 20;
 
     // Draw the speech bubble with 70% opacity
-    ctx.fillStyle = "rgba(51, 51, 51, 0.8)"; // 70% opacity
-    ctx.strokeStyle = "rgba(51, 51, 51, 0.8)"; // 70% opacity
+    ctx.fillStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
+    ctx.strokeStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
     ctx.lineWidth = 0;
     ctx.beginPath();
     ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, 30); // Use bubbleX directly
