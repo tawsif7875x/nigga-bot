@@ -122,7 +122,7 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    const commentX = 135;
+    const commentX = 125;
     const commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
