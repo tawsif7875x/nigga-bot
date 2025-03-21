@@ -145,8 +145,8 @@ module.exports = {
       const bubbleY = commentY - 20 + bubbleYOffset;
 
       // Draw the speech bubble with 70% opacity
-      ctx.fillStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
-      ctx.strokeStyle = "rgba(51, 51, 51, 0.85)"; // 85% opacity
+      ctx.fillStyle = "rgba(51, 51, 51, 0.9)"; // 85% opacity
+      ctx.strokeStyle = "rgba(51, 51, 51, 0.9)"; // 85% opacity
       ctx.lineWidth = 0;
       ctx.beginPath();
 
@@ -185,7 +185,7 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 20;
-    const avatarY = canvasHeight - 165;
+    const avatarY = canvasHeight - 155;
     const avatarWidth = 55;
     const avatarHeight = 55;
 
