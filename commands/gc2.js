@@ -97,7 +97,7 @@ module.exports = {
 
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = totalBubbleHeight + 160 + 50; // Add extra 50 pixels to the top
+    const canvasHeight = totalBubbleHeight + 160 + 40; // Add extra 50 pixels to the top
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -129,7 +129,7 @@ module.exports = {
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
     // Draw the time at the top-middle of the canvas
-    ctx.font = "530 17px Arial";
+    ctx.font = "530 18px Arial";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
