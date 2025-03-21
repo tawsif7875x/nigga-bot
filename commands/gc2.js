@@ -129,7 +129,7 @@ module.exports = {
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
     // Draw the time at the top-middle of the canvas
-    ctx.font = "530 20px Arial";
+    ctx.font = "530 15px Arial";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
@@ -140,8 +140,8 @@ module.exports = {
     const commentY = 150; // Increased by 50 pixels to shift content downward
 
     const nameMaxWidth = canvas.width - 40;
-    const nameX = 115;
-    const nameY = 95; // Increased by 50 pixels to shift content downward
+    const nameX = 105;
+    const nameY = 85; // Increased by 50 pixels to shift content downward
     ctx.font = "530 25px Arial";
     ctx.fillStyle = "#FFFFFF";
 
@@ -210,7 +210,7 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 20;
-    const avatarY = canvasHeight - 120; // Adjusted to align with the new canvas height
+    const avatarY = canvasHeight - 160; // Adjusted to align with the new canvas height
     const avatarWidth = 50;
     const avatarHeight = 50;
 
@@ -224,7 +224,7 @@ module.exports = {
 
     // Draw the cloned avatar on the right side with a smaller size
     const clonedAvatarX = canvasWidth - 40; // Adjust the X position for the right side
-    const clonedAvatarY = canvasHeight - 75; // Adjusted to align with the new canvas height
+    const clonedAvatarY = canvasHeight - 100; // Adjusted to align with the new canvas height
     const clonedAvatarWidth = 25; // Smaller size
     const clonedAvatarHeight = 25; // Smaller size
 
