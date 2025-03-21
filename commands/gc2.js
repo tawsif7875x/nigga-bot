@@ -38,19 +38,23 @@ module.exports = {
     return lines;
   },
   async execute({ args, usersData, threadsData, api, event }) {
-        let userInput = args.join(" ");
+    let userInput = args.join(" ");
     let mentionText = userInput.split("|").map(text => text.trim());
     let commentText = mentionText.join(" ");
     
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
     let mentionedID = event.senderID;
-    if (event.messageReply) { mentionedID = event.messageReply.senderID;
-                            } else if (userInput.match(/|/)) {
-      if (!(userInput.split("|")[1])) { mentionedID = event.senderID
-                                      } else if ((userInput.split("|")[1]).match(/.com/)) { mentionedID = (await api.getUID(userInput.split("|")[1]));
-                                                                                          } else { mentiondedID = userInput.split("|")[1];
-                                                                                                 }
+    if (event.messageReply) { 
+      mentionedID = event.messageReply.senderID;
+    } else if (userInput.match(/|/)) {
+      if (!(userInput.split("|")[1])) { 
+        mentionedID = event.senderID;
+      } else if ((userInput.split("|")[1]).match(/.com/)) { 
+        mentionedID = (await api.getUID(userInput.split("|")[1]));
+      } else { 
+        mentionedID = userInput.split("|")[1];
+      }
     }
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
     let ThreadInfo = await api.getThreadInfo(event.threadID);
@@ -71,7 +75,6 @@ module.exports = {
     let tempCanvas = createCanvas(1, 1);
     let tempCtx = tempCanvas.getContext("2d");
     tempCtx.font = "530 25px Arial";
-
 
     // Measure the comment text
     const commentMaxWidth = 450; // Set a max width for the comment
@@ -159,7 +162,10 @@ module.exports = {
       ctx.beginPath();
 
       // Adjust the border radius based on the bubble position
-      if (i === 0) {
+      if (bubbleTexts.length === 1) {
+        // Only one bubble: all borders rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [35, 35, 35, 35]);
+      } else if (i === 0) {
         // First bubble: down-left border not rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [35, 35, 35, 10]);
       } else if (i === bubbleTexts.length - 1) {
