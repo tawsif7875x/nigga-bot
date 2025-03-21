@@ -129,7 +129,7 @@ module.exports = {
     const commentY = 100;
 
     const nameMaxWidth = canvas.width - 40;
-    const nameX = 125;
+    const nameX = 115;
     const nameY = 45;
     ctx.font = "530 25px Arial";
     ctx.fillStyle = "#FFFFFF";
