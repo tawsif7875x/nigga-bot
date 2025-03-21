@@ -70,7 +70,7 @@ module.exports = {
     // Create a temporary canvas to measure text dimensions
     let tempCanvas = createCanvas(1, 1);
     let tempCtx = tempCanvas.getContext("2d");
-    tempCtx.font = "500 25px Arial";
+    tempCtx.font = "500 25px Verdana";
 
 
     // Measure the comment text
@@ -128,7 +128,7 @@ module.exports = {
     const nameMaxWidth = canvas.width - 40;
     const nameX = 125;
     const nameY = 45;
-    ctx.font = "510 25px Arial";
+    ctx.font = "510 25px Verdana";
     ctx.fillStyle = "#FFFFFF";
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
@@ -185,7 +185,7 @@ module.exports = {
     }
 
     // Draw the name text
-    ctx.font = "400 19px Arial";
+    ctx.font = "400 19px Verdana";
     ctx.fillStyle = "#FFFFFF";
     nameLines.forEach((line, index) => {
       ctx.fillText(line, nameX, nameY + index * 28);
