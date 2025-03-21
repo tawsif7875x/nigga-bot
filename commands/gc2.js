@@ -97,7 +97,7 @@ module.exports = {
 
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = totalBubbleHeight + 160; // Add some padding
+    const canvasHeight = totalBubbleHeight + 160 + 50; // Add extra 50 pixels to the top
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -133,15 +133,15 @@ module.exports = {
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
-    const timeY = 30; // Position at the top
+    const timeY = 50; // Position at the top (increased by 20 pixels)
     ctx.fillText(t, timeX, timeY);
 
     const commentX = 125;
-    const commentY = 100;
+    const commentY = 150; // Increased by 50 pixels to shift content downward
 
     const nameMaxWidth = canvas.width - 40;
     const nameX = 115;
-    const nameY = 45;
+    const nameY = 95; // Increased by 50 pixels to shift content downward
     ctx.font = "530 25px Arial";
     ctx.fillStyle = "#FFFFFF";
 
@@ -210,7 +210,7 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 20;
-    const avatarY = canvasHeight - 170;
+    const avatarY = canvasHeight - 120; // Adjusted to align with the new canvas height
     const avatarWidth = 50;
     const avatarHeight = 50;
 
@@ -224,7 +224,7 @@ module.exports = {
 
     // Draw the cloned avatar on the right side with a smaller size
     const clonedAvatarX = canvasWidth - 40; // Adjust the X position for the right side
-    const clonedAvatarY = canvasHeight - 125;
+    const clonedAvatarY = canvasHeight - 75; // Adjusted to align with the new canvas height
     const clonedAvatarWidth = 25; // Smaller size
     const clonedAvatarHeight = 25; // Smaller size
 
