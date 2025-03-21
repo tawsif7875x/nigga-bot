@@ -185,7 +185,7 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 20;
-    const avatarY = canvasHeight - 155;
+    const avatarY = canvasHeight - 175;
     const avatarWidth = 55;
     const avatarHeight = 55;
 
