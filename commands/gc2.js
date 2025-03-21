@@ -128,7 +128,7 @@ module.exports = {
     const nameMaxWidth = canvas.width - 40;
     const nameX = 125;
     const nameY = 45;
-    ctx.font = "510 25px Verdana";
+    ctx.font = "500 25px Verdana";
     ctx.fillStyle = "#FFFFFF";
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
