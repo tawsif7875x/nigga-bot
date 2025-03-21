@@ -185,9 +185,9 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 20;
-    const avatarY = canvasHeight - 175;
-    const avatarWidth = 55;
-    const avatarHeight = 55;
+    const avatarY = canvasHeight - 170;
+    const avatarWidth = 50;
+    const avatarHeight = 50;
 
     ctx.save(); // Save the current context state
     ctx.beginPath();
