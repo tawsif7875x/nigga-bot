@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
     config: {
-        name: "prompt",
+        name: "p",
         author: "Tawsif~ & Fahim Api's",
         category: "image",
         countDown: 5,
