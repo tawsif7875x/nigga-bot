@@ -38,9 +38,20 @@ module.exports = {
     return lines;
   },
   async execute({ args, usersData, threadsData, api, event }) {
+        let userInput = args.join(" ");
+    let mentionText = userInput.split("|").map(text => text.trim());
+    let commentText = mentionText.join(" ");
+    
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
-    let mentionedID = Object.keys(event.mentions)[0] || event.senderID;
+    let mentionedID = event.senderID;
+    if (event.messageReply) { mentionedID = event.messageReply.senderID;
+                            } else if (userInput.match(/|/)) {
+      if (!(userInput.split("|")[1])) { mentionedID = event.senderID
+                                      } else if ((userInput.split("|")[1]).match(/.com/)) { mentionedID = (await api.getUID(userInput.split("|")[1]));
+                                                                                          } else { mentiondedID = userInput.split("|")[1];
+                                                                                                 }
+    }
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
     let ThreadInfo = await api.getThreadInfo(event.threadID);
     let background = ["https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742466954445.png"];
@@ -61,9 +72,6 @@ module.exports = {
     let tempCtx = tempCanvas.getContext("2d");
     tempCtx.font = "500 25px Arial";
 
-    const userInput = args.join(" ");
-    let mentionText = userInput.split("|").map(text => text.trim());
-    let commentText = mentionText.join(" ");
 
     // Measure the comment text
     const commentMaxWidth = 450; // Set a max width for the comment
