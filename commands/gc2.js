@@ -125,6 +125,17 @@ module.exports = {
     // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
+    // Get the current time in Dhaka timezone
+    const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
+
+    // Draw the time at the top-middle of the canvas
+    ctx.font = "530 20px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    const timeTextWidth = ctx.measureText(t).width;
+    const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
+    const timeY = 30; // Position at the top
+    ctx.fillText(t, timeX, timeY);
+
     const commentX = 125;
     const commentY = 100;
 
