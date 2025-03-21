@@ -70,7 +70,7 @@ module.exports = {
     // Create a temporary canvas to measure text dimensions
     let tempCanvas = createCanvas(1, 1);
     let tempCtx = tempCanvas.getContext("2d");
-    tempCtx.font = "520 25px Arial";
+    tempCtx.font = "530 25px Arial";
 
 
     // Measure the comment text
@@ -128,7 +128,7 @@ module.exports = {
     const nameMaxWidth = canvas.width - 40;
     const nameX = 125;
     const nameY = 45;
-    ctx.font = "520 25px Arial";
+    ctx.font = "530 25px Arial";
     ctx.fillStyle = "#FFFFFF";
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
@@ -161,13 +161,13 @@ module.exports = {
       // Adjust the border radius based on the bubble position
       if (i === 0) {
         // First bubble: down-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [30, 30, 30, 5]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [35, 35, 35, 10]);
       } else if (i === bubbleTexts.length - 1) {
         // Last bubble: up-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [5, 30, 30, 30]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [10, 35, 35, 35]);
       } else {
         // Middle bubbles: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [5, 30, 30, 5]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [10, 35, 35, 10]);
       }
 
       ctx.closePath();
