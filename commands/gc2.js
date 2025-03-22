@@ -61,6 +61,7 @@ module.exports = {
     let bn = 0;
     if (userInput.match(/--theme/)) { bn = userInput.split("--theme")[1];
                                       userInput = userInput.split("--theme")[0];
+                 }
     let rd = background[bn];
     let getAvtmot = (await axios.get(
       `https://graph.facebook.com/${mentionedID}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`,
