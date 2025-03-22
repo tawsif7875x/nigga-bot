@@ -1,3 +1,4 @@
+3;themes
 const { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
@@ -39,9 +40,6 @@ module.exports = {
   },
   async execute({ args, usersData, threadsData, api, event }) {
     let userInput = args.join(" ");
-    
-    let commentText = userInput;
-    
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
     let mentionedID = event.senderID;
@@ -60,6 +58,7 @@ module.exports = {
     if (userInput.match(/--theme/)) { bn = userInput.split("--theme ")[1];
                                       userInput = userInput.split("--theme ")[0];
                  }
+    let commentText = userInput;
     let rd = background[bn];
     let getAvtmot = (await axios.get(
       `https://graph.facebook.com/${mentionedID}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`,
@@ -130,7 +129,7 @@ module.exports = {
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
     // Draw the time at the top-middle of the canvas
-    ctx.font = "540 17px Arial";
+    ctx.font = "550 17px Arial";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
