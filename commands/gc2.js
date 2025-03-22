@@ -129,11 +129,11 @@ module.exports = {
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
     // Draw the time at the top-middle of the canvas
-    ctx.font = "530 18px Arial";
+    ctx.font = "540 17px Arial";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
-    const timeY = 50; // Position at the top (increased by 20 pixels)
+    const timeY = 45; // Position at the top (increased by 20 pixels)
     ctx.fillText(t, timeX, timeY);
 
     const commentX = 125;
@@ -175,16 +175,16 @@ module.exports = {
       // Adjust the border radius based on the bubble position
       if (bubbleTexts.length === 1) {
         // Only one bubble: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [35, 35, 35, 35]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [33, 33, 33, 33]);
       } else if (i === 0) {
         // First bubble: down-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [35, 35, 35, 10]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [33, 33, 33, 8]);
       } else if (i === bubbleTexts.length - 1) {
         // Last bubble: up-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [10, 35, 35, 35]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8, 33, 33, 33]);
       } else {
         // Middle bubbles: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [10, 35, 35, 10]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8, 33, 33, 8]);
       }
 
       ctx.closePath();
@@ -210,7 +210,7 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 20;
-    const avatarY = canvasHeight - 160; // Adjusted to align with the new canvas height
+    const avatarY = canvasHeight - 170; // Adjusted to align with the new canvas height
     const avatarWidth = 50;
     const avatarHeight = 50;
 
@@ -224,7 +224,7 @@ module.exports = {
 
     // Draw the cloned avatar on the right side with a smaller size
     const clonedAvatarX = canvasWidth - 40; // Adjust the X position for the right side
-    const clonedAvatarY = canvasHeight - 120; // Adjusted to align with the new canvas height
+    const clonedAvatarY = canvasHeight - 130; // Adjusted to align with the new canvas height
     const clonedAvatarWidth = 25; // Smaller size
     const clonedAvatarHeight = 25; // Smaller size
 
