@@ -1,4 +1,3 @@
-3;themes
 const { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
