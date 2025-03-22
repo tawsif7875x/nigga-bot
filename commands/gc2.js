@@ -39,28 +39,26 @@ module.exports = {
   },
   async execute({ args, usersData, threadsData, api, event }) {
     let userInput = args.join(" ");
-    let mentionText = userInput.split("|").map(text => text.trim());
-    let commentText = mentionText.join(" ");
+    
+    let commentText = userInput;
     
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
     let mentionedID = event.senderID;
     if (event.messageReply) { 
       mentionedID = event.messageReply.senderID;
-    } else if (userInput.match(/|/)) {
-      if (!(userInput.split("|")[1])) { 
-        mentionedID = event.senderID;
-      } else if ((userInput.split("|")[1]).match(/.com/)) { 
-        mentionedID = (await api.getUID(userInput.split("|")[1]));
+    } else if (userInput.match(/--user /)) {
+       if ((userInput.split("--user ")[1]).match(/.com/)) { 
+        mentionedID = (await api.getUID(userInput.split("--user ")[1]));
       } else { 
-        mentionedID = userInput.split("|")[1];
+        mentionedID = userInput.split("--user ")[1];
       }
     }
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
     let background = ["https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742466954445.png", "https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742642829480.png", "https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742644074382-01.png"];
     let bn = 0;
-    if (userInput.match(/--theme/)) { bn = userInput.split("--theme")[1];
-                                      userInput = userInput.split("--theme")[0];
+    if (userInput.match(/--theme/)) { bn = userInput.split("--theme ")[1];
+                                      userInput = userInput.split("--theme ")[0];
                  }
     let rd = background[bn];
     let getAvtmot = (await axios.get(
@@ -132,7 +130,7 @@ module.exports = {
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
     // Draw the time at the top-middle of the canvas
-    ctx.font = "550 17px Arial";
+    ctx.font = "540 17px Arial";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
