@@ -1,4 +1,4 @@
-const { loadImage, createCanvas } = require("canvas");
+lconst { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
 
@@ -58,7 +58,10 @@ module.exports = {
     }
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
     let background = ["https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742466954445.png", "https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742642829480.png", "https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742644074382-01.png"];
-    let rd = background[Math.floor(Math.random() * background.length)];
+    let bn = 0;
+    if (userInput.match(/--theme/)) { bn = userInput.split("--theme")[1];
+                                      userInput = userInput.split("--theme")[0];
+    let rd = background[bn];
     let getAvtmot = (await axios.get(
       `https://graph.facebook.com/${mentionedID}/picture?width=720&height=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662`,
       { responseType: "arraybuffer" }
@@ -128,11 +131,11 @@ module.exports = {
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
     // Draw the time at the top-middle of the canvas
-    ctx.font = "540 17px Arial";
+    ctx.font = "550 17px Arial";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
-    const timeY = 45; // Position at the top (increased by 20 pixels)
+    const timeY = 40; // Position at the top (increased by 20 pixels)
     ctx.fillText(t, timeX, timeY);
 
     const commentX = 125;
@@ -165,9 +168,13 @@ module.exports = {
       const bubbleX = commentX - 24; // Move the bubble to the left
       const bubbleY = commentY - 20 + bubbleYOffset;
 
-      // Draw the speech bubble with 70% opacity
-      ctx.fillStyle = "rgba(51, 51, 51, 1.0)"; // 85% opacity
-      ctx.strokeStyle = "rgba(51, 51, 51, 1.0)"; // 85% opacity
+      let fills = "rgba(51, 51, 51, 1.0)";
+      let strokes = "rgba(51, 51, 51, 1.0)";
+      if (bn === 1) { fills = "rgba(50, 30, 20, 1.0);
+        strokes = "rgba(50, 30, 20, 1)";
+      }
+      ctx.fillStyle = fills; // 85% opacity
+      ctx.strokeStyle = strokes; // 85% opacity
       ctx.lineWidth = 0;
       ctx.beginPath();
 
@@ -223,7 +230,7 @@ module.exports = {
 
     // Draw the cloned avatar on the right side with a smaller size
     const clonedAvatarX = canvasWidth - 40; // Adjust the X position for the right side
-    const clonedAvatarY = canvasHeight - 130; // Adjusted to align with the new canvas height
+    const clonedAvatarY = canvasHeight - 125; // Adjusted to align with the new canvas height
     const clonedAvatarWidth = 25; // Smaller size
     const clonedAvatarHeight = 25; // Smaller size
 
