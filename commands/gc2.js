@@ -1,4 +1,4 @@
-lconst { loadImage, createCanvas } = require("canvas");
+const { loadImage, createCanvas } = require("canvas");
 const fs = require("fs");
 const axios = require("axios");
 
