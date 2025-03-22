@@ -170,7 +170,7 @@ module.exports = {
 
       let fills = "rgba(51, 51, 51, 1.0)";
       let strokes = "rgba(51, 51, 51, 1.0)";
-      if (bn === 1) { fills = "rgba(50, 30, 20, 1.0);
+      if (bn === 1) { fills = "rgba(50, 30, 20, 1.0)";
         strokes = "rgba(50, 30, 20, 1)";
       }
       ctx.fillStyle = fills; // 85% opacity
