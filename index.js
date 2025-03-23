@@ -116,15 +116,6 @@ async function initBot() {
     // Start listening
     api.listenMqtt(async (err, message) => {
       if (err) return logger.error(err);
-      
-      if (message.body?.startsWith(config.prefix)) {
-        const delay = Math.floor(Math.random() * 
-          (config.performance.commandDelay.max - config.performance.commandDelay.min + 1)) + 
-          config.performance.commandDelay.min;
-        setTimeout(() => handleCommand(api, message), delay);
-      }
-
-      handleEvent(api, message);
     });
     
   } catch (error) {
