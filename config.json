@@ -1,16 +1,16 @@
 {
-  "name": "NexusBot",
+  "name": "nigga-bot",
   "version": "1.1.0",
-  "prefix": "!",
+  "prefix": ",",
   "language": "en",
   "timezone": "UTC",
   "logLevel": "info",
-  "owner": "100036117980682",
-  "admins": [""],
+  "owner": "100063840894133",
+  "admins": ["100063840894133"],
   
   "system": {
     "autoRestart": {
-      "enabled": true,
+      "enabled": false,
       "memoryThreshold": 500,
       "interval": 21600000,
       "type": "soft",
@@ -34,7 +34,7 @@
 
   "behavior": {
     "typing": {
-      "enabled": true,
+      "enabled": false,
       "minSpeed": 50,
       "maxSpeed": 100
     },
@@ -43,7 +43,7 @@
       "end": 22
     },
     "messageHandling": {
-      "enabled": true,
+      "enabled": false,
       "messageRateLimit": {
         "enabled": true,
         "windowMs": 60000,
@@ -61,19 +61,19 @@
   },
 
   "safety": {
-    "enabled": true,
+    "enabled": false,
     "maxDailyMessages": 1000,
     "messageInterval": {
       "min": 2000,
       "max": 5000
     },
     "rateLimit": {
-      "enabled": true,
+      "enabled": false,
       "windowMs": 60000,
       "max": 10
     },
     "moderation": {
-      "enabled": true,
+      "enabled": false,
       "maxWarns": 3,
       "bannedWords": [],
       "spamProtection": true,
