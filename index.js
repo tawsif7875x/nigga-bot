@@ -336,11 +336,11 @@ async function initBot() {
       
       clearInterval(loadingInterval);
       console.log(gradient(['#DC2626', '#EF4444'])('\n❌ Error: ') + error.message);
-      process.exit(1);
+      
     }
   } catch (error) {
     logger.error('Critical initialization error:', error);
-    process.exit(1);
+    
   }
 }
 
@@ -348,7 +348,7 @@ async function initBot() {
 process.on('SIGTERM', async () => {
   logger.info('Received SIGTERM signal');
   await cleanup();
-  process.exit(0);
+  
 });
 
 // Add cleanup function
@@ -374,7 +374,7 @@ initBot();
 // Handle exit
 process.on('SIGINT', () => {
   console.log(successGradient('\n\nShutting down Nexus Bot...\n'));
-  process.exit(0);
+  
 });
 
 // Handle different exit codes
