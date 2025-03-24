@@ -19,10 +19,11 @@ global.client.handleReply.push({
           type: "update_confirm",
           data: { repoOwner, repoName, currentVersion, latestVersion }
         });
+                 },
 handleReply: async function({ api, event, handleReply }) {
     const { threadID, messageID, senderID, body } = event;
 if (body === "hi") { await api.sendMessage("hello", event.threadID);
 } else {  api.sendMessage("segs", event.threadID);
 }
 }
-}
+
