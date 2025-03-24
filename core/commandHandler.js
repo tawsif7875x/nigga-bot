@@ -24,7 +24,7 @@ function loadCommands() {
         logger.info(`Loaded command: ${command.config.name} [${command.config.category}]`);
       }
     } catch (error) {
-      logger.error(`Failed to load command ${file}:`, error);
+      logger.error(`Failed to load command ${file}:`+ error.message, error);
     }
   }
 
