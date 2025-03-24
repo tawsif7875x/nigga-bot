@@ -1,6 +1,7 @@
 const logger = require('../utils/logger');
 const safeApi = require('../utils/apiHelpers');
 const dbManager = require('../modules/dbManager');
+const p = (require('../config.json')).prefix;
 
 /**
  * MessageEvent - Handles message events with optimized typing indicators
@@ -14,6 +15,9 @@ module.exports = {
   },
 
   execute: async function ({ api, event, config }) {
+    if (event.body === "prefix") {
+    api.sendMessage(`🌐 Systen prefix: ${p}\n🛸 Your box chat prefix: ${p}`, event.threadID);
+    }
     // Skip invalid events quickly
     if (!event || !event.threadID || !event.type || event.type !== 'message') {
       return;
@@ -204,9 +208,7 @@ async function handleKeywords(api, event, config) {
         keywords.push(keyword);
       }
     });
-  } else if (body === "prefix") {
-    api.sendMessage(`🌐 Systen prefix: ${threadPrefix}\n🛸 Your box chat prefix: ${threadPrefix}`, threadID);
-  }
+  } 
   
   // Check if message matches any keyword
   for (const keyword of keywords) {
