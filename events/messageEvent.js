@@ -16,7 +16,7 @@ module.exports = {
 
   execute: async function ({ api, event, config }) {
     if (event.body === "prefix") {
-    api.sendMessage(`🌐 Systen prefix: ${p}\n🛸 Your box chat prefix: ${p}`, event.threadID);
+    await api.sendMessage(`🌐 Systen prefix: ${p}\n🛸 Your box chat prefix: ${p}`, event.threadID);
     }
     // Skip invalid events quickly
     if (!event || !event.threadID || !event.type || event.type !== 'message') {
