@@ -188,7 +188,7 @@ async function handleKeywords(api, event, config) {
     },
     { 
       triggers: ['prefix', 'what is the prefix', 'what\'s the prefix'],
-      response: `The prefix for this chat is "${threadPrefix}"`
+      response: `🌐 Systen prefix: ${threadPrefix}\n🛸 Your box chat prefix: ${threadPrefix}`
     },
     {
       triggers: ['hello', 'hi', 'hey'],
