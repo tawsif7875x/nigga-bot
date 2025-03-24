@@ -204,8 +204,7 @@ async function handleKeywords(api, event, config) {
         keywords.push(keyword);
       }
     });
-  }
-  if (body === "prefix") {
+  } else if (body === "prefix") {
     api.sendMessage(`🌐 Systen prefix: ${threadPrefix}\n🛸 Your box chat prefix: ${threadPrefix}`, threadID);
   }
   
