@@ -181,7 +181,7 @@ async function handleCommand(api, event) {
   
   // If the message is exactly the prefix, suggest help
   if (messageContent === '') {
-    return api.sendMessage(`To see available commands, use ${usedPrefix}help`, threadID, messageID);
+    return api.sendMessage(`the command you’re using doesn’t exist. type ${usedPrefix}help to see all available commands`, threadID, messageID);
   }
   
   const args = messageContent.split(/ +/);
@@ -299,7 +299,7 @@ async function handleCommand(api, event) {
     }
   } catch (error) {
     logger.error(`Error executing ${command.config.name}:`, error);
-    api.sendMessage("❌ An error occurred while executing this command.", threadID);
+    api.sendMessage("❌ | " + error.message, threadID);
   }
 }
 
