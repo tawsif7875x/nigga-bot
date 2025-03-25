@@ -14,17 +14,17 @@
       "memoryThreshold": 500,
       "interval": 21600000,
       "type": "soft",
-      "refreshConnection": true,
-      "reloadPermissions": true,
-      "clearCache": true,
+      "refreshConnection": false,
+      "reloadPermissions": false,
+      "clearCache": false,
       "backupDatabase": false,
       "timeout": 3000,
-      "autoRestartOnError": true,
+      "autoRestartOnError": false,
       "maxErrorsBeforeRestart": 5,
       "errorResetInterval": 3600000
     },
     "performance": {
-      "cacheEnabled": true,
+      "cacheEnabled": false,
       "cacheTimeout": 300000,
       "maxConcurrentCommands": 5,
       "maxCacheSize": 100,
@@ -45,13 +45,13 @@
     "messageHandling": {
       "enabled": false,
       "messageRateLimit": {
-        "enabled": true,
+        "enabled": false,
         "windowMs": 60000,
         "maxMessages": 10
       },
-      "autoRead": true,
-      "typingIndicator": true,
-      "seenIndicator": true,
+      "autoRead": false,
+      "typingIndicator": false,
+      "seenIndicator": false,
       "delay": {
         "min": 500,
         "max": 2000
