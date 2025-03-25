@@ -57,7 +57,7 @@
         "max": 2000
       }
     },
-    "adminNotifications": true
+    "adminNotifications": false
   },
 
   "safety": {
@@ -76,14 +76,14 @@
       "enabled": false,
       "maxWarns": 3,
       "bannedWords": [],
-      "spamProtection": true,
+      "spamProtection": false,
       "contentFilter": ["spam", "abuse", "nsfw"]
     }
   },
 
   "database": {
     "backup": {
-      "enabled": true,
+      "enabled": false,
       "interval": 3600000,
       "retention": 7
     },
