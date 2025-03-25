@@ -224,10 +224,10 @@ async function handleKeywords(api, event, config) {
       return false;
     })) {
       // Send the response with typing indicator first
-      await safeApi.sendTypingIndicator(api, threadID);
-      setTimeout(() => {
+      
+      
         api.sendMessage(keyword.response, threadID, messageID);
-      }, 500);
+    }
       
       return;
     }
