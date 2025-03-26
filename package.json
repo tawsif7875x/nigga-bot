@@ -24,7 +24,7 @@
     "winston-daily-rotate-file": "^5.0.0",
     "ws3-fca": "^1.0.0",
     "tinyurl": " ^1.1.7",
-    "child-process": "^2.0.2"
+    "child_process": "^2.0.2"
   },
   "engines": {
     "node": ">=18.0.0"
