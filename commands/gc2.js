@@ -14,7 +14,7 @@ module.exports = {
     guide: "<text> ++ <text> | reply | --user <link> or <uid> | --theme <theme number> | blank"
   },
   wrapText: async function (ctx, text, maxWidth) {
-    const segments = text.split("++");
+    const segments = text.split("++"); // Split text by "++"
     const lines = [];
     
     for (const segment of segments) {
@@ -39,35 +39,28 @@ module.exports = {
     return lines;
   },
   async execute({ args, usersData, threadsData, api, event }) {
-    const scaleFactor = 2; // Double the resolution
-    
     let userInput = args.join(" ");
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
     let mentionedID = event.senderID;
-    
-    if (event?.messageReply?.senderID === "100063840894133") { 
-      userInput = "hi guys I'm gay";
-    } else if (event.messageReply) { 
+    if (event?.messageReply?.senderID === "100063840894133") { userInput = "hi guys I'm gay";
+         } else if (event.messageReply) { 
       mentionedID = event.messageReply.senderID;
     } else if (userInput.match(/--user /)) {
-      if ((userInput.split("--user ")[1]).match(/.com/)) { 
+       if ((userInput.split("--user ")[1]).match(/.com/)) { 
         mentionedID = (await api.getUID(userInput.split("--user ")[1]));
-        userInput = userInput.split("--user ")[0];
+         userInput = userInput.split("--user ")[0];
       } else { 
         mentionedID = userInput.split("--user ")[1];
-        userInput = userInput.split("--user ")[0];
+         userInput = userInput.split("--user ")[0];
       }
     }
-    
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
     let background = ["https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742466954445.png", "https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742642829480.png", "https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742644074382-01.png"];
     let bn = 0;
-    if (userInput.match(/--theme/)) { 
-      bn = userInput.split("--theme ")[1];
-      userInput = userInput.split("--theme ")[0];
-    }
-    
+    if (userInput.match(/--theme/)) { bn = userInput.split("--theme ")[1];
+                                      userInput = userInput.split("--theme ")[0];
+                 }
     let commentText = userInput;
     let rd = background[bn];
     let getAvtmot = (await axios.get(
@@ -81,24 +74,13 @@ module.exports = {
     let baseAvt1 = await loadImage(pathAvt1);
     let baseAvt2 = await loadImage(pathAvt1);
 
-    // Create high-resolution canvas
-    const createHiResCanvas = (width, height) => {
-      const scaledWidth = width * scaleFactor;
-      const scaledHeight = height * scaleFactor;
-      const canvas = createCanvas(scaledWidth, scaledHeight);
-      const ctx = canvas.getContext("2d");
-      ctx.scale(scaleFactor, scaleFactor);
-      ctx.imageSmoothingEnabled = false; // Disable anti-aliasing for crisp edges
-      return { canvas, ctx };
-    };
-
     // Create a temporary canvas to measure text dimensions
     let tempCanvas = createCanvas(1, 1);
     let tempCtx = tempCanvas.getContext("2d");
     tempCtx.font = "530 25px Arial";
 
     // Measure the comment text
-    const commentMaxWidth = 450;
+    const commentMaxWidth = 450; // Set a max width for the comment
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
     // Split the comment text into multiple bubbles based on "++"
@@ -113,16 +95,15 @@ module.exports = {
       const bubbleLines = await this.wrapText(tempCtx, bubbleText, commentMaxWidth);
       const bubblePadding = 18;
       const bubbleHeight = bubbleLines.length * 28 + bubblePadding * 2;
-      totalBubbleHeight += bubbleHeight + 10;
+      totalBubbleHeight += bubbleHeight + 10; // Add some spacing between bubbles
     }
 
-    // Original dimensions calculation
+    // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = totalBubbleHeight + 160 + 40;
+    const canvasHeight = totalBubbleHeight + 160 + 40; // Add extra 50 pixels to the top
 
-    // Create high-res canvas
-    const { canvas, ctx } = createHiResCanvas(canvasWidth, canvasHeight);
-    const scaled = value => value / scaleFactor;
+    let canvas = createCanvas(canvasWidth, canvasHeight);
+    let ctx = canvas.getContext("2d");
 
     // Calculate the aspect ratio of the background image
     const bgAspectRatio = baseImage.width / baseImage.height;
@@ -145,13 +126,7 @@ module.exports = {
     }
 
     // Draw the background image
-    ctx.drawImage(
-      baseImage,
-      scaled(bgX),
-      scaled(bgY),
-      scaled(bgWidth),
-      scaled(bgHeight)
-    );
+    ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
     // Get the current time in Dhaka timezone
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
@@ -160,16 +135,16 @@ module.exports = {
     ctx.font = "530 17px sans-serif";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
-    const timeX = (canvasWidth - timeTextWidth) / 2;
-    const timeY = 40;
-    ctx.fillText(t, scaled(timeX), scaled(timeY));
+    const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
+    const timeY = 40; // Position at the top (increased by 20 pixels)
+    ctx.fillText(t, timeX, timeY);
 
     const commentX = 125;
-    const commentY = 140;
+    const commentY = 140; // Increased by 50 pixels to shift content downward
 
     const nameMaxWidth = canvas.width - 40;
     const nameX = 115;
-    const nameY = 85;
+    const nameY = 85; // Increased by 50 pixels to shift content downward
     ctx.font = "530 25px Arial";
     ctx.fillStyle = "#FFFFFF";
 
@@ -191,30 +166,32 @@ module.exports = {
       const bubbleHeight = bubbleLines.length * 28 + bubblePadding * 2;
 
       // Adjust the bubble's horizontal position without affecting the text
-      const bubbleX = commentX - 24;
+      const bubbleX = commentX - 24; // Move the bubble to the left
       let bubbleY = commentY - 20 + bubbleYOffset;
 
       let fills = "rgba(51, 51, 51, 1.0)";
       let strokes = "rgba(51, 51, 51, 1.0)";
-      if (bn === 1) { 
-        fills = "rgba(51, 34, 17, 1)";
+      if (bn === 1) { fills = "rgba(51, 34, 17, 1)";
         strokes = "rgba(51, 34, 17, 1)";
       }
-      
-      ctx.fillStyle = fills;
-      ctx.strokeStyle = strokes;
+      ctx.fillStyle = fills; // 85% opacity
+      ctx.strokeStyle = strokes; // 85% opacity
       ctx.lineWidth = 0;
       ctx.beginPath();
 
       // Adjust the border radius based on the bubble position
       if (bubbleTexts.length === 1) {
-        ctx.roundRect(scaled(bubbleX), scaled(bubbleY - bubblePadding), scaled(bubbleWidth), scaled(bubbleHeight), [33, 33, 33, 33]);
+        // Only one bubble: all borders rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [33, 33, 33, 33]);
       } else if (i === 0) {
-        ctx.roundRect(scaled(bubbleX), scaled(bubbleY - bubblePadding), scaled(bubbleWidth), scaled(bubbleHeight), [33, 33, 33, 8]);
+        // First bubble: down-left border not rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [33, 33, 33, 8]);
       } else if (i === bubbleTexts.length - 1) {
-        ctx.roundRect(scaled(bubbleX), scaled(bubbleY - bubblePadding), scaled(bubbleWidth), scaled(bubbleHeight), [8, 33, 33, 33]);
+        // Last bubble: up-left border not rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8, 33, 33, 33]);
       } else {
-        ctx.roundRect(scaled(bubbleX), scaled(bubbleY - bubblePadding), scaled(bubbleWidth), scaled(bubbleHeight), [8, 33, 33, 8]);
+        // Middle bubbles: all borders rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8, 33, 33, 8]);
       }
 
       ctx.closePath();
@@ -224,47 +201,50 @@ module.exports = {
       // Draw the comment text inside the bubble
       ctx.fillStyle = "#FFFFFF";
       bubbleLines.forEach((line, index) => {
-        ctx.fillText(line, scaled(commentX), scaled(commentY + index * 28 + bubbleYOffset));
+        ctx.fillText(line, commentX, commentY + index * 28 + bubbleYOffset); // Keep the comment text position unchanged
       });
 
-      bubbleYOffset += bubbleHeight + 4;
+      // Update the Y offset for the next bubble
+      bubbleYOffset += bubbleHeight + 4;// Add some spacing between bubbles
     }
 
     // Draw the name text
     ctx.font = "400 19px Arial";
     ctx.fillStyle = "#FFFFFF";
     nameLines.forEach((line, index) => {
-      ctx.fillText(line, scaled(nameX), scaled(nameY + index * 28));
+      ctx.fillText(line, nameX, nameY + index * 28);
     });
 
     // Draw the avatar on the left side
-    const drawHiResAvatar = (image, x, y, size) => {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(
-        scaled(x + size/2),
-        scaled(y + size/2),
-        scaled(size/2),
-        0,
-        Math.PI * 2
-      );
-      ctx.closePath();
-      ctx.clip();
-      ctx.drawImage(
-        image,
-        scaled(x),
-        scaled(y),
-        scaled(size),
-        scaled(size)
-      );
-      ctx.restore();
-    };
+    const avatarX = 20;
+    const avatarY = canvasHeight - 170; // Adjusted to align with the new canvas height
+    const avatarWidth = 50;
+    const avatarHeight = 50;
 
-    drawHiResAvatar(baseAvt1, 20, canvasHeight - 170, 50);
-    drawHiResAvatar(baseAvt2, canvasWidth - 40, canvasHeight - 125, 25);
+    ctx.save(); // Save the current context state
+    ctx.beginPath();
+    ctx.arc(avatarX + avatarWidth / 2, avatarY + avatarHeight / 2, avatarWidth / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
+    ctx.restore(); // Restore the context state
+
+    // Draw the cloned avatar on the right side with a smaller size
+    const clonedAvatarX = canvasWidth - 40; // Adjust the X position for the right side
+    const clonedAvatarY = canvasHeight - 125; // Adjusted to align with the new canvas height
+    const clonedAvatarWidth = 25; // Smaller size
+    const clonedAvatarHeight = 25; // Smaller size
+
+    ctx.save(); // Save the current context state
+    ctx.beginPath();
+    ctx.arc(clonedAvatarX + clonedAvatarWidth / 2, clonedAvatarY + clonedAvatarHeight / 2, clonedAvatarWidth / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(baseAvt2, clonedAvatarX, clonedAvatarY, clonedAvatarWidth, clonedAvatarHeight);
+    ctx.restore(); // Restore the context state
 
     const imageBuffer = canvas.toBuffer();
-    fs.writeFileSync(pathImg, imageBuffer);
+ fs.writeFileSync(pathImg, imageBuffer);
     return api.sendMessage({ attachment: fs.createReadStream(pathImg) },
       event.threadID, event.messageID);
   },
