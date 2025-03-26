@@ -113,7 +113,7 @@ module.exports = {
 
     // Calculate canvas dimensions based on the total height of all bubbles (scaled up)
     const canvasWidth = 2600;
-    const canvasHeight = (totalBubbleHeight + 160 + 40) * 2;
+    const canvasHeight = (totalBubbleHeight + 160 + 80) * 2;
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
