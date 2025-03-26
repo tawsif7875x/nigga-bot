@@ -3,7 +3,7 @@ const fs = require("fs");
 const axios = require("axios");
 
 // Scale factor for high resolution (2x or 3x)
-const SCALE_FACTOR = 4;
+const SCALE_FACTOR = 3;
 module.exports = {
   config: {
     name: "gc2",
@@ -95,7 +95,7 @@ module.exports = {
     tempCtx.font = `530 ${25 * SCALE_FACTOR}px Arial`;
 
     // Measure the comment text with scaled dimensions
-    const commentMaxWidth = 450 * SCALE_FACTOR;
+    const commentMaxWidth = 500 * SCALE_FACTOR; // Increased width for larger bubbles
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
     // Split the comment text into multiple bubbles based on "++"
@@ -108,14 +108,14 @@ module.exports = {
       if (!bubbleText) continue;
 
       const bubbleLines = await this.wrapText(tempCtx, bubbleText, commentMaxWidth);
-      const bubblePadding = 18 * SCALE_FACTOR;
-      const bubbleHeight = bubbleLines.length * (28 * SCALE_FACTOR) + bubblePadding * 2;
-      totalBubbleHeight += bubbleHeight + (10 * SCALE_FACTOR);
+      const bubblePadding = 25 * SCALE_FACTOR; // Increased padding
+      const bubbleHeight = bubbleLines.length * (35 * SCALE_FACTOR) + bubblePadding * 2; // Increased line height
+      totalBubbleHeight += bubbleHeight + (15 * SCALE_FACTOR); // Increased spacing between bubbles
     }
 
     // Calculate canvas dimensions based on the total height of all bubbles (scaled up)
-    const canvasWidth = (commentMaxWidth + 200) * 2;
-    const canvasHeight = (totalBubbleHeight + 160 + 40) * 2;
+    const canvasWidth = (commentMaxWidth + 300) * 2; // Increased width
+    const canvasHeight = (totalBubbleHeight + 200 + 60) * 2; // Increased height
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -150,21 +150,21 @@ module.exports = {
     // Get the current time in Dhaka timezone
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
-    // Draw the time at the top-middle of the canvas
-    ctx.font = `530 ${17 * SCALE_FACTOR}px sans-serif`;
+    // Draw the time at the top-middle of the canvas (larger and more centered)
+    ctx.font = `530 ${22 * SCALE_FACTOR}px sans-serif`; // Increased font size
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2;
-    const timeY = 40 * SCALE_FACTOR;
+    const timeY = 50 * SCALE_FACTOR; // Moved down slightly
     ctx.fillText(t, timeX, timeY);
 
-    const commentX = 125 * SCALE_FACTOR;
-    const commentY = 140 * SCALE_FACTOR;
+    const commentX = 150 * SCALE_FACTOR; // Increased X position
+    const commentY = 160 * SCALE_FACTOR; // Increased Y position
 
-    const nameMaxWidth = canvas.width - (40 * SCALE_FACTOR);
-    const nameX = 115 * SCALE_FACTOR;
-    const nameY = 85 * SCALE_FACTOR;
-    ctx.font = `530 ${25 * SCALE_FACTOR}px Arial`;
+    const nameMaxWidth = canvas.width - (60 * SCALE_FACTOR); // Increased max width
+    const nameX = 130 * SCALE_FACTOR; // Increased X position
+    const nameY = 100 * SCALE_FACTOR; // Increased Y position
+    ctx.font = `530 ${30 * SCALE_FACTOR}px Arial`; // Increased font size
     ctx.fillStyle = "#FFFFFF";
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
@@ -178,15 +178,15 @@ module.exports = {
       const bubbleLines = await this.wrapText(ctx, bubbleText, commentMaxWidth);
 
       // Calculate the dimensions of the speech bubble (scaled)
-      const bubblePadding = 18 * SCALE_FACTOR;
-      const bubbleMaxWidth = commentMaxWidth + (35 * SCALE_FACTOR);
+      const bubblePadding = 25 * SCALE_FACTOR; // Increased padding
+      const bubbleMaxWidth = commentMaxWidth + (50 * SCALE_FACTOR); // Increased max width
       const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width));
-      const bubbleWidth = Math.min(longestLineWidth + (45 * SCALE_FACTOR), bubbleMaxWidth);
-      const bubbleHeight = bubbleLines.length * (28 * SCALE_FACTOR) + bubblePadding * 2;
+      const bubbleWidth = Math.min(longestLineWidth + (60 * SCALE_FACTOR), bubbleMaxWidth); // Increased width
+      const bubbleHeight = bubbleLines.length * (35 * SCALE_FACTOR) + bubblePadding * 2; // Increased height
 
       // Adjust the bubble's horizontal position without affecting the text
-      const bubbleX = commentX - (24 * SCALE_FACTOR);
-      let bubbleY = commentY - (20 * SCALE_FACTOR) + bubbleYOffset;
+      const bubbleX = commentX - (30 * SCALE_FACTOR); // Increased X position
+      let bubbleY = commentY - (25 * SCALE_FACTOR) + bubbleYOffset; // Increased Y position
 
       let fills = "rgba(51, 51, 51, 1.0)";
       let strokes = "rgba(51, 51, 51, 1.0)";
@@ -201,15 +201,15 @@ module.exports = {
       ctx.beginPath();
 
       // Adjust the border radius based on the bubble position (scaled)
-      const borderRadius = 33 * SCALE_FACTOR;
+      const borderRadius = 40 * SCALE_FACTOR; // Increased border radius
       if (bubbleTexts.length === 1) {
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [borderRadius, borderRadius, borderRadius, borderRadius]);
       } else if (i === 0) {
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [borderRadius, borderRadius, borderRadius, 8 * SCALE_FACTOR]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [borderRadius, borderRadius, borderRadius, 12 * SCALE_FACTOR]);
       } else if (i === bubbleTexts.length - 1) {
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8 * SCALE_FACTOR, borderRadius, borderRadius, borderRadius]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [12 * SCALE_FACTOR, borderRadius, borderRadius, borderRadius]);
       } else {
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8 * SCALE_FACTOR, borderRadius, borderRadius, 8 * SCALE_FACTOR]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [12 * SCALE_FACTOR, borderRadius, borderRadius, 12 * SCALE_FACTOR]);
       }
 
       ctx.closePath();
@@ -219,25 +219,25 @@ module.exports = {
       // Draw the comment text inside the bubble
       ctx.fillStyle = "#FFFFFF";
       bubbleLines.forEach((line, index) => {
-        ctx.fillText(line, commentX, commentY + index * (28 * SCALE_FACTOR) + bubbleYOffset);
+        ctx.fillText(line, commentX, commentY + index * (35 * SCALE_FACTOR) + bubbleYOffset); // Increased line height
       });
 
       // Update the Y offset for the next bubble
-      bubbleYOffset += bubbleHeight + (4 * SCALE_FACTOR);
+      bubbleYOffset += bubbleHeight + (8 * SCALE_FACTOR); // Increased spacing
     }
 
-    // Draw the name text
-    ctx.font = `400 ${19 * SCALE_FACTOR}px Arial`;
+    // Draw the name text (larger and better positioned)
+    ctx.font = `400 ${25 * SCALE_FACTOR}px Arial`; // Increased font size
     ctx.fillStyle = "#FFFFFF";
     nameLines.forEach((line, index) => {
-      ctx.fillText(line, nameX, nameY + index * (28 * SCALE_FACTOR));
+      ctx.fillText(line, nameX, nameY + index * (35 * SCALE_FACTOR)); // Increased line height
     });
 
-    // Draw the avatar on the left side (scaled up)
-    const avatarX = 20 * SCALE_FACTOR;
-    const avatarY = canvasHeight - (170 * SCALE_FACTOR);
-    const avatarWidth = 50 * SCALE_FACTOR;
-    const avatarHeight = 50 * SCALE_FACTOR;
+    // Draw the avatar on the left side (larger and better positioned)
+    const avatarX = 30 * SCALE_FACTOR; // Increased X position
+    const avatarY = canvasHeight - (200 * SCALE_FACTOR); // Increased Y position
+    const avatarWidth = 70 * SCALE_FACTOR; // Increased width
+    const avatarHeight = 70 * SCALE_FACTOR; // Increased height
 
     ctx.save();
     ctx.beginPath();
@@ -247,11 +247,11 @@ module.exports = {
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
     ctx.restore();
 
-    // Draw the cloned avatar on the right side with a smaller size (scaled)
-    const clonedAvatarX = canvasWidth - (40 * SCALE_FACTOR);
-    const clonedAvatarY = canvasHeight - (125 * SCALE_FACTOR);
-    const clonedAvatarWidth = 25 * SCALE_FACTOR;
-    const clonedAvatarHeight = 25 * SCALE_FACTOR;
+    // Draw the cloned avatar on the right side with a larger size
+    const clonedAvatarX = canvasWidth - (60 * SCALE_FACTOR); // Increased X position
+    const clonedAvatarY = canvasHeight - (150 * SCALE_FACTOR); // Increased Y position
+    const clonedAvatarWidth = 40 * SCALE_FACTOR; // Increased width
+    const clonedAvatarHeight = 40 * SCALE_FACTOR; // Increased height
 
     ctx.save();
     ctx.beginPath();
