@@ -77,10 +77,10 @@ module.exports = {
     // Create a temporary canvas to measure text dimensions
     let tempCanvas = createCanvas(1, 1);
     let tempCtx = tempCanvas.getContext("2d");
-    tempCtx.font = "530 25px Arial";
+    tempCtx.font = "530 37.5px Arial";
 
     // Measure the comment text
-    const commentMaxWidth = 450; // Set a max width for the comment
+    const commentMaxWidth = 675; // Set a max width for the comment
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
     // Split the comment text into multiple bubbles based on "++"
@@ -93,14 +93,14 @@ module.exports = {
       if (!bubbleText) continue;
 
       const bubbleLines = await this.wrapText(tempCtx, bubbleText, commentMaxWidth);
-      const bubblePadding = 18;
-      const bubbleHeight = bubbleLines.length * 28 + bubblePadding * 2;
-      totalBubbleHeight += bubbleHeight + 10; // Add some spacing between bubbles
+      const bubblePadding = 27;
+      const bubbleHeight = bubbleLines.length * 42 + bubblePadding * 2;
+      totalBubbleHeight += bubbleHeight + 15; // Add some spacing between bubbles
     }
 
     // Calculate canvas dimensions based on the total height of all bubbles
-    const canvasWidth = commentMaxWidth + 200;
-    const canvasHeight = totalBubbleHeight + 160 + 40; // Add extra 50 pixels to the top
+    const canvasWidth = commentMaxWidth + 300;
+    const canvasHeight = totalBubbleHeight + 240 + 60; // Add extra 75 pixels to the top
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -132,20 +132,20 @@ module.exports = {
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
 
     // Draw the time at the top-middle of the canvas
-    ctx.font = "530 17px sans-serif";
+    ctx.font = "530 25.5px sans-serif";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
-    const timeY = 40; // Position at the top (increased by 20 pixels)
+    const timeY = 60; // Position at the top (increased by 30 pixels)
     ctx.fillText(t, timeX, timeY);
 
-    const commentX = 125;
-    const commentY = 140; // Increased by 50 pixels to shift content downward
+    const commentX = 187.5;
+    const commentY = 210; // Increased by 75 pixels to shift content downward
 
-    const nameMaxWidth = canvas.width - 40;
-    const nameX = 115;
-    const nameY = 85; // Increased by 50 pixels to shift content downward
-    ctx.font = "530 25px Arial";
+    const nameMaxWidth = canvas.width - 60;
+    const nameX = 172.5;
+    const nameY = 127.5; // Increased by 75 pixels to shift content downward
+    ctx.font = "530 37.5px Arial";
     ctx.fillStyle = "#FFFFFF";
 
     const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
@@ -159,15 +159,15 @@ module.exports = {
       const bubbleLines = await this.wrapText(ctx, bubbleText, commentMaxWidth);
 
       // Calculate the dimensions of the speech bubble
-      const bubblePadding = 18;
-      const bubbleMaxWidth = commentMaxWidth + 35;
+      const bubblePadding = 27;
+      const bubbleMaxWidth = commentMaxWidth + 52.5;
       const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width));
-      const bubbleWidth = Math.min(longestLineWidth + 45, bubbleMaxWidth);
-      const bubbleHeight = bubbleLines.length * 28 + bubblePadding * 2;
+      const bubbleWidth = Math.min(longestLineWidth + 67.5, bubbleMaxWidth);
+      const bubbleHeight = bubbleLines.length * 42 + bubblePadding * 2;
 
       // Adjust the bubble's horizontal position without affecting the text
-      const bubbleX = commentX - 24; // Move the bubble to the left
-      let bubbleY = commentY - 20 + bubbleYOffset;
+      const bubbleX = commentX - 36; // Move the bubble to the left
+      let bubbleY = commentY - 30 + bubbleYOffset;
 
       let fills = "rgba(51, 51, 51, 1.0)";
       let strokes = "rgba(51, 51, 51, 1.0)";
@@ -182,16 +182,16 @@ module.exports = {
       // Adjust the border radius based on the bubble position
       if (bubbleTexts.length === 1) {
         // Only one bubble: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [33, 33, 33, 33]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [49.5, 49.5, 49.5, 49.5]);
       } else if (i === 0) {
         // First bubble: down-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [33, 33, 33, 8]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [49.5, 49.5, 49.5, 12]);
       } else if (i === bubbleTexts.length - 1) {
         // Last bubble: up-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8, 33, 33, 33]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [12, 49.5, 49.5, 49.5]);
       } else {
         // Middle bubbles: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [8, 33, 33, 8]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [12, 49.5, 49.5, 12]);
       }
 
       ctx.closePath();
@@ -201,25 +201,25 @@ module.exports = {
       // Draw the comment text inside the bubble
       ctx.fillStyle = "#FFFFFF";
       bubbleLines.forEach((line, index) => {
-        ctx.fillText(line, commentX, commentY + index * 28 + bubbleYOffset); // Keep the comment text position unchanged
+        ctx.fillText(line, commentX, commentY + index * 42 + bubbleYOffset); // Keep the comment text position unchanged
       });
 
       // Update the Y offset for the next bubble
-      bubbleYOffset += bubbleHeight + 4;// Add some spacing between bubbles
+      bubbleYOffset += bubbleHeight + 6;// Add some spacing between bubbles
     }
 
     // Draw the name text
-    ctx.font = "400 19px Arial";
+    ctx.font = "400 28.5px Arial";
     ctx.fillStyle = "#FFFFFF";
     nameLines.forEach((line, index) => {
-      ctx.fillText(line, nameX, nameY + index * 28);
+      ctx.fillText(line, nameX, nameY + index * 42);
     });
 
     // Draw the avatar on the left side
-    const avatarX = 20;
-    const avatarY = canvasHeight - 170; // Adjusted to align with the new canvas height
-    const avatarWidth = 50;
-    const avatarHeight = 50;
+    const avatarX = 30;
+    const avatarY = canvasHeight - 255; // Adjusted to align with the new canvas height
+    const avatarWidth = 75;
+    const avatarHeight = 75;
 
     ctx.save(); // Save the current context state
     ctx.beginPath();
@@ -230,10 +230,10 @@ module.exports = {
     ctx.restore(); // Restore the context state
 
     // Draw the cloned avatar on the right side with a smaller size
-    const clonedAvatarX = canvasWidth - 40; // Adjust the X position for the right side
-    const clonedAvatarY = canvasHeight - 125; // Adjusted to align with the new canvas height
-    const clonedAvatarWidth = 25; // Smaller size
-    const clonedAvatarHeight = 25; // Smaller size
+    const clonedAvatarX = canvasWidth - 60; // Adjust the X position for the right side
+    const clonedAvatarY = canvasHeight - 187.5; // Adjusted to align with the new canvas height
+    const clonedAvatarWidth = 37.5; // Smaller size
+    const clonedAvatarHeight = 37.5; // Smaller size
 
     ctx.save(); // Save the current context state
     ctx.beginPath();
