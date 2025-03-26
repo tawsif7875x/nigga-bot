@@ -4,7 +4,7 @@ const axios = require("axios");
 
 // Scale factor for high resolution (2x or 3x)
 const SCALE_FACTOR = 4;
-const SIZE_INCREASE = 1.3; // 30% size increase
+const SIZE_INCREASE = 1.2; // 30% size increase
 
 module.exports = {
   config: {
