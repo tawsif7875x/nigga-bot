@@ -263,7 +263,7 @@ module.exports = {
     ctx.restore();
 
     // Save the high-quality image
-    const imageBuffer = canvas.toBuffer('image/png', { compressionLevel: 0, filters: canvas.PNG_FILTER_NONE });
+    const imageBuffer = canvas.toBuffer('image/png', { compressionLevel: 10, filters: canvas.PNG_FILTER_NONE });
     fs.writeFileSync(pathImg, imageBuffer);
     
     return api.sendMessage({ attachment: fs.createReadStream(pathImg) },
