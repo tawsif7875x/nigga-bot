@@ -1,7 +1,7 @@
 {
   "name": "nexus-bot",
   "version": "1.1.0",
-  "description": "A Advance Bot For Facebook Messenger",
+  "description": "An Advance Bot For Facebook Messenger",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -23,7 +23,8 @@
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "ws3-fca": "^1.0.0",
-    "tinyurl": " ^1.1.7"
+    "tinyurl": " ^1.1.7",
+    "child-process": "^2.0.2"
   },
   "engines": {
     "node": ">=18.0.0"
