@@ -3,7 +3,7 @@ const fs = require("fs");
 const axios = require("axios");
 
 // Scale factor for high resolution (2x or 3x)
-const SCALE_FACTOR = 2;
+const SCALE_FACTOR = 4;
 
 module.exports = {
   config: {
@@ -220,23 +220,23 @@ module.exports = {
       // Draw the comment text inside the bubble
       ctx.fillStyle = "#FFFFFF";
       bubbleLines.forEach((line, index) => {
-        ctx.fillText(line, commentX, commentY + index * 28 + bubbleYOffset);
+        ctx.fillText(line, commentX, commentY + index * (28 * SCALE_FACTOR) + bubbleYOffset);
       });
 
       // Update the Y offset for the next bubble
-      bubbleYOffset += bubbleHeight + 4;
+      bubbleYOffset += bubbleHeight + (4 * SCALE_FACTOR);
     }
 
     // Draw the name text
-    ctx.font = `400 19px Arial`;
+    ctx.font = `400 ${19 * SCALE_FACTOR}px Arial`;
     ctx.fillStyle = "#FFFFFF";
     nameLines.forEach((line, index) => {
-      ctx.fillText(line, nameX, nameY + index * 28);
+      ctx.fillText(line, nameX, nameY + index * (28 * SCALE_FACTOR));
     });
 
     // Draw the avatar on the left side (scaled up)
-    const avatarX = 20;
-    const avatarY = canvasHeight - 170;
+    const avatarX = 20 * SCALE_FACTOR;
+    const avatarY = canvasHeight - (170 * SCALE_FACTOR);
     const avatarWidth = 50 * SCALE_FACTOR;
     const avatarHeight = 50 * SCALE_FACTOR;
 
