@@ -148,7 +148,7 @@ module.exports = {
 
         // Calculate bubble dimensions
         const bubblePadding = 72;
-        const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width);
+        const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width));
         const bubbleWidth = Math.min(longestLineWidth + 180, 1940);
         const bubbleHeight = bubbleLines.length * 112 + bubblePadding * 2;
 
