@@ -172,7 +172,7 @@ module.exports = {
       const bubbleLines = await this.wrapText(ctx, bubbleText, commentMaxWidth);
       const bubblePadding = 18;
       const bubbleMaxWidth = commentMaxWidth + 35;
-      const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width);
+      const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width));
       const bubbleWidth = Math.min(longestLineWidth + 45, bubbleMaxWidth);
       const bubbleHeight = bubbleLines.length * 28 + bubblePadding * 2;
 
