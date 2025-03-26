@@ -3,7 +3,7 @@ const fs = require("fs");
 const axios = require("axios");
 
 // Scale factor for high resolution (2x or 3x)
-const SCALE_FACTOR = 6;
+const SCALE_FACTOR = 10;
 
 module.exports = {
   config: {
