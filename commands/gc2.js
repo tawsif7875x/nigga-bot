@@ -114,7 +114,7 @@ module.exports = {
     }
 
     // Add extra height if there's a reply image
-    const replyImageHeight = replyImage ? 300 : 0;
+    const replyImageHeight = replyImage ? 600 : 0;
     
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
@@ -162,7 +162,7 @@ module.exports = {
     if (replyImage) {
       // Calculate dimensions for the replied image
       const maxImageWidth = canvasWidth - 200;
-      const maxImageHeight = 900;
+      const maxImageHeight = 600;
       let imageWidth = replyImage.width;
       let imageHeight = replyImage.height;
       
@@ -178,14 +178,14 @@ module.exports = {
       }
       
       // Center the image horizontally
-      const imageX = 365;
+      const imageX = 350;
       const imageY = 270; // Position below the time
       
       // Draw the image
       ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
       
       // Add to the content offset
-      contentYOffset = imageHeight + 30;
+      contentYOffset = imageHeight;
     }
 
     const commentX = 375;
