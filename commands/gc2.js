@@ -113,12 +113,10 @@ module.exports = {
       totalBubbleHeight += bubbleHeight + 30; // Add some spacing between bubbles
     }
 
-    // Add extra height if there's a reply image
-    const replyImageHeight = replyImage ? 600 : 0;
     
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
-    const canvasHeight = totalBubbleHeight + 480 + 120 + replyImageHeight; // Add extra space for the image
+    const canvasHeight = totalBubbleHeight + 480 + 120 + 600; // Add extra space for the image
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -161,7 +159,7 @@ module.exports = {
     let contentYOffset = 0;
     if (replyImage) {
       // Calculate dimensions for the replied image
-      const maxImageWidth = canvasWidth - 200;
+      const maxImageWidth = canvasWidth - 100;
       const maxImageHeight = 600;
       let imageWidth = replyImage.width;
       let imageHeight = replyImage.height;
