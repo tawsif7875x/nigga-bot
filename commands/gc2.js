@@ -162,7 +162,7 @@ module.exports = {
     if (replyImage) {
       // Calculate dimensions for the replied image
       const maxImageWidth = canvasWidth - 200;
-      const maxImageHeight = 600;
+      const maxImageHeight = 900;
       let imageWidth = replyImage.width;
       let imageHeight = replyImage.height;
       
@@ -185,7 +185,7 @@ module.exports = {
       ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
       
       // Add to the content offset
-      contentYOffset = imageHeight;
+      contentYOffset = imageHeight + 30;
     }
 
     const commentX = 375;
