@@ -179,13 +179,13 @@ module.exports = {
       
       // Center the image horizontally
       const imageX = 365;
-      const imageY = 250; // Position below the time
+      const imageY = 270; // Position below the time
       
       // Draw the image
       ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
       
       // Add to the content offset
-      contentYOffset = imageHeight + 20;
+      contentYOffset = imageHeight + 10;
     }
 
     const commentX = 375;
@@ -193,7 +193,7 @@ module.exports = {
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
-    const nameY = 200; // Adjust position based on image presence
+    const nameY = 230; // Adjust position based on image presence
     ctx.font = "530 75px Arial";
     ctx.fillStyle = "#FFFFFF";
 
