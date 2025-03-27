@@ -42,25 +42,40 @@ module.exports = {
     let userInput = args.join(" ");
     let pathImg = __dirname + "/cache/background.png";
     let pathAvt1 = __dirname + "/cache/Avtmot.png";
+    let pathReplyImage = __dirname + "/cache/replyImage.png";
     let mentionedID = event.senderID;
-    if (event?.messageReply?.senderID === "100063840894133") { userInput = "hi guys I'm gay";
-         } else if (event.messageReply) { 
+    
+    // Check if there's a replied message with an image attachment
+    let replyImage = null;
+    if (event?.messageReply?.attachments[0]?.type === "photo") {
+      const imageUrl = event.messageReply.attachments[0].url;
+      const imageData = (await axios.get(imageUrl, { responseType: "arraybuffer" })).data;
+      fs.writeFileSync(pathReplyImage, Buffer.from(imageData, "binary"));
+      replyImage = await loadImage(pathReplyImage);
+    }
+
+    if (event?.messageReply?.senderID === "100063840894133") { 
+      userInput = "hi guys I'm gay";
+    } else if (event.messageReply) { 
       mentionedID = event.messageReply.senderID;
     } else if (userInput.match(/--user /)) {
-       if ((userInput.split("--user ")[1]).match(/.com/)) { 
+      if ((userInput.split("--user ")[1]).match(/.com/)) { 
         mentionedID = (await api.getUID(userInput.split("--user ")[1]));
-         userInput = userInput.split("--user ")[0];
+        userInput = userInput.split("--user ")[0];
       } else { 
         mentionedID = userInput.split("--user ")[1];
-         userInput = userInput.split("--user ")[0];
+        userInput = userInput.split("--user ")[0];
       }
     }
+    
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
     let background = ["https://raw.githubusercontent.com/tawsif7875x/Miku-Nakano/refs/heads/main/1742466954445.png", "https://raw.githubusercontent.com/tawsif7875x/Miku-Nakano/refs/heads/main/1742642829480.png", "https://raw.githubusercontent.com/tawsif7875x/Miku-Nakano/refs/heads/main/1742644074382-01.png"];
     let bn = 0;
-    if (userInput.match(/--theme/)) { bn = userInput.split("--theme ")[1];
-                                      userInput = userInput.split("--theme ")[0];
-                 }
+    if (userInput.match(/--theme/)) { 
+      bn = userInput.split("--theme ")[1];
+      userInput = userInput.split("--theme ")[0];
+    }
+    
     let commentText = userInput;
     let rd = background[bn];
     let getAvtmot = (await axios.get(
@@ -98,9 +113,12 @@ module.exports = {
       totalBubbleHeight += bubbleHeight + 30; // Add some spacing between bubbles
     }
 
+    // Add extra height if there's a reply image
+    const replyImageHeight = replyImage ? 300 : 0;
+    
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
-    const canvasHeight = totalBubbleHeight + 480 + 120; // Add extra 150 pixels to the top
+    const canvasHeight = totalBubbleHeight + 480 + 120 + replyImageHeight; // Add extra space for the image
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -139,12 +157,43 @@ module.exports = {
     const timeY = 120; // Position at the top (increased by 60 pixels)
     ctx.fillText(t, timeX, timeY);
 
+    // Draw the replied image if it exists
+    let contentYOffset = 0;
+    if (replyImage) {
+      // Calculate dimensions for the replied image
+      const maxImageWidth = canvasWidth - 200;
+      const maxImageHeight = 300;
+      let imageWidth = replyImage.width;
+      let imageHeight = replyImage.height;
+      
+      // Maintain aspect ratio
+      const aspectRatio = replyImage.width / replyImage.height;
+      if (imageWidth > maxImageWidth) {
+        imageWidth = maxImageWidth;
+        imageHeight = imageWidth / aspectRatio;
+      }
+      if (imageHeight > maxImageHeight) {
+        imageHeight = maxImageHeight;
+        imageWidth = imageHeight * aspectRatio;
+      }
+      
+      // Center the image horizontally
+      const imageX = (canvasWidth - imageWidth) / 2;
+      const imageY = 180; // Position below the time
+      
+      // Draw the image
+      ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
+      
+      // Add to the content offset
+      contentYOffset = imageHeight + 30;
+    }
+
     const commentX = 375;
-    const commentY = 420; // Increased by 150 pixels to shift content downward
+    const commentY = 420 + contentYOffset; // Adjust position based on image presence
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
-    const nameY = 255; // Increased by 150 pixels to shift content downward
+    const nameY = 255 + contentYOffset; // Adjust position based on image presence
     ctx.font = "530 75px Arial";
     ctx.fillStyle = "#FFFFFF";
 
@@ -171,7 +220,8 @@ module.exports = {
 
       let fills = "rgba(51, 51, 51, 1.0)";
       let strokes = "rgba(51, 51, 51, 1.0)";
-      if (bn === 1) { fills = "rgba(51, 34, 17, 1)";
+      if (bn === 1) { 
+        fills = "rgba(51, 34, 17, 1)";
         strokes = "rgba(51, 34, 17, 1)";
       }
       ctx.fillStyle = fills; // 85% opacity
@@ -201,7 +251,7 @@ module.exports = {
       // Draw the comment text inside the bubble
       ctx.fillStyle = "#FFFFFF";
       bubbleLines.forEach((line, index) => {
-        ctx.fillText(line, commentX, commentY + index * 84 + bubbleYOffset); // Keep the comment text position unchanged
+        ctx.fillText(line, commentX, commentY + index * 84 + bubbleYOffset);
       });
 
       // Update the Y offset for the next bubble
@@ -217,7 +267,7 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 60;
-    const avatarY = canvasHeight - 510; // Adjusted to align with the new canvas height
+    const avatarY = canvasHeight - 510 - (replyImage ? 0 : 0); // Adjust if needed
     const avatarWidth = 150;
     const avatarHeight = 150;
 
@@ -231,7 +281,7 @@ module.exports = {
 
     // Draw the cloned avatar on the right side with a smaller size
     const clonedAvatarX = canvasWidth - 120; // Adjust the X position for the right side
-    const clonedAvatarY = canvasHeight - 375; // Adjusted to align with the new canvas height
+    const clonedAvatarY = canvasHeight - 375 - (replyImage ? 0 : 0); // Adjust if needed
     const clonedAvatarWidth = 75; // Smaller size
     const clonedAvatarHeight = 75; // Smaller size
 
@@ -244,7 +294,7 @@ module.exports = {
     ctx.restore(); // Restore the context state
 
     const imageBuffer = canvas.toBuffer();
- fs.writeFileSync(pathImg, imageBuffer);
+    fs.writeFileSync(pathImg, imageBuffer);
     return api.sendMessage({ attachment: fs.createReadStream(pathImg) },
       event.threadID, event.messageID);
   },
