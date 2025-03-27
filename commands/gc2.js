@@ -113,7 +113,7 @@ module.exports = {
       totalBubbleHeight += bubbleHeight + 30; // Add some spacing between bubbles
     }
 
-    let rh = replyImage? 700:0; // Increased from 600 to 800 for larger reply image
+    let rh = replyImage? 900:0; // Increased from 600 to 800 for larger reply image
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
     const canvasHeight = totalBubbleHeight + 480 + 120 + rh; // Add extra space for the image
@@ -160,9 +160,9 @@ module.exports = {
     if (replyImage) {
       // Calculate dimensions for the replied image (increased size)
       const maxImageWidth = canvasWidth - 100; // Reduced margin for larger image
-      const maxImageHeight = 700; // Increased max height
-      let imageWidth = replyImage.width + 200;
-      let imageHeight = replyImage.height + 200;
+      const maxImageHeight = 900; // Increased max height
+      let imageWidth = replyImage.width + 500;
+      let imageHeight = replyImage.height + 500;
       
       // Maintain aspect ratio
       const aspectRatio = replyImage.width / replyImage.height;
