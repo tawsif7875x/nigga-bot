@@ -34,7 +34,7 @@
 
   "behavior": {
     "typing": {
-      "enabled": false,
+      "enabled": true,
       "minSpeed": 50,
       "maxSpeed": 100
     },
@@ -50,7 +50,7 @@
         "maxMessages": 10
       },
       "autoRead": false,
-      "typingIndicator": false,
+      "typingIndicator": true,
       "seenIndicator": false,
       "delay": {
         "min": 500,
