@@ -162,7 +162,7 @@ module.exports = {
     if (replyImage) {
       // Calculate dimensions for the replied image
       const maxImageWidth = canvasWidth - 200;
-      const maxImageHeight = 300;
+      const maxImageHeight = 600;
       let imageWidth = replyImage.width;
       let imageHeight = replyImage.height;
       
@@ -185,7 +185,7 @@ module.exports = {
       ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
       
       // Add to the content offset
-      contentYOffset = imageHeight + 10;
+      contentYOffset = imageHeight;
     }
 
     const commentX = 375;
@@ -193,7 +193,7 @@ module.exports = {
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
-    const nameY = 230; // Adjust position based on image presence
+    const nameY = 240; // Adjust position based on image presence
     ctx.font = "530 75px Arial";
     ctx.fillStyle = "#FFFFFF";
 
