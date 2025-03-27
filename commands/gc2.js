@@ -56,8 +56,7 @@ module.exports = {
       }
     }
     let mentionedName = (await api.getUserInfo(mentionedID))[mentionedID].name;
-    const t = "GHSAT0AAAAAAC77VKLSN4RMWYNUVINEHTN4Z7FFWRA";
-    let background = [`https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742466954445.png?token=${t}`, `https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742642829480.png?token=${t}`, `https://raw.githubusercontent.com/tawsif7875x/nigga-bot/refs/heads/main/1742644074382-01.png?token=${t}`];
+    let background = ["https://raw.githubusercontent.com/tawsif7875x/Miku-Nakano/refs/heads/main/1742466954445.png", "https://raw.githubusercontent.com/tawsif7875x/Miku-Nakano/refs/heads/main/1742642829480.png", "https://raw.githubusercontent.com/tawsif7875x/Miku-Nakano/refs/heads/main/1742644074382-01.png"];
     let bn = 0;
     if (userInput.match(/--theme/)) { bn = userInput.split("--theme ")[1];
                                       userInput = userInput.split("--theme ")[0];
