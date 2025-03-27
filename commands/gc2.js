@@ -161,8 +161,8 @@ module.exports = {
       // Calculate dimensions for the replied image (increased size)
       const maxImageWidth = canvasWidth - 100; // Reduced margin for larger image
       const maxImageHeight = 700; // Increased max height
-      let imageWidth = canvasWidth - 100;
-      let imageHeight = 700;
+      let imageWidth = replyImage.width + 200;
+      let imageHeight = replyImage.height + 200;
       
       // Maintain aspect ratio
       const aspectRatio = replyImage.width / replyImage.height;
@@ -180,7 +180,7 @@ module.exports = {
       const imageY = 270; // Position below the time
       
       // Draw rounded rectangle for the image
-      const borderRadius = 30; // Corner radius
+      const borderRadius = 50; // Corner radius
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(imageX, imageY, imageWidth, imageHeight, borderRadius);
