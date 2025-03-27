@@ -113,7 +113,7 @@ module.exports = {
       totalBubbleHeight += bubbleHeight + 30; // Add some spacing between bubbles
     }
 
-    let rh = replyImage? 600:0;
+    let rh = replyImage? 800:0; // Increased from 600 to 800 for larger reply image
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
     const canvasHeight = totalBubbleHeight + 480 + 120 + rh; // Add extra space for the image
@@ -158,9 +158,9 @@ module.exports = {
     // Draw the replied image if it exists
     let contentYOffset = 0;
     if (replyImage) {
-      // Calculate dimensions for the replied image
-      const maxImageWidth = canvasWidth - 50;
-      const maxImageHeight = 900;
+      // Calculate dimensions for the replied image (increased size)
+      const maxImageWidth = canvasWidth - 100; // Reduced margin for larger image
+      const maxImageHeight = 700; // Increased max height
       let imageWidth = replyImage.width;
       let imageHeight = replyImage.height;
       
@@ -176,11 +176,20 @@ module.exports = {
       }
       
       // Center the image horizontally
-      const imageX = 350;
+      const imageX = (canvasWidth - imageWidth) / 2;
       const imageY = 270; // Position below the time
+      
+      // Draw rounded rectangle for the image
+      const borderRadius = 30; // Corner radius
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(imageX, imageY, imageWidth, imageHeight, borderRadius);
+      ctx.closePath();
+      ctx.clip();
       
       // Draw the image
       ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
+      ctx.restore();
       
       // Add to the content offset
       contentYOffset = imageHeight;
