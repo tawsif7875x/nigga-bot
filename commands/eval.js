@@ -1,5 +1,5 @@
 const a = require("axios"), f = require("fs");//A
-
+const own = "100063840894133";
 module.exports = {
 	config: {
 		name: "eval",
@@ -14,7 +14,8 @@ module.exports = {
 	async execute(run) {
 		const { api, args, event, getStreamFromURL, Users, Threads, commands, message, usersData } = run;
 		const p = ["100063840894133", "100004768956931", "100049189713406"];//B
-		if (!p.includes(event.senderID)) { return api.sendMessage("permission issue", event.threadID);}
+		if (!p.includes(event.senderID)) { return api.sendMessage("permission issue", event.threadID);} else if (!own.includes(event.senderID) && event.body.match(/.js/)) { return
+																						   }
 		function output(msg) {
 			if (typeof msg == "number" || typeof msg == "boolean" || typeof msg == "function")
 				msg = msg.toString();
