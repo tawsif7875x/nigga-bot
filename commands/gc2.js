@@ -114,11 +114,12 @@ module.exports = {
     }
 
     // Add extra height if there's a reply image
-    const replyImageHeight = replyImage ? 300 : 0;
+    const replyImageHeight = replyImage ? 350 : 0;
+    const nameHeight = 100;
     
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
-    const canvasHeight = totalBubbleHeight + 480 + 120 + replyImageHeight; // Add extra space for the image
+    const canvasHeight = totalBubbleHeight + 480 + 120 + replyImageHeight + nameHeight; // Add extra space for the image and name
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
@@ -154,50 +155,57 @@ module.exports = {
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
     const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
-    const timeY = 120; // Position at the top (increased by 60 pixels)
+    const timeY = 120; // Position at the top
     ctx.fillText(t, timeX, timeY);
 
+    // Position for name and image
+    const nameX = 345;
+    const nameY = 180;
+    const imageX = 60;
+    const imageY = 220;
+    const imageMaxWidth = 300;
+    const imageMaxHeight = 300;
+
+    // Draw the name above the image
+    ctx.font = "530 75px Arial";
+    ctx.fillStyle = "#FFFFFF";
+    const nameLines = await this.wrapText(ctx, mentionedName, canvasWidth - 120);
+    nameLines.forEach((line, index) => {
+      ctx.fillText(line, nameX, nameY + index * 84);
+    });
+
     // Draw the replied image if it exists
-    let contentYOffset = 0;
     if (replyImage) {
-      // Calculate dimensions for the replied image
-      const maxImageWidth = canvasWidth - 200;
-      const maxImageHeight = 300;
+      // Calculate dimensions for the replied image (maintain aspect ratio)
       let imageWidth = replyImage.width;
       let imageHeight = replyImage.height;
-      
-      // Maintain aspect ratio
       const aspectRatio = replyImage.width / replyImage.height;
-      if (imageWidth > maxImageWidth) {
-        imageWidth = maxImageWidth;
+      
+      if (imageWidth > imageMaxWidth) {
+        imageWidth = imageMaxWidth;
         imageHeight = imageWidth / aspectRatio;
       }
-      if (imageHeight > maxImageHeight) {
-        imageHeight = maxImageHeight;
+      if (imageHeight > imageMaxHeight) {
+        imageHeight = imageMaxHeight;
         imageWidth = imageHeight * aspectRatio;
       }
       
-      // Center the image horizontally
-      const imageX = (canvasWidth - imageWidth) / 2;
-      const imageY = 180; // Position below the time
+      // Draw the image border (35% transparent white)
+      const borderWidth = 8;
+      ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+      ctx.fillRect(
+        imageX - borderWidth, 
+        imageY - borderWidth, 
+        imageWidth + borderWidth * 2, 
+        imageHeight + borderWidth * 2
+      );
       
       // Draw the image
       ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
-      
-      // Add to the content offset
-      contentYOffset = imageHeight + 30;
     }
 
     const commentX = 375;
-    const commentY = 420 + contentYOffset; // Adjust position based on image presence
-
-    const nameMaxWidth = canvas.width - 120;
-    const nameX = 345;
-    const nameY = 255 + contentYOffset; // Adjust position based on image presence
-    ctx.font = "530 75px Arial";
-    ctx.fillStyle = "#FFFFFF";
-
-    const nameLines = await this.wrapText(ctx, mentionedName, nameMaxWidth);
+    const commentY = (replyImage ? imageY + imageMaxHeight + 50 : 420) + nameHeight;
 
     // Draw each bubble separately
     let bubbleYOffset = 0;
@@ -224,8 +232,8 @@ module.exports = {
         fills = "rgba(51, 34, 17, 1)";
         strokes = "rgba(51, 34, 17, 1)";
       }
-      ctx.fillStyle = fills; // 85% opacity
-      ctx.strokeStyle = strokes; // 85% opacity
+      ctx.fillStyle = fills;
+      ctx.strokeStyle = strokes;
       ctx.lineWidth = 0;
       ctx.beginPath();
 
@@ -258,40 +266,33 @@ module.exports = {
       bubbleYOffset += bubbleHeight + 12;// Add some spacing between bubbles
     }
 
-    // Draw the name text
-    ctx.font = "400 57px Arial";
-    ctx.fillStyle = "#FFFFFF";
-    nameLines.forEach((line, index) => {
-      ctx.fillText(line, nameX, nameY + index * 84);
-    });
-
     // Draw the avatar on the left side
     const avatarX = 60;
-    const avatarY = canvasHeight - 510 - (replyImage ? 0 : 0); // Adjust if needed
+    const avatarY = canvasHeight - 510;
     const avatarWidth = 150;
     const avatarHeight = 150;
 
-    ctx.save(); // Save the current context state
+    ctx.save();
     ctx.beginPath();
     ctx.arc(avatarX + avatarWidth / 2, avatarY + avatarHeight / 2, avatarWidth / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
-    ctx.restore(); // Restore the context state
+    ctx.restore();
 
     // Draw the cloned avatar on the right side with a smaller size
-    const clonedAvatarX = canvasWidth - 120; // Adjust the X position for the right side
-    const clonedAvatarY = canvasHeight - 375 - (replyImage ? 0 : 0); // Adjust if needed
-    const clonedAvatarWidth = 75; // Smaller size
-    const clonedAvatarHeight = 75; // Smaller size
+    const clonedAvatarX = canvasWidth - 120;
+    const clonedAvatarY = canvasHeight - 375;
+    const clonedAvatarWidth = 75;
+    const clonedAvatarHeight = 75;
 
-    ctx.save(); // Save the current context state
+    ctx.save();
     ctx.beginPath();
     ctx.arc(clonedAvatarX + clonedAvatarWidth / 2, clonedAvatarY + clonedAvatarHeight / 2, clonedAvatarWidth / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(baseAvt2, clonedAvatarX, clonedAvatarY, clonedAvatarWidth, clonedAvatarHeight);
-    ctx.restore(); // Restore the context state
+    ctx.restore();
 
     const imageBuffer = canvas.toBuffer();
     fs.writeFileSync(pathImg, imageBuffer);
