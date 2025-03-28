@@ -168,7 +168,7 @@ module.exports = {
       const aspectRatio = replyImage.width / replyImage.height;
       if (imageWidth > maxImageWidth) {
         imageWidth = maxImageWidth;
-        imageHeight = replyImage.height - (replyImage.width - maxImageWidth);
+        imageHeight = replyImage.height - 300;
       }
       if (imageHeight > maxImageHeight) {
         imageHeight = maxImageHeight;
