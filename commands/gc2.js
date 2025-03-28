@@ -176,7 +176,7 @@ module.exports = {
       }
       
       // Center the image horizontally
-      const imageX = 300;
+      const imageX = 305;
       const imageY = 280; // Position below the time
       
       // Draw rounded rectangle for the image
