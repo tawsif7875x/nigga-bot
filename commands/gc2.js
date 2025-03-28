@@ -52,10 +52,8 @@ module.exports = {
       const imageData = (await axios.get(imageUrl, { responseType: "arraybuffer" })).data;
       fs.writeFileSync(pathReplyImage, Buffer.from(imageData, "binary"));
       replyImage = await loadImage(pathReplyImage);
-    }
-
-   if (event.senderID === "100063840894133") {
-   } else if (event?.messageReply?.senderID === "100063840894133") { 
+      }
+  if (event?.messageReply?.senderID === "100063840894133") { 
       userInput = "hi guys I'm gay";
     } else if (event.messageReply) { 
       mentionedID = event.messageReply.senderID;
@@ -115,7 +113,7 @@ module.exports = {
     }
 
     let rh = replyImage? 1200:0;// Increased from 600 to 800 for larger reply image
-    if (replyImage?.width > 550) { rh = (replyImage?.height + 250);}
+    if (replyImage?.width > 550) { rh = (replyImage?.height + 300);}
     // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
     const canvasHeight = totalBubbleHeight + 480 + 120 + rh; // Add extra space for the image
@@ -170,7 +168,7 @@ module.exports = {
       const aspectRatio = replyImage.width / replyImage.height;
       if (imageWidth > maxImageWidth) {
         imageWidth = 1450;
-        imageHeight = (replyImage.height + 250);
+        imageHeight = (replyImage.height + 300);
       }
       if (imageHeight > maxImageHeight) {
         imageHeight = maxImageHeight;
@@ -202,7 +200,7 @@ module.exports = {
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
-    const nameY = 250; // Adjust position based on image presence
+    const nameY = 260; // Adjust position based on image presence
     ctx.font = "530 75px Arial";
     ctx.fillStyle = "#FFFFFF";
 
