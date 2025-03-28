@@ -161,7 +161,7 @@ module.exports = {
       // Calculate dimensions for the replied image (increased size)
       const maxImageWidth = canvasWidth - 200; // Reduced margin for larger image
       const maxImageHeight = 1200; // Increased max height
-      let imageWidth = replyImage.width + 900;
+      let imageWidth = replyImage.width + 600;
       let imageHeight = replyImage.height + 900;
       
       // Maintain aspect ratio
