@@ -196,7 +196,7 @@ module.exports = {
     }
 
     const commentX = 375;
-    const commentY = 420 + contentYOffset; // Adjust position based on image presence
+    const commentY = 420; // Adjust position based on image presence
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
