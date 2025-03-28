@@ -227,9 +227,9 @@ module.exports = {
 
       let fills = "rgba(51, 51, 51, 1.0)";
       let strokes = "rgba(51, 51, 51, 1.0)";
-      if (bn === 1) { 
-        fills = "rgba(51, 34, 17, 1)";
-        strokes = "rgba(51, 34, 17, 1)";
+      if (bn === "1") { 
+        fills = "rgba(67, 0, 0, 1)";
+        strokes = "rgba(67, 0, 0, 1)";
       }
       ctx.fillStyle = fills; // 85% opacity
       ctx.strokeStyle = strokes; // 85% opacity
