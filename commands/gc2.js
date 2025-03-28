@@ -95,7 +95,7 @@ module.exports = {
     tempCtx.font = "530 75px Arial";
 
     // Measure the comment text
-    const commentMaxWidth = 1350;
+    const commentMaxWidth = 1350; // Set a max width for the comment
     const commentLines = await this.wrapText(tempCtx, commentText, commentMaxWidth);
 
     // Split the comment text into multiple bubbles based on "++"
@@ -110,68 +110,77 @@ module.exports = {
       const bubbleLines = await this.wrapText(tempCtx, bubbleText, commentMaxWidth);
       const bubblePadding = 54;
       const bubbleHeight = bubbleLines.length * 84 + bubblePadding + bubblePadding;
-      totalBubbleHeight += bubbleHeight + 30;
+      totalBubbleHeight += bubbleHeight + 30; // Add some spacing between bubbles
     }
 
-    // Calculate canvas dimensions
+    let rh = replyImage? 1200:0; // Increased from 600 to 800 for larger reply image
+    // Calculate canvas dimensions based on the total height of all bubbles
     const canvasWidth = commentMaxWidth + 600;
-    const canvasHeight = totalBubbleHeight + 480 + 120 + (replyImage ? 800 : 0);
+    const canvasHeight = totalBubbleHeight + 480 + 120 + rh; // Add extra space for the image
 
     let canvas = createCanvas(canvasWidth, canvasHeight);
     let ctx = canvas.getContext("2d");
 
-    // Draw the background image
+    // Calculate the aspect ratio of the background image
     const bgAspectRatio = baseImage.width / baseImage.height;
     const canvasAspectRatio = canvasWidth / canvasHeight;
 
     let bgWidth, bgHeight, bgX, bgY;
 
     if (bgAspectRatio > canvasAspectRatio) {
+      // Background is wider than canvas
       bgHeight = canvasHeight;
       bgWidth = bgHeight * bgAspectRatio;
       bgX = (canvasWidth - bgWidth) / 2;
       bgY = 0;
     } else {
+      // Background is taller than canvas
       bgWidth = canvasWidth;
       bgHeight = bgWidth / bgAspectRatio;
       bgX = 0;
-      bgY = canvasHeight - bgHeight;
+      bgY = canvasHeight - bgHeight; // Align to the bottom
     }
+
+    // Draw the background image
     ctx.drawImage(baseImage, bgX, bgY, bgWidth, bgHeight);
 
-    // Draw the time
+    // Get the current time in Dhaka timezone
     const t = new Date().toLocaleTimeString([], { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', hour12: true });
+
+    // Draw the time at the top-middle of the canvas
     ctx.font = "530 51px sans-serif";
     ctx.fillStyle = "#FFFFFF";
     const timeTextWidth = ctx.measureText(t).width;
-    const timeX = (canvasWidth - timeTextWidth) / 2;
-    const timeY = 120;
+    const timeX = (canvasWidth - timeTextWidth) / 2; // Center the time text
+    const timeY = 120; // Position at the top (increased by 60 pixels)
     ctx.fillText(t, timeX, timeY);
 
     // Draw the replied image if it exists
     let contentYOffset = 0;
     if (replyImage) {
-      const maxImageWidth = 1000;
-      const maxImageHeight = 1000;
-      const imageAspectRatio = replyImage.width / replyImage.height;
+      // Calculate dimensions for the replied image (increased size)
+      const maxImageWidth = canvasWidth - 100; // Reduced margin for larger image
+      const maxImageHeight = 1200; // Increased max height
+      let imageWidth = replyImage.width + 900;
+      let imageHeight = replyImage.height + 900;
       
-      let imageWidth, imageHeight;
-      
-      if (replyImage.width > replyImage.height) {
-        // Landscape image
-        imageWidth = Math.min(replyImage.width, maxImageWidth);
-        imageHeight = imageWidth / imageAspectRatio;
-      } else {
-        // Portrait image
-        imageHeight = Math.min(replyImage.height, maxImageHeight);
-        imageWidth = imageHeight * imageAspectRatio;
+      // Maintain aspect ratio
+      const aspectRatio = replyImage.width / replyImage.height;
+      if (imageWidth > maxImageWidth) {
+        imageWidth -= 200;
+        imageHeight -= 200;
+      }
+      if (imageHeight > maxImageHeight) {
+        imageHeight = maxImageHeight;
+        imageWidth = imageHeight * aspectRatio;
       }
       
-      const imageX = (canvasWidth - imageWidth) / 2;
-      const imageY = 280;
+      // Center the image horizontally
+      const imageX = 305;
+      const imageY = 280; // Position below the time
       
-      // Draw rounded rectangle
-      const borderRadius = [90, 90, 90, 24];
+      // Draw rounded rectangle for the image
+      const borderRadius = [90, 90, 90, 24]; // Corner radius
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(imageX, imageY, imageWidth, imageHeight, borderRadius);
@@ -182,15 +191,16 @@ module.exports = {
       ctx.drawImage(replyImage, imageX, imageY, imageWidth, imageHeight);
       ctx.restore();
       
+      // Add to the content offset
       contentYOffset = imageHeight - 10;
     }
 
     const commentX = 375;
-    const commentY = 420 + contentYOffset;
+    const commentY = 420 + contentYOffset; // Adjust position based on image presence
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
-    const nameY = 250;
+    const nameY = 250; // Adjust position based on image presence
     ctx.font = "530 75px Arial";
     ctx.fillStyle = "#FFFFFF";
 
@@ -204,13 +214,15 @@ module.exports = {
 
       const bubbleLines = await this.wrapText(ctx, bubbleText, commentMaxWidth);
 
+      // Calculate the dimensions of the speech bubble
       const bubblePadding = 54;
       const bubbleMaxWidth = commentMaxWidth + 105;
       const longestLineWidth = Math.max(...bubbleLines.map(line => ctx.measureText(line).width));
       const bubbleWidth = Math.min(longestLineWidth + 135, bubbleMaxWidth);
       const bubbleHeight = bubbleLines.length * 84 + bubblePadding + bubblePadding;
 
-      const bubbleX = commentX - 72;
+      // Adjust the bubble's horizontal position without affecting the text
+      const bubbleX = commentX - 72; // Move the bubble to the left
       let bubbleY = commentY - 60 + bubbleYOffset;
 
       let fills = "rgba(51, 51, 51, 1.0)";
@@ -219,20 +231,25 @@ module.exports = {
         fills = "rgba(0,0,96,1)";
         strokes = "rgba(0,0,96,1)";
       }
-      ctx.fillStyle = fills;
-      ctx.strokeStyle = strokes;
+      ctx.fillStyle = fills; // 85% opacity
+      ctx.strokeStyle = strokes; // 85% opacity
       ctx.lineWidth = 0;
       ctx.beginPath();
 
+      // Adjust the border radius based on the bubble position
       if (replyImage) { 
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
       } else if (bubbleTexts.length === 1) {
+        // Only one bubble: all borders rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [99, 99, 99, 99]);
       } else if (i === 0) {
+        // First bubble: down-left border not rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [99, 99, 99, 24]);
       } else if (i === bubbleTexts.length - 1) {
+        // Last bubble: up-left border not rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
       } else {
+        // Middle bubbles: all borders rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 24]);
       }
 
@@ -240,12 +257,14 @@ module.exports = {
       ctx.fill();
       ctx.stroke();
 
+      // Draw the comment text inside the bubble
       ctx.fillStyle = "#FFFFFF";
       bubbleLines.forEach((line, index) => {
         ctx.fillText(line, commentX, commentY + index * 84 + bubbleYOffset);
       });
 
-      bubbleYOffset += bubbleHeight + 12;
+      // Update the Y offset for the next bubble
+      bubbleYOffset += bubbleHeight + 12;// Add some spacing between bubbles
     }
 
     // Draw the name text
@@ -257,31 +276,31 @@ module.exports = {
 
     // Draw the avatar on the left side
     const avatarX = 60;
-    const avatarY = canvasHeight - 510;
+    const avatarY = canvasHeight - 510 - (replyImage ? 0 : 0); // Adjust if needed
     const avatarWidth = 150;
     const avatarHeight = 150;
 
-    ctx.save();
+    ctx.save(); // Save the current context state
     ctx.beginPath();
     ctx.arc(avatarX + avatarWidth / 2, avatarY + avatarHeight / 2, avatarWidth / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(baseAvt1, avatarX, avatarY, avatarWidth, avatarHeight);
-    ctx.restore();
+    ctx.restore(); // Restore the context state
 
-    // Draw the cloned avatar on the right side
-    const clonedAvatarX = canvasWidth - 120;
-    const clonedAvatarY = canvasHeight - 375;
-    const clonedAvatarWidth = 75;
-    const clonedAvatarHeight = 75;
+    // Draw the cloned avatar on the right side with a smaller size
+    const clonedAvatarX = canvasWidth - 120; // Adjust the X position for the right side
+    const clonedAvatarY = canvasHeight - 375 - (replyImage ? 0 : 0); // Adjust if needed
+    const clonedAvatarWidth = 75; // Smaller size
+    const clonedAvatarHeight = 75; // Smaller size
 
-    ctx.save();
+    ctx.save(); // Save the current context state
     ctx.beginPath();
     ctx.arc(clonedAvatarX + clonedAvatarWidth / 2, clonedAvatarY + clonedAvatarHeight / 2, clonedAvatarWidth / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(baseAvt2, clonedAvatarX, clonedAvatarY, clonedAvatarWidth, clonedAvatarHeight);
-    ctx.restore();
+    ctx.restore(); // Restore the context state
 
     const imageBuffer = canvas.toBuffer();
     fs.writeFileSync(pathImg, imageBuffer);
