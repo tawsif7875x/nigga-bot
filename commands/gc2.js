@@ -180,7 +180,7 @@ module.exports = {
       const imageY = 280; // Position below the time
       
       // Draw rounded rectangle for the image
-      const borderRadius = [50, 50, 10, 50]; // Corner radius
+      const borderRadius = [90, 90, 90, 24]; // Corner radius
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(imageX, imageY, imageWidth, imageHeight, borderRadius);
@@ -200,7 +200,7 @@ module.exports = {
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
-    const nameY = 240; // Adjust position based on image presence
+    const nameY = 250; // Adjust position based on image presence
     ctx.font = "530 75px Arial";
     ctx.fillStyle = "#FFFFFF";
 
@@ -237,7 +237,9 @@ module.exports = {
       ctx.beginPath();
 
       // Adjust the border radius based on the bubble position
-      if (bubbleTexts.length === 1) {
+      if (replyImage) { 
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
+      } else if (bubbleTexts.length === 1) {
         // Only one bubble: all borders rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [99, 99, 99, 99]);
       } else if (i === 0) {
