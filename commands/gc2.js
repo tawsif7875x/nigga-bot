@@ -177,10 +177,10 @@ module.exports = {
       
       // Center the image horizontally
       const imageX = 300;
-      const imageY = 270; // Position below the time
+      const imageY = 280; // Position below the time
       
       // Draw rounded rectangle for the image
-      const borderRadius = 50; // Corner radius
+      const borderRadius = [50, 50, 10, 50]; // Corner radius
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(imageX, imageY, imageWidth, imageHeight, borderRadius);
@@ -196,7 +196,7 @@ module.exports = {
     }
 
     const commentX = 375;
-    const commentY = 420; // Adjust position based on image presence
+    const commentY = 420 + contentYOffset; // Adjust position based on image presence
 
     const nameMaxWidth = canvas.width - 120;
     const nameX = 345;
