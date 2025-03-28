@@ -192,7 +192,7 @@ module.exports = {
       ctx.restore();
       
       // Add to the content offset
-      contentYOffset = imageHeight;
+      contentYOffset = imageHeight - 50;
     }
 
     const commentX = 375;
