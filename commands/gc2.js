@@ -238,19 +238,33 @@ module.exports = {
 
       // Adjust the border radius based on the bubble position
       if (replyImage) { 
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
-      } else if (bubbleTexts.length === 1) {
+      if (bubbleTexts.length === 1) {
         // Only one bubble: all borders rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [99, 99, 99, 99]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
       } else if (i === 0) {
         // First bubble: down-left border not rounded
-        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [99, 99, 99, 24]);
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 24]);
       } else if (i === bubbleTexts.length - 1) {
         // Last bubble: up-left border not rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
       } else {
         // Middle bubbles: all borders rounded
         ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 24]);
+      }
+      } else {
+      if (bubbleTexts.length === 1) {
+        // Only one bubble: all borders rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [99, 99, 99, 99]);
+      } else if (i === 0) {
+        // First bubble: down-left border not rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
+      } else if (i === bubbleTexts.length - 1) {
+        // Last bubble: up-left border not rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 99]);
+      } else {
+        // Middle bubbles: all borders rounded
+        ctx.roundRect(bubbleX, bubbleY - bubblePadding, bubbleWidth, bubbleHeight, [24, 99, 99, 24]);
+      }
       }
 
       ctx.closePath();
